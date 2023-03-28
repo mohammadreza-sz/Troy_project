@@ -41,6 +41,10 @@ INSTALLED_APPS = [#mrs
     'rest_framework',#must put before apps
     'djoser',
 ]
+#mrs
+INTERNAL_IPS = [
+    "127.0.0.1", 
+]
 
 MIDDLEWARE = [
     "debug_toolbar.middleware.DebugToolbarMiddleware",
