@@ -40,6 +40,8 @@ INSTALLED_APPS = [#mrs
     'debug_toolbar',
     'rest_framework',#must put before apps
     'djoser',
+    'profile',
+    'account',
 ]
 #mrs
 INTERNAL_IPS = [
@@ -98,7 +100,8 @@ DATABASES = {
         'NAME': 'Troy',
         'HOST': 'localhost',
         'USER': 'root',
-        'PASSWORD': 'MRS'
+        'PASSWORD': '***********',
+        'PORT':'3306'
     }
 }
 
@@ -143,3 +146,5 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+AUTH_USER_MODEL = 'account.user' #mrs #47
