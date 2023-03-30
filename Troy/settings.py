@@ -100,7 +100,7 @@ DATABASES = {
         'NAME': 'Troy',
         'HOST': 'localhost',
         'USER': 'root',
-        'PASSWORD': '***********',
+        'PASSWORD': 'Mrsmysql18!',
         'PORT':'3306'
     }
 }
@@ -147,4 +147,50 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+
+DJOSER = {
+    'PASSWORD_RESET_CONFIRM_RETYPE':True,#mrs
+
+    #helne
+    # 'LOGIN_FIELD' : 'email',
+
+    # now djoser know that we use email for login.
+    'USER_CREATE_PASSWORD_RETYPE' : True,
+    'USERNAME_CHANGED_EMAIL_CONFIRMATION' : True,
+    'PASSWORD_CHANGED_EMAIL_CONFIRMATION' : True,
+    'SEND_CONFIRMATION' : True,
+    'SET_USERNAME_RETYPE' : True,
+    'SET_PASSWORD_RETYPE' : True,
+    'PASSWORD_RESET_CONFIRM_URL' : 'password/reset/confirm/{uid}/{token}',
+    'USERNAME_RESET_CONFIRM_URL' : 'email/reset/confirm/{uid}/{token}',
+    'ACTIVATION_URL' : 'activate/{uid}/{token}',
+    'SEND_ACTIVATION_EMAIL': True,
+    'SERIALIZERS' : {
+        'user_create' : 'account.serializers.UserCreateSerializer',
+        'user' : 'account.serializers.UserCreateSerializer',
+        'user_delete' : 'djoser.serializers.UserDeleteSerializer',
+    }
+}
+
+# AUTH_USER_MODEL = 'accounts.UserAccount'
+# }helen
 AUTH_USER_MODEL = 'account.user' #mrs #47
+
+
+# email account = frnz.azad2002@gmail.com
+# app passsword = qazwsx
+#helen{
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+#TODO
+EMAIL_HOST_USER = 'mm.r.s81.d@gmail.com'
+EMAIL_HOST_PASSWORD ='tqigeyaetlockzid'
+EMAIL_USE_TLS = True
+#}helen
+
+# mamadreza
+# {
+#     "refresh": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTY4MDI1MTkxMiwiaWF0IjoxNjgwMTY1NTEyLCJqdGkiOiJmYmYyYjdjYmFlODA0MGRmODJkOTY4NDM4ODY1ZjJjZSIsInVzZXJfaWQiOjR9.tsBQCN2KAZz7ieUqyz4Z4UMUBogyAZnxUxFOqSKSx_4",
+#     "access": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjgwMTY1ODEyLCJpYXQiOjE2ODAxNjU1MTIsImp0aSI6ImYzNzE5YWExMzY2NTQ4ZTZhZDJkNmY1MDM2OWUwYTQ0IiwidXNlcl9pZCI6NH0.TxDQ0WQvY73QdgIpQ0UWkBVEKr62wXTYna212WRid1Q"
+# }
