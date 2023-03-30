@@ -150,25 +150,27 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 DJOSER = {
     'PASSWORD_RESET_CONFIRM_RETYPE':True,#mrs
-
+    'PASSWORD_RESET_SHOW_EMAIL_NOT_FOUND' : True ,#mrs #for this url -> /users/reset_password/
     #helne
     # 'LOGIN_FIELD' : 'email',
 
     # now djoser know that we use email for login.
+    # 'SET_USERNAME_RETYPE' : True, i think must use permissin for this two line,right??? and notif front to design this page "auth/users/set_password"
+    # 'SET_PASSWORD_RETYPE' : True,
     'USER_CREATE_PASSWORD_RETYPE' : True,
     'USERNAME_CHANGED_EMAIL_CONFIRMATION' : True,
     'PASSWORD_CHANGED_EMAIL_CONFIRMATION' : True,
-    'SEND_CONFIRMATION' : True,
-    'SET_USERNAME_RETYPE' : True,
-    'SET_PASSWORD_RETYPE' : True,
     'PASSWORD_RESET_CONFIRM_URL' : 'password/reset/confirm/{uid}/{token}',
     'USERNAME_RESET_CONFIRM_URL' : 'email/reset/confirm/{uid}/{token}',
     'ACTIVATION_URL' : 'activate/{uid}/{token}',
+    'SEND_CONFIRMATION' : True,
     'SEND_ACTIVATION_EMAIL': True,
     'SERIALIZERS' : {
         'user_create' : 'account.serializers.UserCreateSerializer',
         'user' : 'account.serializers.UserCreateSerializer',
         'user_delete' : 'djoser.serializers.UserDeleteSerializer',
+
+        'user_create_password_retype': 'account.serializers.UserCreatePasswordRetypeSerializer',#mrs
     }
 }
 
