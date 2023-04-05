@@ -64,9 +64,10 @@ REST_FRAMEWORK = {#mrs
         'rest_framework_simplejwt.authentication.JWTAuthentication',
 		),
     }
-
+from datetime import timedelta
 SIMPLE_JWT = {#mrs
 		'AUTH_HEADER_TYPES': ('JWT',),
+        'ACCESS_TOKEN_LIFETIME':timedelta(days = 1),#mrs
 		}
 
 
@@ -147,11 +148,11 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-from datetime import timedelta
+
 DJOSER = {
     'PASSWORD_RESET_CONFIRM_RETYPE':True,#mrs
     'PASSWORD_RESET_SHOW_EMAIL_NOT_FOUND' : True ,#mrs #for this url -> /users/reset_password/
-    'ACCESS_TOKEN_LIFETIME':timedelta(days = 1),#mrs
+    
     #helne
     # 'LOGIN_FIELD' : 'email',
 
@@ -167,8 +168,8 @@ DJOSER = {
     'SEND_CONFIRMATION' : True,
     'SEND_ACTIVATION_EMAIL': True,
     'SERIALIZERS' : {
-        'user_create' : 'account.serializers.UserCreateSerializer',
-        'user' : 'account.serializers.UserCreateSerializer',
+        # 'user_create' : 'account.serializers.UserCreateSerializer',
+        # 'user' : 'account.serializers.UserCreateSerializer',
         'user_delete' : 'djoser.serializers.UserDeleteSerializer',
         
         'current_user':'account.serializers.UserSerializer',
@@ -194,7 +195,9 @@ EMAIL_USE_TLS = True
 #}helen
 
 # mamadreza
-#{
-#    "refresh": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTY4MDQ0NDkwNiwiaWF0IjoxNjgwMzU4NTA2LCJqdGkiOiIwZGE4NDZjNTMwMjM0YWU4OWVjMGQ0ZTdmZTdjMTdiNyIsInVzZXJfaWQiOjR9.OeU1uW-JMf052cM5pBhT32S_GFeWWW6Z_toTjxQKatw",
-#    "access": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjgwMzU4ODA2LCJpYXQiOjE2ODAzNTg1MDYsImp0aSI6ImNjZmZiMGJjMGE4NTQ0MGNiMWRmMTdhN2Y2MGU0OWUzIiwidXNlcl9pZCI6NH0.U19-gx8ng9kWVbNivsvjAbvIu4HT844V3bHMtSNsqsU"
-#}
+# {
+#eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTY4MDc4OTEyNywiaWF0IjoxNjgwNzAyNzI3LCJqdGkiOiJjNmNlNDMxYTJkNTk0MDMwODRkMmJjYWYzYWE3ZDg0NyIsInVzZXJfaWQiOjV9.ZPaq4IO2HS34yhg3ZU06p6NjGsfBUnwTRuCYEBBOGJY",
+
+#    "access": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjgwNzAzOTkxLCJpYXQiOjE2ODA3MDI3MjcsImp0aSI6IjAyZGUwMzliZjQ0ZDRmNjE5MTM1N2Y5OTlkNWRiNmZmIiwidXNlcl9pZCI6NX0.-AsUiEv9jITslXbXfG1NxVUBg9g20Wr1XaCQWLddH0I"
+
+# }
