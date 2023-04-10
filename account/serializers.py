@@ -1,6 +1,5 @@
-from multiprocessing import context
 from djoser.serializers import UserCreateSerializer as BaseUserCreateSerializer , UserSerializer as BaseUserSerializer ,UserCreatePasswordRetypeSerializer as BaseUserCreatePasswordRetypeSerializer
-from djoser.serializers import  ActivationSerializer as BaseActivationSerializer
+from djoser.serializers import  PasswordResetConfirmRetypeSerializer as BasePasswordResetConfirmRetypeSerializer
     # 'activation': 'djoser.serializers.ActivationSerializer',
 
 from rest_framework import serializers
@@ -20,14 +19,29 @@ class UserSerializer(BaseUserSerializer):#mrs#59
 
     # email = serializers.EmailField(read_only = True)#if want to avoid to modify its own email
 
-# class UserCreatePasswordRetypeSerializer(BaseUserCreatePasswordRetypeSerializer):#mrs
+
+class UserCreatePasswordRetypeSerializer(BaseUserCreatePasswordRetypeSerializer):#mrs
     
-    # class Meta(BaseUserCreatePasswordRetypeSerializer.Meta):
-    #     fields = ('id', 'email', 'username' , 'password')#,'first_name' , 'last_name')
+    class Meta(BaseUserCreatePasswordRetypeSerializer.Meta):
+        fields = ('id', 'email', 'username' , 'password')#,'first_name' , 'last_name')
         
     # email = serializers.EmailField(read_only = True)#if want to avoid to modify its own email
-    # password = serializers.CharField(initial = "mrsmrsmrs")
-    # re_new_password = serializers.CharField(read_only = True)
+    password = serializers.CharField()
+    re_new_password = serializers.CharField()
+
+
+class EmailUrlSerializer(serializers.Serializer):#mrs
+    password = serializers.CharField(max_length =255 )
+    confirm_password = serializers.CharField(max_length =255)
+    
+    def validate (self, data):
+        if data['password'] != data['confirm_password']:
+            return serializers.ValidationError('passwords do not match')
+        return data #-> dictionary
+
+        
+# class PasswordResetConfirmRetypeSerializer(BasePasswordResetConfirmRetypeSerializer):
+#     class Meta(BasePasswordResetConfirmRetypeSerializer.Meta):
 
 
 

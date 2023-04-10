@@ -171,8 +171,8 @@ DJOSER = {
     'USERNAME_CHANGED_EMAIL_CONFIRMATION' : True,
     'PASSWORD_CHANGED_EMAIL_CONFIRMATION' : True,
     'PASSWORD_RESET_CONFIRM_URL' : 'password/reset/confirm/{uid}/{token}',
-    'USERNAME_RESET_CONFIRM_URL' : 'email/reset/confirm/{uid}/{token}',
     'ACTIVATION_URL' : 'activate/{uid}/{token}',
+    'USERNAME_RESET_CONFIRM_URL' : 'email/reset/confirm/{uid}/{token}',
     'SEND_CONFIRMATION' : True,
     'SEND_ACTIVATION_EMAIL': True,
     'SERIALIZERS' : {
@@ -182,6 +182,8 @@ DJOSER = {
         
         # 'current_user':'account.serializers.UserSerializer',
         # 'user_create_password_retype': 'account.serializers.UserCreatePasswordRetypeSerializer',#mrs
+        # 'password_reset_confirm_retype': 'account.serializers.PasswordResetConfirmRetypeSerializer',
+
     }
 }
 
