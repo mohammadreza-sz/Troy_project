@@ -31,6 +31,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [#mrs
+    "corsheaders",
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -47,8 +48,10 @@ INSTALLED_APPS = [#mrs
 INTERNAL_IPS = [
     "127.0.0.1", 
 ]
-
+CORS_ALLOW_ALL_ORIGINS = True
 MIDDLEWARE = [
+     "corsheaders.middleware.CorsMiddleware",
+    "django.middleware.common.CommonMiddleware",
     "debug_toolbar.middleware.DebugToolbarMiddleware",
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -64,9 +67,10 @@ REST_FRAMEWORK = {#mrs
         'rest_framework_simplejwt.authentication.JWTAuthentication',
 		),
     }
-
+from datetime import timedelta
 SIMPLE_JWT = {#mrs
 		'AUTH_HEADER_TYPES': ('JWT',),
+        'ACCESS_TOKEN_LIFETIME':timedelta(days = 1),#mrs
 		}
 
 
@@ -94,17 +98,22 @@ WSGI_APPLICATION = 'Troy.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         # 'NAME': 'Troy',
+#         # 'HOST': 'localhost',
+#         # 'USER': 'root',
+#         # 'PASSWORD': 'Mrsmysql18!',
+#         # 'PORT':'3306'
+#     }
+# }
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'Troy',
-        'HOST': 'localhost',
-        'USER': 'root',
-        'PASSWORD': 'Mrsmysql18!',
-        'PORT':'3306'
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
     }
-}
-
+} 
 
 # Password validation
 # https://docs.djangoproject.com/en/4.1/ref/settings/#auth-password-validators
@@ -151,6 +160,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 DJOSER = {
     'PASSWORD_RESET_CONFIRM_RETYPE':True,#mrs
     'PASSWORD_RESET_SHOW_EMAIL_NOT_FOUND' : True ,#mrs #for this url -> /users/reset_password/
+    
     #helne
     # 'LOGIN_FIELD' : 'email',
 
@@ -166,10 +176,11 @@ DJOSER = {
     'SEND_CONFIRMATION' : True,
     'SEND_ACTIVATION_EMAIL': True,
     'SERIALIZERS' : {
-        'user_create' : 'account.serializers.UserCreateSerializer',
-        'user' : 'account.serializers.UserCreateSerializer',
+        # 'user_create' : 'account.serializers.UserCreateSerializer',
+        # 'user' : 'account.serializers.UserCreateSerializer',
         'user_delete' : 'djoser.serializers.UserDeleteSerializer',
-
+        
+        'current_user':'account.serializers.UserSerializer',
         'user_create_password_retype': 'account.serializers.UserCreatePasswordRetypeSerializer',#mrs
     }
 }
@@ -193,6 +204,8 @@ EMAIL_USE_TLS = True
 
 # mamadreza
 # {
-#     "refresh": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTY4MDI1MTkxMiwiaWF0IjoxNjgwMTY1NTEyLCJqdGkiOiJmYmYyYjdjYmFlODA0MGRmODJkOTY4NDM4ODY1ZjJjZSIsInVzZXJfaWQiOjR9.tsBQCN2KAZz7ieUqyz4Z4UMUBogyAZnxUxFOqSKSx_4",
-#     "access": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjgwMTY1ODEyLCJpYXQiOjE2ODAxNjU1MTIsImp0aSI6ImYzNzE5YWExMzY2NTQ4ZTZhZDJkNmY1MDM2OWUwYTQ0IiwidXNlcl9pZCI6NH0.TxDQ0WQvY73QdgIpQ0UWkBVEKr62wXTYna212WRid1Q"
+#eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTY4MDc4OTEyNywiaWF0IjoxNjgwNzAyNzI3LCJqdGkiOiJjNmNlNDMxYTJkNTk0MDMwODRkMmJjYWYzYWE3ZDg0NyIsInVzZXJfaWQiOjV9.ZPaq4IO2HS34yhg3ZU06p6NjGsfBUnwTRuCYEBBOGJY",
+
+#    "access": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjgwNzAzOTkxLCJpYXQiOjE2ODA3MDI3MjcsImp0aSI6IjAyZGUwMzliZjQ0ZDRmNjE5MTM1N2Y5OTlkNWRiNmZmIiwidXNlcl9pZCI6NX0.-AsUiEv9jITslXbXfG1NxVUBg9g20Wr1XaCQWLddH0I"
+
 # }
