@@ -100,7 +100,7 @@ DATABASES = {
         'NAME': 'Troy',
         'HOST': 'localhost',
         'USER': 'root',
-        'PASSWORD': 'Mrsmysql18!',
+        'PASSWORD': 'newpassword',
         'PORT':'3306'
     }
 }
