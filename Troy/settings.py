@@ -178,10 +178,10 @@ DJOSER = {
     'SERIALIZERS' : {
         # 'user_create' : 'account.serializers.UserCreateSerializer',
         # 'user' : 'account.serializers.UserCreateSerializer',
-        'user_delete' : 'djoser.serializers.UserDeleteSerializer',
+        # 'user_delete' : 'djoser.serializers.UserDeleteSerializer',
         
-        'current_user':'account.serializers.UserSerializer',
-        'user_create_password_retype': 'account.serializers.UserCreatePasswordRetypeSerializer',#mrs
+        # 'current_user':'account.serializers.UserSerializer',
+        # 'user_create_password_retype': 'account.serializers.UserCreatePasswordRetypeSerializer',#mrs
     }
 }
 
