@@ -184,7 +184,13 @@ DJOSER = {
         # 'user_create_password_retype': 'account.serializers.UserCreatePasswordRetypeSerializer',#mrs
         # 'password_reset_confirm_retype': 'account.serializers.PasswordResetConfirmRetypeSerializer',
 
-    }
+    },
+    'EMAIL': {
+        'activation': 'account.email.CustomizeActivationEmail',
+        'confirmation': 'account.email.ConfirmationEmail',
+        'password_reset': 'account.email.CustomizePasswordResetEmail',
+        'password_changed_confirmation': 'account.email.PasswordChangedConfirmationEmail',
+    },
 }
 
 # AUTH_USER_MODEL = 'accounts.UserAccount'
