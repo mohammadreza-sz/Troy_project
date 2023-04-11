@@ -96,12 +96,12 @@ WSGI_APPLICATION = 'Troy.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'Troy',
-        'HOST': 'localhost',
-        'USER': 'root',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'Troy_database',
+        # 'HOST': 'localhost',
+        'USER': 'Troy',
         'PASSWORD': 'newpassword',
-        'PORT':'3306'
+        # 'PORT':'3306'
     }
 }
 
