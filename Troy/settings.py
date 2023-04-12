@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-@b#qth26z%ovzuhddg!s1h8f^#+rmuc-kg+9i7632qeg+wm+wl
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['helenazad.pythonanywhere.com']
 
 
 # Application definition
@@ -45,7 +45,7 @@ INSTALLED_APPS = [#mrs
 ]
 #mrs
 INTERNAL_IPS = [
-    "127.0.0.1", 
+    "127.0.0.1",
 ]
 
 MIDDLEWARE = [
@@ -141,6 +141,8 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
 
 STATIC_URL = 'static/'
+
+STATIC_ROOT = '/home/helenazad/Troy_project/static'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
