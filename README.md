@@ -10,6 +10,7 @@ first update pip (python.exe -m pip install --upgrade pip) and pipenv (pip insta
 8-pip install djoser
 9-pipenv install djangorestframework_simplejwt
 10- pipenv install psycopg2
+11- pip install pillow
 **-if we want install nested router can install it  with "pipenv install drf-nested-routers"
 
 https://pipenv-fork.readthedocs.io/en/latest/basics.html

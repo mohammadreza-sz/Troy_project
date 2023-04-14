@@ -4,6 +4,13 @@ from account import models #helen
 
 ### User ### 
 
+# {edit profile}
+# CRUD baraye safar tavassote organization va assign kardane ye tour leader baraye oon
+# CRUD = create read update delete
+
+#baraye tour leader betoonim rate bedim(oonja goftim baraye jaee ke gharare berim) -- > bayad beporsim.
+
+
 class Person(models.Model):
     birth_date : models.DateField(null = True)
     country : models.CharField(max_length = 255)
