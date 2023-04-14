@@ -9,16 +9,16 @@ from account import models #helen
 # CRUD = create read update delete
 
 #baraye tour leader betoonim rate bedim(oonja goftim baraye jaee ke gharare berim) -- > bayad beporsim.
-
+ 
 
 class Person(models.Model):
     birth_date : models.DateField(null = True)
-    country : models.CharField(max_length = 255)
-    city : models.CharField(max_length = 255)
+    country : models.CharField(max_length = 255)  #must be changed
+    city : models.CharField(max_length = 255)   # must be changed 
     gender : models.BooleanField()
     bio : models.TextField()
     registration_date : models.DateField(auth_now = True)
-    image : models.ImageField(upload_to = 'pics', default = 'default.svg')
+    profile_image : models.ImageField(upload_to = 'pics/', default = 'default-avatar.png', null = True, blank = True) #change 
 
 #helen {
 class CommenPeople(models.Model):

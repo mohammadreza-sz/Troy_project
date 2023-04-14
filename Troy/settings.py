@@ -197,5 +197,6 @@ EMAIL_USE_TLS = True
 #     "access": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjgwMTY1ODEyLCJpYXQiOjE2ODAxNjU1MTIsImp0aSI6ImYzNzE5YWExMzY2NTQ4ZTZhZDJkNmY1MDM2OWUwYTQ0IiwidXNlcl9pZCI6NH0.TxDQ0WQvY73QdgIpQ0UWkBVEKr62wXTYna212WRid1Q"
 # }
 # for edit profile 
+import os
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media') #helen
 MEDIA_URL = '/media/' #helen
