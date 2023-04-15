@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-@b#qth26z%ovzuhddg!s1h8f^#+rmuc-kg+9i7632qeg+wm+wl
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['helenazad.pythonanywhere.com']
+ALLOWED_HOSTS = ['helenazad.pythonanywhere.com' , '127.0.0.1']
 
 
 # Application definition
@@ -40,7 +40,7 @@ INSTALLED_APPS = [#mrs
     'debug_toolbar',
     'rest_framework',#must put before apps
     'djoser',
-    'profile',
+    'Profile',
     'account',
 ]
 #mrs
@@ -64,9 +64,10 @@ REST_FRAMEWORK = {#mrs
         'rest_framework_simplejwt.authentication.JWTAuthentication',
 		),
     }
-
+from datetime import timedelta
 SIMPLE_JWT = {#mrs
 		'AUTH_HEADER_TYPES': ('JWT',),
+        "ACCESS_TOKEN_LIFETIME": timedelta(hours=1)#lesson 56
 		}
 
 
@@ -96,12 +97,12 @@ WSGI_APPLICATION = 'Troy.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'Troy',
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'troy',
         'HOST': 'localhost',
         'USER': 'root',
         'PASSWORD': 'newpassword',
-        'PORT':'5432'
+        'PORT':'3306'
     }
 }
 
@@ -160,17 +161,17 @@ DJOSER = {
     'USER_CREATE_PASSWORD_RETYPE' : True,
     'USERNAME_CHANGED_EMAIL_CONFIRMATION' : True,
     'PASSWORD_CHANGED_EMAIL_CONFIRMATION' : True,
-    'SEND_CONFIRMATION' : True,
+    # 'SEND_CONFIRMATION' : True,
     'SET_USERNAME_RETYPE' : True,
     'SET_PASSWORD_RETYPE' : True,
     'PASSWORD_RESET_CONFIRM_URL' : 'password/reset/confirm/{uid}/{token}',
     'USERNAME_RESET_CONFIRM_URL' : 'email/reset/confirm/{uid}/{token}',
-    'ACTIVATION_URL' : 'activate/{uid}/{token}',
-    'SEND_ACTIVATION_EMAIL': True,
+    # 'ACTIVATION_URL' : 'activate/{uid}/{token}',
+    # 'SEND_ACTIVATION_EMAIL': True,
     'SERIALIZERS' : {
-        'user_create' : 'account.serializers.UserCreateSerializer',
-        'user' : 'account.serializers.UserCreateSerializer',
-        'user_delete' : 'djoser.serializers.UserDeleteSerializer',
+        # 'user_create' : 'account.serializers.UserCreateSerializer',
+        # 'user' : 'account.serializers.UserCreateSerializer',
+        # 'user_delete' : 'djoser.serializers.UserDeleteSerializer',
     }
 }
 
@@ -191,12 +192,6 @@ EMAIL_HOST_PASSWORD ='tqigeyaetlockzid'
 EMAIL_USE_TLS = True
 #}helen
 
-# mamadreza
-# {
-#     "refresh": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTY4MDI1MTkxMiwiaWF0IjoxNjgwMTY1NTEyLCJqdGkiOiJmYmYyYjdjYmFlODA0MGRmODJkOTY4NDM4ODY1ZjJjZSIsInVzZXJfaWQiOjR9.tsBQCN2KAZz7ieUqyz4Z4UMUBogyAZnxUxFOqSKSx_4",
-#     "access": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjgwMTY1ODEyLCJpYXQiOjE2ODAxNjU1MTIsImp0aSI6ImYzNzE5YWExMzY2NTQ4ZTZhZDJkNmY1MDM2OWUwYTQ0IiwidXNlcl9pZCI6NH0.TxDQ0WQvY73QdgIpQ0UWkBVEKr62wXTYna212WRid1Q"
-# }
-# for edit profile 
 import os
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media') #helen
 MEDIA_URL = '/media/' #helen

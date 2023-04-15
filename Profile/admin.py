@@ -2,4 +2,4 @@ from django.contrib import admin
 from .models import Person
 # Register your models here.
 
-admin.site.Register(Person)
+# admin.site.Register(Person)
