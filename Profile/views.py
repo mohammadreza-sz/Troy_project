@@ -4,21 +4,22 @@ from django.views import generic
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 from django.urls import reverse_lazy
 from .forms import ProfileForm
- 
+# from account.serializers import UserSerializer
 
-class UserRegisterView(generic.CreateView):
-    form_class = ProfileForm
-    # i hava a question..
-    template_name = 'registration/register.html'
-    success_url = reverse_lazy('login')
+class UserEditView(generics.UpdateAPIView):
+    queryset = Person.objects.all()
+    serializer_class = PersonSerializer
+    lookup_field = 'id'
 
-class UserEditView(generic.UpdateView):
-    form_class = UserChangeForm
-    # i hava a question..
-    template_name = 'registration/edit_profile.html'
-    success_url = reverse_lazy('home')
+    def update(self, request, *args, **kwargs):
+        instance = self.get_object()
+        serializer = self.get_serializer(instance, data=request.data, partial=True)
 
-    def get_object(self):
-        return self.reques.user
+        if serializer.is_valid():
+            serializer.save()
+            return Response({"message": "data updated successfully"})
+
+        else:
+            return Response({"message": "failed", "details": serializer.errors})
 
 #}helen
