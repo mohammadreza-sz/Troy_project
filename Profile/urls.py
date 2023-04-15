@@ -11,7 +11,7 @@ urlpatterns = router.urls#lesson 28
 # urlpatterns = router.urls + Person_router.urls #lesson 28
 
 
-print(urlpatterns)
+# print(urlpatterns)
 
 # urlpatterns = [
 #     # path('register/', UserRegisterView.as_view() , name = 'register'),
