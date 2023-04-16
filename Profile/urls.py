@@ -10,7 +10,7 @@ urlpatterns = router.urls#lesson 28
 
 # urlpatterns = router.urls + Person_router.urls #lesson 28
 
-
+    # path('users/<int:id>/', UserUpdateView.as_view()),
 # print(urlpatterns)
 
 # urlpatterns = [
