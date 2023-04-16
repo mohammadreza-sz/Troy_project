@@ -123,7 +123,7 @@ from account import serializers
 class ActivateUser(GenericAPIView):#mrs
     def get(self, request, uid, token, format = None):
         payload = {'uid': uid, 'token': token}
-        url = "http://localhost:8000/auth/users/activation/"
+        url = "http://mrsz.pythonanywhere.com/auth/users/activation/"
         response = requests.post(url, data = payload)
         if response.status_code == 204 :
 
@@ -149,7 +149,7 @@ class ConfirmPassword(APIView):#mrs
         payload["new_password"]=serializer.validated_data["password"]
         payload["re_new_password"]=serializer.validated_data["confirm_password"]
         # print(payload)
-        url = "http://127.0.0.1:8000/auth/users/reset_password_confirm/"
+        url = "http://mrsz.pythonanywhere.com/auth/users/reset_password_confirm/"
         response = requests.post(url, data = payload)
         if response.status_code == 204:
             return Response({"accept":"your password changed"})
