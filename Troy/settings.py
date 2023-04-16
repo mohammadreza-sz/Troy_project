@@ -80,6 +80,8 @@ INSTALLED_APPS = [#mrs
 
     'rest_framework',#must put before apps
 
+    'drf_base64',
+
     'djoser',
 
     'Profile',
