@@ -6,7 +6,6 @@ from django.conf import settings
 
 from django.db import models#mrs
 
-from base64.fields import Base64ImageField #helen
 ### User ### 
 
 
