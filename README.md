@@ -11,7 +11,7 @@ first update pip (python.exe -m pip install --upgrade pip) and pipenv (pip insta
 9-pipenv install djangorestframework_simplejwt
 10-pipenv install pillow
 11-pipenv install drf-nested-routers"
-12-pip install drf-base64
+12-pipenv install drf-base64
 
 https://pipenv-fork.readthedocs.io/en/latest/basics.html
 **Generally, keep both Pipfile and Pipfile.lock in version control.

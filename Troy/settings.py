@@ -326,9 +326,9 @@ DJOSER = {
 
     'USER_CREATE_PASSWORD_RETYPE' : True,
 
-    'USERNAME_CHANGED_EMAIL_CONFIRMATION' : True,
+    # 'USERNAME_CHANGED_EMAIL_CONFIRMATION' : True,
 
-    'PASSWORD_CHANGED_EMAIL_CONFIRMATION' : True,
+    # 'PASSWORD_CHANGED_EMAIL_CONFIRMATION' : True,
 
     # 'SEND_CONFIRMATION' : True,
 
@@ -336,9 +336,9 @@ DJOSER = {
 
     'SET_PASSWORD_RETYPE' : True,
 
-    'PASSWORD_RESET_CONFIRM_URL' : 'password/reset/confirm/{uid}/{token}',
+    # 'PASSWORD_RESET_CONFIRM_URL' : 'password/reset/confirm/{uid}/{token}',
 
-    'USERNAME_RESET_CONFIRM_URL' : 'email/reset/confirm/{uid}/{token}',
+    # 'USERNAME_RESET_CONFIRM_URL' : 'email/reset/confirm/{uid}/{token}',
 
     # 'ACTIVATION_URL' : 'activate/{uid}/{token}',
 

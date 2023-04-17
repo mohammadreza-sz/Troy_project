@@ -12,10 +12,16 @@ from rest_framework.permissions import IsAuthenticated#61
 from rest_framework.response import Response
 from rest_framework import status
 from .models import Person
-class PersonViewSet(CreateModelMixin , RetrieveModelMixin , UpdateModelMixin , GenericViewSet):
+from .filters import ProductFilter
+from rest_framework.filters import SearchFilter, OrderingFilter
+
+from django_filters.rest_framework import DjangoFilterBackend
+class PersonViewSet(CreateModelMixin , RetrieveModelMixin , UpdateModelMixin , GenericViewSet ,ListModelMixin):
+    filterset_class = ProductFilter
+    filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
     queryset = Person.objects.all()
     serializer_class = PersonSerializer
-    permission_classes=[IsAuthenticated]#helen
+    # permission_classes=[IsAuthenticated]#helen
     lookup_field = 'id' #helen
     @action(detail=False , methods=['GET' , 'PUT'])# , permission_classes=[IsAuthenticated])#lesson 60 , permi... -> 61
     def me(self:Person, request):#lesson 60

@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from .models import Person
+from django.conf import settings
 # from base64.fields import Base64ImageField #helen
 #helen{
 class Base64ImageField(serializers.ImageField):
