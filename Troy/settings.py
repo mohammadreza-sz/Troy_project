@@ -130,7 +130,7 @@ INSTALLED_APPS = [#mrs
 
 
 
-#    "corsheaders",#mrs for load frontend in it's system
+    "corsheaders",#mrs for load frontend in it's system #not just for this
 
     'django.contrib.admin',
 
@@ -194,13 +194,13 @@ INTERNAL_IPS = [
 
 ]
 
-#CORS_ALLOW_ALL_ORIGINS = True#mrs for load frontend in it's system
+CORS_ALLOW_ALL_ORIGINS = True#mrs for load frontend in it's system #not just for this
 
 MIDDLEWARE = [
 
-#     "corsheaders.middleware.CorsMiddleware",
+     "corsheaders.middleware.CorsMiddleware",
 
-#    "django.middleware.common.CommonMiddleware",#mrs for load frontend in it's system
+    "django.middleware.common.CommonMiddleware",#mrs for load frontend in it's system #not just for this
 
     "debug_toolbar.middleware.DebugToolbarMiddleware",
 
@@ -270,7 +270,7 @@ SIMPLE_JWT = {#mrs
 
 		'AUTH_HEADER_TYPES': ('JWT',),
 
-        'ACCESS_TOKEN_LIFETIME':timedelta(days = 1),#mrs
+        'ACCESS_TOKEN_LIFETIME':timedelta(minutes= 1),#mrs
 
 		}
 
@@ -597,7 +597,7 @@ DJOSER = {
 
     'PASSWORD_RESET_SHOW_EMAIL_NOT_FOUND' : True ,#mrs #for this url -> /users/reset_password/
 
-    
+
 
     #helne
 
@@ -627,7 +627,7 @@ DJOSER = {
 
 
 
-    'PASSWORD_CHANGED_EMAIL_CONFIRMATION' : True,
+    #'PASSWORD_CHANGED_EMAIL_CONFIRMATION' : True,
 
 
 
@@ -673,7 +673,7 @@ DJOSER = {
 
         # 'user_delete' : 'djoser.serializers.UserDeleteSerializer',
 
-        
+
 
         # 'current_user':'account.serializers.UserSerializer',
 
