@@ -44,6 +44,9 @@ class Person(models.Model):
 
     image = models.TextField(null=True)
 
+    first_name = models.CharField(max_length = 50 , null = True)
+    last_name = models.CharField(max_length=50, null = True)
+
     #     image : models.ImageField(upload_to = 'Profile/images', default = 'default.svg', validators = [validate_file_size])#mrs change
 
 

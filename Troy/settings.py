@@ -166,7 +166,7 @@ INSTALLED_APPS = [#mrs
 
     'djoser',
 
-
+    'drf_yasg',#helen
 
     'Profile',
 
@@ -180,7 +180,16 @@ INSTALLED_APPS = [#mrs
 
 
 
-#mrs
+SWAGGER_SETTINGS = {#helen
+    'SECURITY_DEFINITIONS' : {
+        "Auth Token eg [Bearer (JWT) ]" : {
+            "type": "apiKey",
+            "name": "Authorization",
+            "in": "header"
+        }
+    }
+}
+
 
 
 
@@ -380,19 +389,29 @@ WSGI_APPLICATION = 'Troy.wsgi.application'
 
 
 
+# DATABASES = {
+#     'default': {
+#        'ENGINE': 'django.db.backends.mysql',
+#         'NAME': 'mrsz$TroyD',
+#         'HOST': 'mrsz.mysql.pythonanywhere-services.com',
+#         'USER': 'mrsz',
+#         'PASSWORD': 'newpasswordnewpassword',
+#         'PORT':'3306'
+#     }
 DATABASES = {
-    'default': {
-       'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'mrsz$TroyD',
-        'HOST': 'mrsz.mysql.pythonanywhere-services.com',
-        'USER': 'mrsz',
-        'PASSWORD': 'newpasswordnewpassword',
-        'PORT':'3306'
+        'default': {
+            'ENGINE': 'django.db.backends.mysql',
+            'NAME': 'mrsz$troy',
+            'HOST': 'localhost',
+            'USER': 'root',
+            'PASSWORD': 'newpassword'
+        }
     }
 
 
 
-}
+
+
 
 
 
@@ -623,7 +642,7 @@ DJOSER = {
 
 
 
-    'USERNAME_CHANGED_EMAIL_CONFIRMATION' : True,
+    # 'USERNAME_CHANGED_EMAIL_CONFIRMATION' : True,
 
 
 
@@ -643,11 +662,11 @@ DJOSER = {
 
 
 
-    'PASSWORD_RESET_CONFIRM_URL' : 'password/reset/confirm/{uid}/{token}',
+    # 'PASSWORD_RESET_CONFIRM_URL' : 'password/reset/confirm/{uid}/{token}',
 
 
 
-    'USERNAME_RESET_CONFIRM_URL' : 'email/reset/confirm/{uid}/{token}',
+    # 'USERNAME_RESET_CONFIRM_URL' : 'email/reset/confirm/{uid}/{token}',
 
 
 

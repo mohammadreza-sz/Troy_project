@@ -5,4 +5,4 @@ class PersonSerializer(serializers.ModelSerializer):#lesson 59
     class Meta:
         model = Person
         fields =['birth_date' , 'country' , 'city' , 'gender',
-         'bio' , 'registration_date' , 'image']
+         'bio' , 'registration_date' , 'image' , 'first_name' , 'last_name']#helen

@@ -1,32 +1,21 @@
-    [[source]]
-
-url = "https://pypi.org/simple"
-
-verify_ssl = true
-
-name = "pypi"
-
-
-[packages]
-
-django = "*"
-
-django-debug-toolbar = "*"
-
-mysqlclient = "*"
-
-djangorestframework = "*"
-
-djangorestframework-simplejwt = "*"
-
-pillow = "*"
-djoser = "*"
-drf-nested-routers = "*"
-
-[dev-packages]
-
-
-[requires]
-
-python_version = "3.11"
-
+    [[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+django = "*"
+django-debug-toolbar = "*"
+mysqlclient = "*"
+djangorestframework = "*"
+djangorestframework-simplejwt = "*"
+pillow = "*"
+djoser = "*"
+drf-nested-routers = "*"
+django-rest-swagger = "*"
+drf-yasg = "*"
+
+[dev-packages]
+
+[requires]
+python_version = "3.11"
