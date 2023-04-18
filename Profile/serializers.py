@@ -1,5 +1,6 @@
+from dataclasses import fields
 from rest_framework import serializers
-from .models import Person
+from .models import Person , Trip
 from django.conf import settings
 # from base64.fields import Base64ImageField #helen
 #helen{
@@ -48,3 +49,7 @@ class PersonSerializer(serializers.ModelSerializer):#lesson 59
          'bio' , 'registration_date', 'profile_image']
 #helen
 
+class TripSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Trip
+        fields = ['destination' , 'origin' , 'begin_time' , 'end_time' , 'capacity']
