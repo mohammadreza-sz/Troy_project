@@ -11,7 +11,7 @@ class UserAdmin(BaseUserAdmin):#mrs#47
             None,
             {
                 "classes": ("wide",),
-                "fields": ("username", "password1", "password2" , "email" , "first_name" , "last_name"),
+                "fields": ("username", "password1", "password2" , "email"),#helen change it
             },
         ),
     )

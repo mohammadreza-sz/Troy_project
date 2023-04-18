@@ -81,6 +81,7 @@ INSTALLED_APPS = [#mrs
     'rest_framework',#must put before apps
 
     'drf_base64',
+    'drf_yasg', # helen chenge it
 
     'djoser',
 
@@ -357,6 +358,15 @@ DJOSER = {
 }
 
 
+SWAGGER_SETTINGS = {
+    'SECURITY_DEFINITIONS' : {
+        "Auth Token eg [Bearer (JWT) ]" : {
+            "type": "apiKey",
+            "name": "Authorization",
+            "in": "header"
+        }
+    } 
+}
 
 # AUTH_USER_MODEL = 'accounts.UserAccount'
 
