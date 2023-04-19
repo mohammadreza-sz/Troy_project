@@ -1,16 +1,18 @@
 from django.urls import path
-from .views import PersonViewSet
+from .views import PersonViewSet, TripViewSet
 from rest_framework_nested import routers
 
 # router = SimpleRouter()
 router = routers.DefaultRouter()#lesson 28 two bottom line is parent router
 router.register('Profile' , PersonViewSet)#end point => first argument without forward slash
-urlpatterns = router.urls#lesson 28
 # Person_router = routers.NestedSimpleRouter(router, 'Profile', lookup='product')#lesson 28 first ARG -> parent router second ARG -> parent prefix  third ARG -> 
 
+router.register("Trip" , TripViewSet)
+
+urlpatterns = router.urls#lesson 28
 # urlpatterns = router.urls + Person_router.urls #lesson 28
 
-
+    # path('users/<int:id>/', UserUpdateView.as_view()),
 # print(urlpatterns)
 
 # urlpatterns = [
