@@ -30,10 +30,6 @@ class Person(models.Model):
 
     profile_image = models.TextField(blank=True, null=True)#helen
 
-    first_name = models.CharField(max_length = 50 , null = True)
-
-    last_name = models.CharField(max_length=50, null = True)
-
 #helen {
 
 class CommenPeople(models.Model):

@@ -23,11 +23,11 @@ class UserSerializer(BaseUserSerializer):#mrs#59
 class UserCreatePasswordRetypeSerializer(BaseUserCreatePasswordRetypeSerializer):#mrs
     
     class Meta(BaseUserCreatePasswordRetypeSerializer.Meta):
-        fields = ('id', 'email', 'username' , 'password')#,'first_name' , 'last_name')
+        fields = ('id', 'email', 'username'  ,'first_name' , 'last_name', 'password')
         
     # email = serializers.EmailField(read_only = True)#if want to avoid to modify its own email
-    password = serializers.CharField()
-    re_new_password = serializers.CharField()
+    # password = serializers.CharField()
+    # re_new_password = serializers.CharField()
 
 
 class EmailUrlSerializer(serializers.Serializer):#mrs

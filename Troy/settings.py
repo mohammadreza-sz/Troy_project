@@ -58,11 +58,21 @@ DEBUG = True
 
 # Application definition
 
-
+SWAGGER_SETTINGS = {
+    'SECURITY_DEFINITIONS' : {
+        "Auth Token eg [Bearer (JWT) ]" : {
+            "type": "apiKey",
+            "name": "Authorization",
+            "in": "header"
+        }
+    }
+}
 
 INSTALLED_APPS = [#mrs
     
     "corsheaders",
+
+    'drf_yasg',
 
     'django.contrib.admin',
 
@@ -512,7 +522,7 @@ DJOSER = {
 
         # 'current_user':'account.serializers.UserSerializer',
 
-        # 'user_create_password_retype': 'account.serializers.UserCreatePasswordRetypeSerializer',#mrs
+        'user_create_password_retype': 'account.serializers.UserCreatePasswordRetypeSerializer',#mrs
 
         # 'password_reset_confirm_retype': 'account.serializers.PasswordResetConfirmRetypeSerializer',
 

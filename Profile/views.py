@@ -13,12 +13,12 @@ from rest_framework.response import Response
 from rest_framework import status
 from .models import Person , Trip
 
-#from .filters import ProductFilter#mrs
-#from rest_framework.filters import SearchFilter, OrderingFilter#mrs
-#from django_filters.rest_framework import DjangoFilterBackend$mrs
+from .filters import ProductFilter , TripFilter#mrs
+from rest_framework.filters import SearchFilter, OrderingFilter#mrs
+from django_filters.rest_framework import DjangoFilterBackend#mrs
 class PersonViewSet(CreateModelMixin , RetrieveModelMixin , UpdateModelMixin , GenericViewSet ,ListModelMixin):
- #   filterset_class = ProductFilter#mrs
-  #  filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]#mrs
+    filterset_class = ProductFilter#mrs
+    filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]#mrs
     
     queryset = Person.objects.all()
     serializer_class = PersonSerializer
@@ -44,4 +44,8 @@ class TripViewSet(CreateModelMixin , RetrieveModelMixin , UpdateModelMixin , Gen
     #TODO every one can get but not update
     queryset = Trip.objects.all()
     serializer_class = TripSerializer
+
+    filterset_class = TripFilter#mrs
+    filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]#mrs
+    search_fields = ['origin' , 'destination']
     
