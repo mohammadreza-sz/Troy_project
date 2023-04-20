@@ -7,7 +7,7 @@ from django.contrib.auth.models import AbstractUser #lesson 47
     #             raise ValueError('Users must have an email address')
     #         email = self.normalize_email(email)
     #         # normalize_email : BRayan@gmail.com --> brayan@gmail.com
-    #         user = self.model(email = email, name = name) 
+    #         user = self.model(email = email, name = name)
 
     #         user.set_password(password)
     #         user.save()
@@ -17,7 +17,9 @@ from django.contrib.auth.models import AbstractUser #lesson 47
 class User(AbstractUser):#mrs       #lesson 47 we can use this user model instead of default user which django use
     email = models.EmailField(unique=True)
     # USERNAME_FIELD = "username" by default
-    
+    REQUIRED_FIELDS = ["first_name" , "last_name" , "email"]
+
+
 
     # email = models.EmailField(max_length = 255, unique = True)
 
@@ -26,7 +28,7 @@ class User(AbstractUser):#mrs       #lesson 47 we can use this user model instea
 
     # USERNAME_FIELD = 'email'
     # REQIERED_FIELDS = ['name']
-    
+
     # def get_full_name(self):
     #     return self.name
     # def get_short_name(self):

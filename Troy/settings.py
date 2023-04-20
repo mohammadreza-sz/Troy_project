@@ -671,13 +671,13 @@ DATABASES = {
 
         'ENGINE': 'django.db.backends.mysql',
 
-        'NAME': 'troy',
+        'NAME': 'mrsz$TroyD',
 
-        'HOST': 'localhost',
+        'HOST': 'mrsz.mysql.pythonanywhere-services.com',
 
-        'USER': 'root',
+        'USER': 'mrsz',
 
-        'PASSWORD': 'newpassword',
+        'PASSWORD': 'newpasswordnewpassword',
 
         'PORT':'3306'
 
@@ -1181,7 +1181,7 @@ DJOSER = {
 
 
 
-        
+
 
 
 
@@ -1189,7 +1189,7 @@ DJOSER = {
 
 
 
-        'user_create_password_retype': 'account.serializers.UserCreatePasswordRetypeSerializer',#mrs
+        #'user_create_password_retype': 'account.serializers.UserCreatePasswordRetypeSerializer',#mrs
 
 
 
