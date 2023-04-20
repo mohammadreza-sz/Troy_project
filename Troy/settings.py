@@ -1169,7 +1169,7 @@ DJOSER = {
 
 
 
-        'current_user' : 'account.serializers.UserSerializer',
+        #'current_user' : 'account.serializers.UserSerializer',
 
 
 
