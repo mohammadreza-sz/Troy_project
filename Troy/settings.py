@@ -286,26 +286,6 @@ INSTALLED_APPS = [#mrs
 
 
 
-SWAGGER_SETTINGS = {#helen
-
-    'SECURITY_DEFINITIONS' : {
-
-        "Auth Token eg [Bearer (JWT) ]" : {
-
-            "type": "apiKey",
-
-            "name": "Authorization",
-
-            "in": "header"
-
-        }
-
-    }
-
-}
-
-
-
 
 
 
@@ -326,11 +306,11 @@ INTERNAL_IPS = [
 
 
 
-
+CORS_ALLOW_ALL_ORIGINS = True
 
 MIDDLEWARE = [
 
-     "corsheaders.middleware.CorsMiddleware",
+    "corsheaders.middleware.CorsMiddleware",
 
 
 
@@ -338,7 +318,7 @@ MIDDLEWARE = [
 
 
 
-    "django.middleware.common.CommonMiddleware",
+    #"django.middleware.common.CommonMiddleware",
 
 
 
@@ -687,44 +667,23 @@ WSGI_APPLICATION = 'Troy.wsgi.application'
 
 DATABASES = {
 
-
-
     'default': {
-
-
 
         'ENGINE': 'django.db.backends.mysql',
 
-
-
         'NAME': 'troy',
-
-
 
         'HOST': 'localhost',
 
-
-
         'USER': 'root',
-
-
 
         'PASSWORD': 'newpassword',
 
-
-
         'PORT':'3306'
-
-
 
     }
 
-
-
 }
-
-
-
 
 
 
@@ -1210,7 +1169,7 @@ DJOSER = {
 
 
 
-        # 'user' : 'account.serializers.UserCreateSerializer',
+        'current_user' : 'account.serializers.UserSerializer',
 
 
 
