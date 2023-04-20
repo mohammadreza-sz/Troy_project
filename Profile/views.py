@@ -4,16 +4,16 @@ from django.views import generic
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 from django.urls import reverse_lazy
 # from account.serializers import UserSerializer
-from .serializers import PersonSerializer , TripSerializer
+from .serializers import PersonSerializer , TripSerializer , CountrySerializer , CitySerializer
 from rest_framework.mixins import CreateModelMixin , ListModelMixin , RetrieveModelMixin , UpdateModelMixin , DestroyModelMixin
 from rest_framework.viewsets import ModelViewSet , GenericViewSet
 from rest_framework.decorators import action #lesson 60
 from rest_framework.permissions import IsAuthenticated#61
 from rest_framework.response import Response
 from rest_framework import status
-from .models import Person , Trip
+from .models import Person , Trip , Country , City
 
-from .filters import ProductFilter , TripFilter#mrs
+from .filters import ProductFilter , TripFilter ,CityFilter#, CountryFilter#mrs
 from rest_framework.filters import SearchFilter, OrderingFilter#mrs
 from django_filters.rest_framework import DjangoFilterBackend#mrs
 class PersonViewSet(CreateModelMixin , RetrieveModelMixin , UpdateModelMixin , GenericViewSet ,ListModelMixin):
@@ -39,13 +39,31 @@ class PersonViewSet(CreateModelMixin , RetrieveModelMixin , UpdateModelMixin , G
 
 #}helen
 
-
+from datetime import datetime#mrs
 class TripViewSet(CreateModelMixin , RetrieveModelMixin , UpdateModelMixin , GenericViewSet ,ListModelMixin , DestroyModelMixin):
     #TODO every one can get but not update
-    queryset = Trip.objects.all()
+    # queryset = Trip.objects.filter(begin_time__gt =datetime.now() ).all()#mrs change for greater than now
+    queryset = Trip.objects.all()#mrs change for greater than now
     serializer_class = TripSerializer
-
-    filterset_class = TripFilter#mrs
-    filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]#mrs
-    search_fields = ['origin' , 'destination']
     
+    filterset_class = TripFilter#mrs
+    # filterset_fields = ['destination_country']
+    filter_backends = [DjangoFilterBackend, OrderingFilter]#mrs
+    # search_fields = ['destination_country' , 'destination_city']#mrs
+    
+
+class CountryViewSet(ModelViewSet):#mrs
+    # filterset_class = CountryFilter#mrs
+    filter_backends = [ SearchFilter]#mrs
+    search_fields = ['country_name']
+    queryset = Country.objects.prefetch_related('city_set').all()
+    serializer_class = CountrySerializer
+
+
+class CityViewSet(ModelViewSet):#mrs
+    filterset_class = CityFilter#mrs
+    filter_backends = [ DjangoFilterBackend]#mrs
+    queryset = City.objects.all()
+    serializer_class = CitySerializer
+
+

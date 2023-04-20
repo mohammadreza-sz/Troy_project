@@ -1,6 +1,8 @@
 from dataclasses import fields
+from itertools import count
+from re import search
 from rest_framework import serializers
-from .models import Person , Trip
+from .models import Person , Trip , Country , City
 from django.conf import settings
 # from base64.fields import Base64ImageField #helen
 #helen{
@@ -46,10 +48,23 @@ class PersonSerializer(serializers.ModelSerializer):#lesson 59
     class Meta:
         model = Person
         fields =['birth_date' , 'country' , 'city' , 'gender',
-         'bio' , 'registration_date', 'profile_image']
+         'bio' , 'registration_date', 'profile_image' ]
+    # user = 
 #helen
 
 class TripSerializer(serializers.ModelSerializer):
     class Meta:
         model = Trip
-        fields = ['destination' , 'origin' , 'begin_time' , 'end_time' , 'capacity']
+        fields = ['destination_country' ,'destination_city' , 'origin_country',  'origin_city' , 'begin_time' , 'end_time' , 'capacity']
+
+class CitySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = City
+        fields = ['city_name' , 'country_id']
+
+
+class CountrySerializer(serializers.ModelSerializer):#mrs
+    class Meta:
+        model = Country
+        fields = ['country_name' , 'city_set' ]#] 'city_set__city_name']
+    city_set = CitySerializer(read_only = True , many = True)

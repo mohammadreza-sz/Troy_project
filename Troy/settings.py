@@ -522,7 +522,7 @@ DJOSER = {
 
         # 'current_user':'account.serializers.UserSerializer',
 
-        'user_create_password_retype': 'account.serializers.UserCreatePasswordRetypeSerializer',#mrs
+        # 'user_create_password_retype': 'account.serializers.UserCreatePasswordRetypeSerializer',#mrs
 
         # 'password_reset_confirm_retype': 'account.serializers.PasswordResetConfirmRetypeSerializer',
 

@@ -72,15 +72,31 @@ class Trip(models.Model):
 
     Tour_leader_id = models.ForeignKey(TourLeader, on_delete=models.SET_NULL, null= True)
 
-    destination = models.CharField(max_length = 30)
+    destination_country = models.CharField(max_length = 30 , null = True)
+    destination_city = models.CharField(max_length = 30 , null = True)
 
-    origin = models.CharField(max_length = 30)
+    origin_country = models.CharField(max_length = 30 , null = True)
+    origin_city = models.CharField(max_length = 30 , null = True)
 
-    begin_time = models.DateTimeField()
+    begin_time = models.DateTimeField(null = True)
 
-    end_time = models.DateTimeField()
+    end_time = models.DateTimeField(null = True)
 
-    capacity = models.IntegerField()
+    capacity = models.IntegerField(null = True)
+
+    image = models.ImageField(upload_to = "profile/imaged" , null = True)#mrs
+
+class Country(models.Model):#mrs
+    country_name = models.CharField(null = True , max_length=30)
+    def __str__(self) -> str:
+        return self.country_name
+
+
+class City(models.Model):#mrs
+    city_name = models.CharField(null = True, max_length=30)
+    country_id = models.ForeignKey(Country, on_delete=models.CASCADE , null = True)
+    def __str__(self) -> str:
+        return self.city_name
 
 class Post(models.Model):
 

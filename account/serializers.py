@@ -1,5 +1,6 @@
 from djoser.serializers import UserCreateSerializer as BaseUserCreateSerializer , UserSerializer as BaseUserSerializer ,UserCreatePasswordRetypeSerializer as BaseUserCreatePasswordRetypeSerializer
 from djoser.serializers import  PasswordResetConfirmRetypeSerializer as BasePasswordResetConfirmRetypeSerializer
+from django.conf import settings
     # 'activation': 'djoser.serializers.ActivationSerializer',
 
 from rest_framework import serializers
@@ -14,8 +15,9 @@ from rest_framework import serializers
 
 class UserSerializer(BaseUserSerializer):#mrs#59
     class Meta(BaseUserSerializer.Meta):
-        fields =['id' , 'email' , 'username' , 'first_name' , 'last_name']
-    username = serializers.CharField(max_length = 40)
+        # model = settings.AUTH_USER_MODEL
+        fields =['id'  , 'username','email' , 'first_name' , 'last_name']
+    
 
     # email = serializers.EmailField(read_only = True)#if want to avoid to modify its own email
 
@@ -23,6 +25,7 @@ class UserSerializer(BaseUserSerializer):#mrs#59
 class UserCreatePasswordRetypeSerializer(BaseUserCreatePasswordRetypeSerializer):#mrs
     
     class Meta(BaseUserCreatePasswordRetypeSerializer.Meta):
+        # model = settings.AUTH_USER_MODEL
         fields = ('id', 'email', 'username'  ,'first_name' , 'last_name', 'password')
         
     # email = serializers.EmailField(read_only = True)#if want to avoid to modify its own email

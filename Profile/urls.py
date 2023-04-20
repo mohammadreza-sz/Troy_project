@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import PersonViewSet, TripViewSet
+from .views import PersonViewSet, TripViewSet , CountryViewSet , CityViewSet
 from rest_framework_nested import routers
 
 # router = SimpleRouter()
@@ -8,7 +8,8 @@ router.register('Profile' , PersonViewSet)#end point => first argument without f
 # Person_router = routers.NestedSimpleRouter(router, 'Profile', lookup='product')#lesson 28 first ARG -> parent router second ARG -> parent prefix  third ARG -> 
 
 router.register("Trip" , TripViewSet)
-
+router.register("Country" , CountryViewSet)
+router.register("City" , CityViewSet)
 urlpatterns = router.urls#lesson 28
 # urlpatterns = router.urls + Person_router.urls #lesson 28
 
