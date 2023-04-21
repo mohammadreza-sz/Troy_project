@@ -19,7 +19,7 @@ from django_filters.rest_framework import DjangoFilterBackend#mrs
 class PersonViewSet(CreateModelMixin , RetrieveModelMixin , UpdateModelMixin , GenericViewSet ,ListModelMixin):
     filterset_class = ProductFilter#mrs
     filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]#mrs
-    
+
     queryset = Person.objects.all()
     serializer_class = PersonSerializer
     # permission_classes=[IsAuthenticated]#helen
@@ -45,12 +45,12 @@ class TripViewSet(CreateModelMixin , RetrieveModelMixin , UpdateModelMixin , Gen
     # queryset = Trip.objects.filter(begin_time__gt =datetime.now() ).all()#mrs change for greater than now
     queryset = Trip.objects.all()#mrs change for greater than now
     serializer_class = TripSerializer
-    
+
     filterset_class = TripFilter#mrs
     # filterset_fields = ['destination_country']
     filter_backends = [DjangoFilterBackend, OrderingFilter]#mrs
     # search_fields = ['destination_country' , 'destination_city']#mrs
-    
+
 
 class CountryViewSet(ModelViewSet):#mrs
     # filterset_class = CountryFilter#mrs
