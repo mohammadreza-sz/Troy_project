@@ -36,6 +36,11 @@ class PersonViewSet(CreateModelMixin , RetrieveModelMixin , UpdateModelMixin , G
             serializer.is_valid(raise_exception=True)
             serializer.save()
             return Response({'opreation':'succesfully update'} | serializer.data ,status =status.HTTP_200_OK)
+        elif request.method == 'PATCH   ':
+            serializer = PersonSerializer(person , data = request.data)
+            serializer.is_valid(raise_exception=True)
+            serializer.save()
+            return Response({'opreation':'succesfully update'} | serializer.data ,status =status.HTTP_200_OK)
 
 #}helen
 

@@ -1,3 +1,4 @@
+from urllib.request import Request
 from django.shortcuts import render
 from rest_framework.views import APIView #heln
 from rest_framework.generics import GenericAPIView #helen
@@ -157,3 +158,59 @@ class ConfirmPassword(APIView):#mrs
             return Response({"not allow":"bad"})
         else:
             return Response({"exception which not handeled :)"})
+
+from rest_framework.views import APIView
+from .models import User as baseuser , UserCode
+from django.core.mail import BadHeaderError, send_mail
+from django.core.mail import EmailMessage, get_connection
+from templated_mail.mail import BaseEmailMessage
+# from djoser.email
+import string    
+import random # define the random module  
+@api_view(['GET' , 'POST'])#by default argument => GET      lesson 15
+def SendEmailForgotPassword(request):
+    if request.method == "POST":
+        try:
+            user = User.objects.get(email = request.data["email"])
+        except :
+            return Response("your email does not exist")
+        subject = "Troy site"
+        S = 6  # number of characters in the string.  
+        # call random.choices() string module to find the string in Uppercase + numeric data.  
+        ran = ''.join(random.choices(string.ascii_uppercase + string.digits, k = S))    
+        code  = str(ran)
+        # print("The randomly generated string is : " + str(ran)) # print the random data  
+        message = ("hello new user , your code is "+code)
+        # from_email = request.POST.get("from_email", "")
+        # send_mail(subject , message ,"ali", [user.email] , connection=connection).send()
+        codeuser = UserCode(user_name = user.username ,code = code)
+        codeuser.save()
+
+        send_mail(subject,message, settings.EMAIL_HOST_USER, [user.email,])
+        return Response("email sent")
+        # template_name = "email/activation.html"
+    else:
+        return Response("by")
+
+@api_view(['GET' , 'POST'])#by default argument => GET      lesson 15
+def changepassword(request):
+    if request.method == "POST":
+        try:
+            exist_user_code = UserCode.objects.get(code = request.data["code"])
+        except:
+            return Response("your code is invalid")
+        try:
+            user = baseuser.objects.get(username = exist_user_code.user_name)
+        except:
+            return Response("user doesn't exist")
+        password = request.data["password"]
+        retype_password = request.data["retype_password"]
+        if password != retype_password:
+            return Response("password must equall retype_password")
+        else:
+            user.set_password(password)
+            user.save()
+            exist_user_code.delete()
+            return Response("your password changed")
+    else:
+        return Response("nothing")
