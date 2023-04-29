@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import PersonViewSet, TripViewSet , CountryViewSet , CityViewSet
+from .views import PersonViewSet, TripViewSet , CountryViewSet , CityViewSet , FavoriteView
 from rest_framework_nested import routers
 
 # router = SimpleRouter()
@@ -10,7 +10,12 @@ router.register('Profile' , PersonViewSet)#end point => first argument without f
 router.register("Trip" , TripViewSet)
 router.register("Country" , CountryViewSet)
 router.register("City" , CityViewSet)
-urlpatterns = router.urls#lesson 28
+router.register("favorite" , FavoriteView)
+urlpatterns=[
+    path("favorite/me/<int:id>" , FavoriteView.as_view())
+]
+urlpatterns += router.urls#lesson 28
+print(urlpatterns)
 # urlpatterns = router.urls + Person_router.urls #lesson 28
 
     # path('users/<int:id>/', UserUpdateView.as_view()),

@@ -171,7 +171,7 @@ import random # define the random module
 def SendEmailForgotPassword(request):
     if request.method == "POST":
         try:
-            user = User.objects.get(email = request.data["email"])
+            user = baseuser.objects.get(email = request.data["email"])
         except :
             return Response("your email does not exist")
         subject = "Troy site"

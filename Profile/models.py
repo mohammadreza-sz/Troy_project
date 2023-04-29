@@ -60,7 +60,8 @@ class Person(models.Model):
 
 
     profile_image = models.TextField(blank=True, null=True)#helen
-
+    def __str__(self):
+        return str(self.user_id)
 
 
 #helen {
@@ -76,7 +77,8 @@ class CommenPeople(models.Model):
 
 
     friend_id = models.ManyToManyField("CommenPeople")
-
+    def __str__(self) -> str:
+        return str(self.Id)
 
 
 
@@ -241,3 +243,6 @@ class Post_image(models.Model):
 
 
 
+class Favorite(models.Model):
+    favorite = models.TextField(null =True)
+    common_people_id = models.ForeignKey(CommenPeople , on_delete=models.CASCADE)
