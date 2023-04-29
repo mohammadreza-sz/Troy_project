@@ -15,6 +15,13 @@ from .models import Person
 from .filters import ProductFilter
 from rest_framework.filters import SearchFilter, OrderingFilter
 
+
+from rest_framework import viewsets
+
+from .serializers import TripSerializer
+from .models import Trip
+
+
 from django_filters.rest_framework import DjangoFilterBackend
 class PersonViewSet(CreateModelMixin , RetrieveModelMixin , UpdateModelMixin , GenericViewSet ,ListModelMixin):
     filterset_class = ProductFilter
@@ -35,5 +42,13 @@ class PersonViewSet(CreateModelMixin , RetrieveModelMixin , UpdateModelMixin , G
             serializer.is_valid(raise_exception=True)
             serializer.save()
             return Response({'opreation':'succesfully update'} | serializer.data ,status =status.HTTP_200_OK)
+
+
+# rate newww
+
+  # Get all trips in random order
+class TripViewSet(viewsets.ModelViewSet):
+      queryset = Trip.objects.all().order_by('?')
+      serializer_class = TripSerializer
 
 #}helen

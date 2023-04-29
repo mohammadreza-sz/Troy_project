@@ -1,5 +1,7 @@
 from rest_framework import serializers
 from .models import Person
+from .models import Trip
+
 from django.conf import settings
 # from base64.fields import Base64ImageField #helen
 #helen{
@@ -47,4 +49,13 @@ class PersonSerializer(serializers.ModelSerializer):#lesson 59
         fields =['birth_date' , 'country' , 'city' , 'gender',
         'bio' , 'registration_date', 'profile_image', 'first_name', 'last_name'] # helen modifiy it..
 #helen
+# rate newww
+# review it..
 
+class TripSerializer(serializers.ModelSerializer):
+      rating = serializers.StringRelatedField(many=True)
+      class Meta:
+        model= Trip
+        fields = ['id', 'destination', 'origin', 'begin_time', 'end_time',
+                  'capacity']
+#   , 'rating', 'caption', 'post_image'
