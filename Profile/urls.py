@@ -15,7 +15,7 @@ router.register("favorite" , FavoriteView)
     # path("favorite/me/<int:id>" , FavoriteView.as_view())
 # ]
 urlpatterns = router.urls#lesson 28
-print(urlpatterns)
+# print(urlpatterns)
 # urlpatterns = router.urls + Person_router.urls #lesson 28
 
     # path('users/<int:id>/', UserUpdateView.as_view()),

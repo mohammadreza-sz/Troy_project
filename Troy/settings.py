@@ -205,7 +205,7 @@ INSTALLED_APPS = [#mrs
 
 
     'Profile',
-
+    'Place',
 
 
 
@@ -467,7 +467,7 @@ DATABASES = {
 
 
 
-        'NAME': 'mrsz$TroyD',
+        'NAME': 'troy',
 
 
 
@@ -477,7 +477,7 @@ DATABASES = {
 
 
 
-        'HOST': 'mrsz.mysql.pythonanywhere-services.com',
+        'HOST': 'localhost',
 
 
 
@@ -487,7 +487,7 @@ DATABASES = {
 
 
 
-        'USER': 'mrsz',
+        'USER': 'root',
 
 
 
@@ -497,7 +497,7 @@ DATABASES = {
 
 
 
-        'PASSWORD': 'newpasswordnewpassword',
+        'PASSWORD': 'newpassword',
 
 
 
