@@ -11,10 +11,10 @@ router.register("Trip" , TripViewSet)
 router.register("Country" , CountryViewSet)
 router.register("City" , CityViewSet)
 router.register("favorite" , FavoriteView)
-urlpatterns=[
-    path("favorite/me/<int:id>" , FavoriteView.as_view())
-]
-urlpatterns += router.urls#lesson 28
+# urlpatterns=[
+    # path("favorite/me/<int:id>" , FavoriteView.as_view())
+# ]
+urlpatterns = router.urls#lesson 28
 print(urlpatterns)
 # urlpatterns = router.urls + Person_router.urls #lesson 28
 
