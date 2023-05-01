@@ -23,7 +23,8 @@ class PlaceSerializer(serializers.ModelSerializer):#mrs 59
         fields = [
                 # 'country_name',
                 # 'city_id__city_name',
-                'city_id',           
+                # 'city_id',           
+                'id',
                 'name',
                 'address',
                 'description',

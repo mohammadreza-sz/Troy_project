@@ -164,10 +164,11 @@ from .models import User as baseuser , UserCode
 from django.core.mail import BadHeaderError, send_mail
 from django.core.mail import EmailMessage, get_connection
 from templated_mail.mail import BaseEmailMessage
+from django.contrib.auth.hashers import check_password
 # from djoser.email
 import string    
 import random # define the random module  
-@api_view(['GET' , 'POST'])#by default argument => GET      lesson 15
+@api_view(['GET' , 'POST'])#15 by default argument => GET ******** must use permision here
 def SendEmailForgotPassword(request):
     if request.method == "POST":
         try:
@@ -187,12 +188,14 @@ def SendEmailForgotPassword(request):
         codeuser.save()
 
         send_mail(subject,message, settings.EMAIL_HOST_USER, [user.email,])
+        # print("\n \n \n your code is = ",code)
         return Response("email sent")
+
         # template_name = "email/activation.html"
     else:
         return Response("by")
 
-@api_view(['GET' , 'POST'])#by default argument => GET      lesson 15
+@api_view(['GET' , 'POST'])#mrs #by default argument => GET      lesson 15
 def changepassword(request):
     if request.method == "POST":
         try:
@@ -208,9 +211,13 @@ def changepassword(request):
         if password != retype_password:
             return Response("password must equall retype_password")
         else:
-            user.set_password(password)
-            user.save()
-            exist_user_code.delete()
-            return Response("your password changed")
+            old_password = user.password
+            if check_password(password , old_password):
+                return Response("old password and new password are same! :|")
+            else:
+                user.set_password(password)
+                user.save()
+                exist_user_code.delete()
+                return Response("your password changed")
     else:
         return Response("nothing")
