@@ -459,84 +459,21 @@ CHANNEL_LAYERS = {
 
 
 DATABASES = {
-
-
-
-
-
-
-
     'default': {
-
-
-
-
-
-
 
         'ENGINE': 'django.db.backends.mysql',
 
-
-
-
-
-
-
         'NAME': 'troy',
-
-
-
-
-
-
-
-
 
         'HOST': 'localhost',
 
-
-
-
-
-
-
-
-
         'USER': 'root',
-
-
-
-
-
-
-
-
 
         'PASSWORD': 'newpassword',
 
-
-
-
-
-
-
-
-
         'PORT':'3306'
 
-
-
-
-
-
-
     }
-
-
-
-
-
-
 
 }
 
@@ -567,405 +504,69 @@ DATABASES = {
 
 
 AUTH_PASSWORD_VALIDATORS = [
-
-
-
-
-
-
-
     {
-
-
-
-
-
-
 
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
 
-
-
-
-
-
-
     },
 
-
-
-
-
-
-
     {
-
-
-
-
-
-
-
         'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
-
-
-
-
-
-
-
     },
 
-
-
-
-
-
-
     {
-
-
-
-
-
-
-
         'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
-
-
-
-
-
-
-
     },
-
-
-
-
-
-
-
     {
-
-
-
-
-
-
 
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
-
-
-
-
-
-
-
     },
-
-
-
-
-
-
-
 ]
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 # Internationalization
-
-
-
-
-
-
 
 # https://docs.djangoproject.com/en/4.1/topics/i18n/
 
 
 
 
-
-
-
-
-
-
-
-
-
-
-
 LANGUAGE_CODE = 'en-us'
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 TIME_ZONE = 'UTC'
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 USE_I18N = True
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 USE_TZ = True
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 # Static files (CSS, JavaScript, Images)
 
-
-
-
-
-
-
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+import os
 STATIC_URL = 'static/'
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'static')
+]
 import os#4
-
-
-
-
-
-
 
 MEDIA_URL = "/media/"#4  endpoint in url we can access to it
 
-
-
-
-
-
-
 MEDIA_ROOT =os.path.join(BASE_DIR , 'media') #4 must tell django where we save media
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 # Default primary key field type
 
-
-
-
-
-
-
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 DJOSER = {
 
 
-
-
-
-
-
     'PASSWORD_RESET_CONFIRM_RETYPE':True,#mrs
-
-
-
     #helne
-
-
-
-
-
-
-
     # 'LOGIN_FIELD' : 'email',
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
     # now djoser know that we use email for login.
-
-
-
     'USER_CREATE_PASSWORD_RETYPE' : True,
-
-
-
-
-
-
-
     # 'USERNAME_CHANGED_EMAIL_CONFIRMATION' : True,
-
-
-
-
-
-
-
     # 'PASSWORD_CHANGED_EMAIL_CONFIRMATION' : True,
 
 
@@ -1110,84 +711,13 @@ DJOSER = {
 
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 # AUTH_USER_MODEL = 'accounts.UserAccount'
-
-
-
-
-
-
-
 # }helen
-
-
-
-
-
-
-
 AUTH_USER_MODEL = 'account.user' #mrs #47
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 # email account = frnz.azad2002@gmail.com
-
-
-
-
-
-
-
 # app passsword = qazwsx
-
-
-
-
-
-
-
 #helen{
-
-
-
-
-
-
-
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
 EMAIL_HOST = 'smtp.gmail.com'
