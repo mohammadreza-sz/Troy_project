@@ -141,6 +141,7 @@ SWAGGER_SETTINGS = {
 INSTALLED_APPS = [#mrs
 
 
+    'daphne',#must be top to prevent error
 
 
 
@@ -205,7 +206,7 @@ INSTALLED_APPS = [#mrs
 
 
     'Profile',
-
+    'chat',
 
 
 
@@ -368,7 +369,7 @@ TEMPLATES = [
 
 
 
-        'DIRS': [],
+        'DIRS': [BASE_DIR/'templates'],
 
 
 
@@ -420,7 +421,21 @@ TEMPLATES = [
 
 
 
+# WSGI_APPLICATION = 'Troy.wsgi.application'
 WSGI_APPLICATION = 'Troy.wsgi.application'
+
+ASGI_APPLICATION = "Troy.asgi.application"
+
+CHANNEL_LAYERS = {
+    "default": {
+        # "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "BACKEND":"channels.layers.InMemoryChannelLayer"
+        # "CONFIG": {
+        #     "hosts": [("127.0.0.1", 6379)],
+        # },
+    },
+}
+
 
 
 
@@ -467,7 +482,7 @@ DATABASES = {
 
 
 
-        'NAME': 'mrsz$TroyD',
+        'NAME': 'troy',
 
 
 
@@ -477,7 +492,7 @@ DATABASES = {
 
 
 
-        'HOST': 'mrsz.mysql.pythonanywhere-services.com',
+        'HOST': 'localhost',
 
 
 
@@ -487,7 +502,7 @@ DATABASES = {
 
 
 
-        'USER': 'mrsz',
+        'USER': 'root',
 
 
 
@@ -497,7 +512,7 @@ DATABASES = {
 
 
 
-        'PASSWORD': 'newpasswordnewpassword',
+        'PASSWORD': 'newpassword',
 
 
 
