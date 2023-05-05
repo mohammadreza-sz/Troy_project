@@ -12,6 +12,7 @@ class ChatConsumer(WebsocketConsumer):
     def fetch_messages(self, data):
         messages = Message.last_30_messages()
         content = {
+            'cammand' : 'messages',
             'messages' : self.messages_to_json(messages)
         }
         self.send_message(content)
@@ -37,6 +38,7 @@ class ChatConsumer(WebsocketConsumer):
 
     def message_to_json(self, message):
         return {
+            'id' : message.id,
             'author': message.author.username,
             'content' : message.content,
             'timestamp' : str(message.timestamp)
@@ -59,7 +61,6 @@ class ChatConsumer(WebsocketConsumer):
         # user = self.scope["user"]        
         # if user.username != "mrs2":
         self.accept()
-        
 
     def disconnect(self, close_code):
         # Leave room group
@@ -84,6 +85,7 @@ class ChatConsumer(WebsocketConsumer):
 
     def send_message(self, message):
         self.send(text_data=json.dumps(message))
+
     def chat_message(self, event):
         message = event["message"]
         # Send message to WebSocket

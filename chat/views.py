@@ -1,13 +1,15 @@
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 # from chat.models import Room, Message
+from django.utils.safestring import mark_safe
+import json
 from django.http import HttpResponse, JsonResponse
 
 # def home(request):
 #     return render(request, 'home.html')
 
 def index(request):
-    return render(request, "chat/index.html")
+    return render(request, 'chat/index.html', {})
 
 @login_required
 def room(request, room_name):
