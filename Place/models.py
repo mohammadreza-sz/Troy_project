@@ -11,7 +11,8 @@ class Place(models.Model):#mrs
     description =models.TextField(null =True )
     lan = models.FloatField(null = True)
     lon = models.FloatField(null = True)
-
+    def __str__(self) -> str:
+        return self.name
 
 class PlaceImage(models.Model):#mrs
     place_id = models.ForeignKey(Place , on_delete=models.CASCADE , null = True)

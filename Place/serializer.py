@@ -10,11 +10,11 @@ class PlaceImageSerializer(serializers.ModelSerializer):#mrs
 
 class PlaceSerializer(serializers.ModelSerializer):#mrs 59
     # placeimage_set = PlaceImageSerializer(many = True , read_only = True)
-    placeimage_set = serializers.SlugRelatedField(
-        many=True,
-        read_only=True,
-        slug_field='image'
-    )
+    # placeimage_set = serializers.SlugRelatedField(
+    #     many=True,
+    #     read_only=True,
+    #     slug_field='image'
+    # )
     # city = CitySerializer()
     # city_id = serializers.CharField(max_length = 50)
     # country_id= serializers.CharField(max_length = 50)
@@ -30,7 +30,33 @@ class PlaceSerializer(serializers.ModelSerializer):#mrs 59
                 'description',
                 'lan',
                 'lon',
-                'placeimage_set',
+                # 'placeimage',
             ]
-        
+
+
+class PlaceFrontSerializer(serializers.ModelSerializer):#mrs 59
+    image = PlaceImageSerializer()
+    # image = serializers.SlugRelatedField(
+    #     many=True,
+    #     read_only=True,
+    #     slug_field='image'
+    # )
+    # city = CitySerializer()
+    # city_id = serializers.CharField(max_length = 50)
+    # country_id= serializers.CharField(max_length = 50)
+    class Meta:
+        model = Place
+        fields = [
+                # 'country_name',
+                # 'city_id__city_name',
+                # 'city_id',           
+                'id',
+                'name',
+                'address',
+                'description',
+                'lan',
+                'lon',
+                'image',
+            ]
+
 
