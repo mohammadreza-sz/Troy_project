@@ -1,5 +1,5 @@
 from django.contrib import admin
-from django.urls import path ,include
+from django.urls import path, re_path ,include
 from django.conf import settings#4 mrs
 from django.conf.urls.static import static#4 mrs
 from djoser.urls import jwt
@@ -33,16 +33,18 @@ urlpatterns = [
    #  path('rest-auth/registration/', include('rest_auth.registration.urls')),
    # # } helen
 
-    #path('activate/', include('account.urls')),#mrs
-    #path('password/' , include('account.urls')),#mrs
-    path('auth/', include('djoser.urls')),#mrs
-    path('auth/', include('djoser.urls.jwt')),#mrs
-    path('__debug__/', include('debug_toolbar.urls')),#mrs
-    path('', include('Profile.urls')),#mrs
-    path('swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),#mrs
-    path('redoc', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),#mrs
-    path('account/', include('account.urls')),
-    path('chat/' , include('chat.urls', namespace='chat')),
+   #path('activate/', include('account.urls')),#mrs
+   #path('password/' , include('account.urls')),#mrs
+   path('auth/', include('djoser.urls')),#mrs
+   path('auth/', include('djoser.urls.jwt')),#mrs
+   path('__debug__/', include('debug_toolbar.urls')),#mrs
+   path('', include('Profile.urls')),#mrs
+   path('swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),#mrs
+   path('redoc', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),#mrs
+   path('account/', include('account.urls')),
+   #  path('chat/' , include('chat.urls', name='chat')),
+   path('chat/' , include('chat.urls')),
+
 ]
 if settings.DEBUG:#4 mrs
     urlpatterns += static(settings.MEDIA_URL,
