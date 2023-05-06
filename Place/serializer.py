@@ -19,6 +19,8 @@ class PlaceSerializer(serializers.ModelSerializer):#mrs 59
     # city = CitySerializer()
     # city_id = serializers.CharField(max_length = 50)
     # country_id= serializers.CharField(max_length = 50)
+    avg_rate = serializers.ReadOnlyField()
+
     class Meta:
         model = Place
         fields = [
@@ -31,8 +33,10 @@ class PlaceSerializer(serializers.ModelSerializer):#mrs 59
                 'lan',
                 'lon',
                 'placeimage_set',
-                'rate',
-                'rate_no',
+                # 'rate',
+                # 'rate_no',
+                'avg_rate',
+                
             ]
         read_only_fields = ['rate', 'rate_no']
         

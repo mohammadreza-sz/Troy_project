@@ -20,12 +20,15 @@ class Place(models.Model):#mrs
     rate = models.DecimalField(
         max_digits=2, decimal_places=1, blank=True)
     rate_no = models.IntegerField(default=0, blank=True)
-    def update_rate(self):
-        rates = self.rates.all()
-        self.rate_no = len(rates)
-        self.rate = round(sum(
-            [rate_obj.rate for rate_obj in rates]) / self.rate_no, 1)
-        self.save()
+    # def update_rate(self):
+    #     rates = Rate.objects.all()
+    #     self.rate_no = len(rates)
+    #     self.rate = round(sum(
+    #         [rates.rate for rates in rates]) / self.rate_no, 1)
+            # [for rate in rates.rate])/self.rate_no , 1)
+        # self.rate = sum( [for i in rates.rate] ) / self.rate_no
+
+        # self.save()
     def __str__(self) -> str:
         return self.name
 
