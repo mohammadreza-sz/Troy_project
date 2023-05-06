@@ -1,4 +1,5 @@
 from distutils import text_file
+from unicodedata import name
 from django.db import models
 from Profile.models import City#mrs
 # from Troy.settings import AUTH_USER_MODEL
@@ -17,7 +18,7 @@ class Place(models.Model):#mrs
     lan = models.FloatField(null = True)
     lon = models.FloatField(null = True)
     rate = models.DecimalField(
-        max_digits=2, decimal_places=1, default=5, blank=True)
+        max_digits=2, decimal_places=1, blank=True)
     rate_no = models.IntegerField(default=0, blank=True)
     def update_rate(self):
         rates = self.rates.all()
@@ -25,6 +26,8 @@ class Place(models.Model):#mrs
         self.rate = round(sum(
             [rate_obj.rate for rate_obj in rates]) / self.rate_no, 1)
         self.save()
+    def __str__(self) -> str:
+        return self.name
 
 class PlaceImage(models.Model):#mrs
     place_id = models.ForeignKey(Place , on_delete=models.CASCADE , null = True)

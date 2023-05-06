@@ -1,6 +1,7 @@
 
 # from ..Profile.serializers import CitySerializer
-from .models import Place , PlaceImage
+from dataclasses import fields
+from .models import Place , PlaceImage, Rate
 from rest_framework import serializers
 class PlaceImageSerializer(serializers.ModelSerializer):#mrs
     class Meta:
@@ -33,6 +34,14 @@ class PlaceSerializer(serializers.ModelSerializer):#mrs 59
                 'rate',
                 'rate_no',
             ]
-        # read_only_fields = ['rate', 'rate_no']
+        read_only_fields = ['rate', 'rate_no']
         
 
+class RateSerializer(serializers.ModelSerializer):#mrs 59
+    class Meta:
+        model = Rate
+        fields = [
+            'place',
+            'user',
+            'rate'
+        ]
