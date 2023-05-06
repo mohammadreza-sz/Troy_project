@@ -48,7 +48,9 @@ class PlaceImageViewSet(ModelViewSet):#mrs
 
 class RateViewSet(ModelViewSet):
 
-    queryset = Rate.objects.all()
+    # queryset = Rate.objects.all()
+    def get_queryset(self):
+        return Rate.objects.filter(place = self.kwargs['Place_pk'])
 
     serializer_class = RateSerializer
 
