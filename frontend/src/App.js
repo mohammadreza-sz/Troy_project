@@ -6,6 +6,7 @@ import BaseRouter from './routes';
 import Sidepanel from './containers/Sidepanel';
 import Profile from './containers/Profile';
 
+
 class App extends React.Component {
 
     componentDidMount() {

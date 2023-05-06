@@ -20,6 +20,12 @@ schema_view = get_schema_view(
 )
 urlpatterns = [
     path('admin/', admin.site.urls),
+   #  helen{
+   path('api-auth/', include('rest_framework.urls')), 
+    path('rest-auth/', include('rest_auth.urls')),
+    path('rest-auth/registration/', include('rest_auth.registration.urls')),
+   # } helen
+
     #path('activate/', include('account.urls')),#mrs
     #path('password/' , include('account.urls')),#mrs
     path('auth/', include('djoser.urls')),#mrs
@@ -29,7 +35,7 @@ urlpatterns = [
     path('swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),#mrs
     path('redoc', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),#mrs
     path('account/', include('account.urls')),
-    path('chat/' , include('chat.urls', namespace='chat')),
+    path('chat/' , include('chat.api.urls', namespace='chat')),
 ]
 if settings.DEBUG:#4 mrs
     urlpatterns += static(settings.MEDIA_URL,

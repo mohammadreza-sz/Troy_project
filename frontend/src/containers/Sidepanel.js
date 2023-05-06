@@ -1,6 +1,8 @@
 import React from 'react';
+import axios from 'axios';
 import { Spin, Icon } from 'antd';
 import { connect } from 'react-redux';
+import Contact from '../components/Contact';
 import * as actions from '../store/actions/auth';
 
 const antIcon = <Icon type="loading" style={{ fontSize: 24 }} spin />;
@@ -9,7 +11,29 @@ const antIcon = <Icon type="loading" style={{ fontSize: 24 }} spin />;
 class Sidepanel extends React.Component {
 
     state = { 
+        chats: [],
         loginForm: true,
+    }
+
+    componentWillReceiveProps(newProps) {
+        if (newProps.token !== null && newProps.username !== null) {
+            this.getUserChats(newProps.token, newProps.username);
+        }
+    }
+
+    componentDidMount() {
+        if (this.props.token !== null && this.props.username !== null) {
+            this.getUserChats(this.props.token, this.props.username);
+        }
+    }
+
+    getUserChats = (token, username) => {
+        axios.defaults.headers = {
+            "Content-Type": "application/json",
+            Authorization: `Token ${token}`
+        };
+        axios.get(`http://127.0.0.1:8000/chat/?username=${username}`)
+        .then(res => this.setState({ chats: res.data }));
     }
 
     changeForm = () => {
@@ -34,6 +58,16 @@ class Sidepanel extends React.Component {
     }
 
     render() {
+        const activeChats = this.state.chats.map(c => {
+            return (
+                <Contact 
+                    key={c.id}
+                    name="Harvey Specter" 
+                    picURL="http://emilcarlsson.se/assets/louislitt.png"
+                    status="busy"
+                    chatURL={`/${c.id}`} />
+            )
+        })
         return (
             <div id="sidepanel">
             <div id="profile">
@@ -98,26 +132,17 @@ class Sidepanel extends React.Component {
             </div>
             <div id="contacts">
                 <ul>
-                <li className="contact">
-                    <div className="wrap">
-                    <span className="contact-status online"></span>
-                    <img src="http://emilcarlsson.se/assets/louislitt.png" alt="" />
-                    <div className="meta">
-                        <p className="name">Louis Litt</p>
-                        <p className="preview">You just got LITT up, Mike.</p>
-                    </div>
-                    </div>
-                </li>
-                <li className="contact active">
-                    <div className="wrap">
-                    <span className="contact-status busy"></span>
-                    <img src="http://emilcarlsson.se/assets/harveyspecter.png" alt="" />
-                    <div className="meta">
-                        <p className="name">Harvey Specter</p>
-                        <p className="preview">Wrong. You take the gun, or you pull out a bigger one. Or, you call their bluff. Or, you do any one of a hundred and htmlForty six other things.</p>
-                    </div>
-                    </div>
-                </li>
+                    {activeChats}
+                    {/* <Contact 
+                        name="Louis Litt" 
+                        picURL="http://emilcarlsson.se/assets/harveyspecter.png"
+                        status="online"
+                        chatURL="/louis" /> */}
+                    {/* <Contact 
+                        name="Harvey Specter" 
+                        picURL="http://emilcarlsson.se/assets/louislitt.png"
+                        status="busy"
+                        chatURL="/harvey" /> */}
                 </ul>
             </div>
             <div id="bottom-bar">
@@ -132,7 +157,9 @@ class Sidepanel extends React.Component {
 const mapStateToProps = state => {
     return {
         isAuthenticated: state.token !== null,
-        loading: state.loading
+        loading: state.loading,
+        token: state.token,
+        username: state.username
     }
 }
 
