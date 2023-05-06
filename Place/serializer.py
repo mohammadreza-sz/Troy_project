@@ -30,6 +30,9 @@ class PlaceSerializer(serializers.ModelSerializer):#mrs 59
                 'lan',
                 'lon',
                 'placeimage_set',
+                'rate',
+                'rate_no',
             ]
+        # read_only_fields = ['rate', 'rate_no']
         
 

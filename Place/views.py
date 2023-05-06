@@ -8,7 +8,7 @@ class PlaceViewSet(ModelViewSet):#mrs
     # queryset = Place.objects.prefetch_related("placeimage_set").select_related("city_id").all()
     queryset = Place.objects.all()
     serializer_class = PlaceSerializer
-
+    ordering_fields = ['-rate']
 
 class PlaceImageViewSet(ModelViewSet):#mrs
     queryset = PlaceImage.objects.all()
