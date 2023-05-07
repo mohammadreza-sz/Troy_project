@@ -20,6 +20,16 @@ class Chat(models.Model):
     room_name = models.CharField(max_length=250)
     sender_type= models.CharField(max_length=6, choices=SenderType.choices, null=True)
 
+# class Room(models.Model):
+#     place = models.ForeignKey(
+#         Place, on_delete=models.CASCADE, related_name='rooms')
+#     room_type = models.CharField(max_length=255) #mishe choices gozasht
+#     capacity = models.IntegerField()
+#     price = models.DecimalField(max_digits=10, decimal_places=3)
+
+#     def __str__(self):
+#         return f"{self.place.title} {self.room_type}"
+
 
 
 # we must modify it...

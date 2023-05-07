@@ -5,7 +5,6 @@ from .models import Chat
 from Troy.settings import AUTH_USER_MODEL
 # from .view import get_last_30_messages, get_user_contact, get_current_chat
 User = AUTH_USER_MODEL
-# User = get_user_model()
 
 # helen changes Async to async_to_sync
 class ChatConsumer(WebsocketConsumer):
