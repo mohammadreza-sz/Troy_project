@@ -41,18 +41,17 @@ class PlaceSerializer(serializers.ModelSerializer):#mrs 59
     # country_id= serializers.CharField(max_length = 50)
 
     avg_rate = serializers.ReadOnlyField()
-
-
-
+    city_name = serializers.SerializerMethodField()
+    country_name = serializers.SerializerMethodField()
     class Meta:
 
         model = Place
 
         fields = [
 
-                # 'country_name',
+                'country_name',
 
-                # 'city_id__city_name',
+                'city_name',
 
                 # 'city_id',           
 
@@ -77,7 +76,10 @@ class PlaceSerializer(serializers.ModelSerializer):#mrs 59
 
             ]
 
-
+    def get_city_name(self, obj):
+        return obj.city_id.city_name
+    def get_country_name(self, obj):
+        return obj.city_id.country_id.country_name
 
 
 

@@ -1,5 +1,6 @@
 from django.contrib import admin
-# from Places.models import *
+from Place.models import *
 
 # Register your models here.
-# admin.site.register(Rate)
+admin.site.register(Rate)
+admin.site.register(Place)
