@@ -26,7 +26,8 @@ urlpatterns = [
 
     path('specific_info_of_place_front/<str:country_name>/<str:city_name>' ,views.get_specific_place),#mrs
 
-    path('placeimage/<int:place_idd>' , views.get_specific_placeimage),
+    path('specific_placeimage/<int:place_idd>' , views.get_specific_placeimage),
+    # path('placeimage/<int:place_idd>' , views.PlaceViewSet.as_view({"get":"g"})),
 ]
 
 
@@ -38,7 +39,7 @@ Place_router.register('Rate',views.RateViewSet, basename='Place-Rate')#lesson 28
 
 
 
-urlpatterns = router.urls + Place_router.urls #lesson 28
+urlpatterns += router.urls + Place_router.urls #lesson 28
 
 
 

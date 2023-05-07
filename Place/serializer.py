@@ -80,6 +80,7 @@ class PlaceSerializer(serializers.ModelSerializer):#mrs 59
         return obj.city_id.city_name
     def get_country_name(self, obj):
         return obj.city_id.country_id.country_name
+    
 
 
 

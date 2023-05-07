@@ -3,7 +3,7 @@ from django.shortcuts import render
 from .models import Place , PlaceImage, Rate
 
 from .serializer import PlaceImageSerializer, PlaceSerializer, RateSerializer
-
+from django.http import JsonResponse
 
 
 from rest_framework.decorators import api_view
@@ -32,18 +32,24 @@ class PlaceViewSet(ModelViewSet):#mrs
     ordering_fields = ['-rate']
 
 from Place import serializer #mrs
-
-
-
-
-
+import base64
+from django.core.files.base import ContentFile
 
 class PlaceImageViewSet(ModelViewSet):#mrs
 
     queryset = PlaceImage.objects.all()
 
     serializer_class = PlaceImageSerializer
+    # def post(self, request , *args , **kwargs):
+    #     img_b64 = request.post.get('image')
+    #     img_data = base64.b64decode(img_b64)
+    #     file_name = "my_image.png"
+    #     pl_id = request.post.get('place_id')
+    #     placeimage = PlaceImage.objects.create(place_id=pl_id)
+    #     placeimage.image.save(filename , ContentFile(img_data))
+    #     placeimage.save()
 
+    # def get
 
 
 class RateViewSet(ModelViewSet):
@@ -66,11 +72,13 @@ class RateViewSet(ModelViewSet):
 
 def get_specific_placeimage(request , place_idd):
 
-    place_image = PlaceImage.objects.filter(place_id = place_idd).values("place_id" , "image")
+    place_image = PlaceImage.objects.filter(place_id = place_idd)
+    # print(place_image)
 
-    print(place_image)
-
-    return Response(place_image)
+    images = []
+    for image in place_image:
+        images.append({"place_image":image.image , "place_id":image.place_id.id})
+    return JsonResponse({"images": images})
 
 
 

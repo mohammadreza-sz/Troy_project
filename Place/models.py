@@ -38,7 +38,7 @@ class Place(models.Model):#mrs
 
     rate = models.DecimalField(
 
-        max_digits=2, decimal_places=1, blank=True)
+        max_digits=2, default=0, decimal_places=1, blank=True)
 
     rate_no = models.IntegerField(default=0, blank=True)
 
@@ -69,9 +69,6 @@ class PlaceImage(models.Model):#mrs
     place_id = models.ForeignKey(Place , on_delete=models.CASCADE , null = True)
 
     image = models.TextField(null = True)
-
-
-
 
 
 class Rate(models.Model):
