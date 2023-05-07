@@ -1,27 +1,15 @@
 from django.shortcuts import render
-
 from .models import Place , PlaceImage, Rate
-
 from .serializer import PlaceImageSerializer, PlaceSerializer, RateSerializer
-
-
-
 from rest_framework.decorators import api_view
-
 from rest_framework.response import Response
-
-
-
 from rest_framework.viewsets import ModelViewSet
-
-
-
 from rest_framework.viewsets import ModelViewSet #mrs
+from rest_framework.permissions import IsAuthenticated#mrs  #61
 
 from django.db.models import Avg
 
-class PlaceViewSet(ModelViewSet):#mrs
-
+class PlaceViewSet(ModelViewSet):#mrs 
     # queryset = Place.objects.prefetch_related("placeimage_set").select_related("city_id").all()   *********************
 
     # queryset = Place.objects.all()
@@ -47,11 +35,14 @@ class PlaceImageViewSet(ModelViewSet):#mrs
 
 
 class RateViewSet(ModelViewSet):
+    permission_classes=[IsAuthenticated]#mrs
 
     # queryset = Rate.objects.all()
     def get_queryset(self):
         return Rate.objects.filter(place = self.kwargs['Place_pk'])
 
+    def get_serializer_context(self ):
+        return {'user_id':self.request.user}
     serializer_class = RateSerializer
 
     ordering_fields = ['-rate']
@@ -81,16 +72,6 @@ from django.db.models import F
 @api_view(['GET'])#mrs     #by default argument => GET  15
 
 def get_specific_place(request ,place_id = None, country_name = None , city_name = None):
-
-    # place = Place.objects.select_related('city_id' , 'country_id' ).prefetch_related('placeimage_set').annotate(
-
-    #     country =F('city_id__country_id__country_name') ,
-
-    #     city = F('city_id__city_name') ,
-
-    #     image = F('placeimage__image')
-
-    # ).values("id" ,"name","country", "city","address" , "description","lan", "lon" , "image")
 
     place = Place.objects.select_related('city_id' , 'country_id' ).annotate(
 
@@ -127,4 +108,14 @@ def get_specific_place(request ,place_id = None, country_name = None , city_name
     # return Response(serializers.data)
 
     return Response(place)
+
+    # place = Place.objects.select_related('city_id' , 'country_id' ).prefetch_related('placeimage_set').annotate(
+
+    #     country =F('city_id__country_id__country_name') ,
+
+    #     city = F('city_id__city_name') ,
+
+    #     image = F('placeimage__image')
+
+    # ).values("id" ,"name","country", "city","address" , "description","lan", "lon" , "image")
 

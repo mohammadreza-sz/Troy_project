@@ -25,7 +25,7 @@ class PersonViewSet(CreateModelMixin , RetrieveModelMixin , UpdateModelMixin , G
     serializer_class = PersonSerializer
     # permission_classes=[IsAuthenticated]#helen
     #lookup_field = 'id' #helen
-    @action(detail=False , methods=['GET' , 'PUT'])# , permission_classes=[IsAuthenticated])#lesson 60 , permi... -> 61
+    @action(detail=False , methods=['GET' , 'PUT'])#mrs , permission_classes=[IsAuthenticated])#lesson 60 , permi... -> 61
     def me(self:Person, request):#lesson 60
         (person , created) = Person.objects.get_or_create(id = request.user.id)#********** equal must specify with one '=' not '=='**********
         # person = Person.objects.get(User_id = request.user.id)#********** equal must specify with one '=' not '=='**********
