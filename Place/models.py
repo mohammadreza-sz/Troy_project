@@ -63,12 +63,24 @@ class Place(models.Model):#mrs
         return self.name
 
 
+import base64
+
 
 class PlaceImage(models.Model):#mrs
 
     place_id = models.ForeignKey(Place , on_delete=models.CASCADE , null = True)
+    image = models.TextField(null=True)
 
-    image = models.TextField(null = True)
+    # image = models.BinaryField(null = True)
+    # def save_image_to_field(self, image_path):
+    #     with open(image_path, "rb") as f:
+    #         image_bytes = f.read()
+    #         encoded_image_data = base64.b64encode(image_bytes)
+    #         self.image_data = encoded_image_data
+
+    # def get_image_as_base64(self):
+    #     # return self.image_data.decode("utf-8")
+    #     return self.image_data
 
 
 class Rate(models.Model):

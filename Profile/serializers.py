@@ -168,7 +168,7 @@ class TripSerializer(serializers.ModelSerializer):
 
         model = Trip
 
-        fields = ['destination_country' ,'destination_city' , 'origin_country',  'origin_city' , 'begin_time' , 'end_time' , 'capacity']
+        fields = ['id' , 'destination_country' ,'destination_city' , 'origin_country',  'origin_city' , 'begin_time' , 'end_time' , 'capacity']
 
 
 

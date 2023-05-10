@@ -133,50 +133,6 @@ class TourLeader(models.Model):
 
 
 
-
-
-
-
-class Trip(models.Model):
-
-
-
-    # vali dar halate koli dar Trip ha zakhire shode bashand...
-
-
-
-    Tour_leader_id = models.ForeignKey(TourLeader, on_delete=models.SET_NULL, null= True)
-
-
-
-    destination_country = models.CharField(max_length = 30 , null = True)
-
-    destination_city = models.CharField(max_length = 30 , null = True)
-
-
-
-    origin_country = models.CharField(max_length = 30 , null = True)
-
-    origin_city = models.CharField(max_length = 30 , null = True)
-
-
-
-    begin_time = models.DateTimeField(null = True)
-
-
-
-    end_time = models.DateTimeField(null = True)
-
-
-
-    capacity = models.IntegerField(null = True)
-
-
-
-    image = models.ImageField(upload_to = "profile/imaged" , null = True)#mrs
-
-
-
 class Country(models.Model):#mrs
 
     country_name = models.CharField(null = True , max_length=30)
@@ -198,6 +154,45 @@ class City(models.Model):#mrs
     def __str__(self) -> str:
 
         return self.city_name
+
+
+class Trip(models.Model):
+
+
+
+    # vali dar halate koli dar Trip ha zakhire shode bashand...
+
+
+
+    Tour_leader_id = models.ForeignKey(TourLeader, on_delete=models.SET_NULL, null= True)
+
+
+
+    destination_country = models.ForeignKey(Country, null = True)
+
+    destination_city = models.ForeignKey(City, null = True)
+
+
+
+    origin_country = models.ForeignKey(Country, null = True)
+
+    origin_city = models.ForeignKey(City, null = True)
+
+
+
+    begin_time = models.DateTimeField(null = True)
+
+
+
+    end_time = models.DateTimeField(null = True)
+
+
+
+    capacity = models.IntegerField(null = True)
+
+
+
+    image = models.ImageField(upload_to = "profile/imaged" , null = True)#mrs
 
 
 
