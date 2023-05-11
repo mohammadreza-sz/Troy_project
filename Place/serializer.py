@@ -1,5 +1,5 @@
 from dataclasses import fields
-from .models import Place , PlaceImage, Rate
+from .models import *
 from rest_framework import serializers
 class PlaceImageSerializer(serializers.ModelSerializer):#mrs
     class Meta:
@@ -16,10 +16,10 @@ class PlaceSerializer(serializers.ModelSerializer):#mrs 59
     # city = CitySerializer()
     # city_id = serializers.CharField(max_length = 50)
     # country_id= serializers.CharField(max_length = 50)
-    avg_rate = serializers.ReadOnlyField()
+    # avg_rate = serializers.ReadOnlyField()
     rate_no = serializers.ReadOnlyField()
     comment_number = serializers.ReadOnlyField()
-    city_name = serializers.SerializerMet
+    city_name = serializers.SerializerMethodField()
     city_name = serializers.SerializerMethodField()
     country_name = serializers.SerializerMethodField()
 
@@ -28,21 +28,21 @@ class PlaceSerializer(serializers.ModelSerializer):#mrs 59
         fields = "__all__"  
         read_only_fields = ['avg_rate', 'comment_number', 'rate_no','user']
 
-        fields = [
-                'country_name',
-                'city_name',
-                # 'city_id',           
-                'id',
-                'name',
-                'address',
-                'description',
-                'lan',
-                'lon',
-                # 'placeimage',
-                'rate_no',
-                'avg_rate',
-                'comment_number',
-            ]
+        # fields = [
+        #         'country_name',
+        #         'city_name',
+        #         # 'city_id',           
+        #         'id',
+        #         'name',
+        #         'address',
+        #         'description',
+        #         'lan',
+        #         'lon',
+        #         # 'placeimage',
+        #         'rate_no',
+        #         'avg_rate',
+        #         'comment_number',
+        #     ]
 
     def get_city_name(self, obj):
         return obj.city_id.city_name
