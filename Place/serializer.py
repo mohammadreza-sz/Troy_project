@@ -20,7 +20,6 @@ class PlaceSerializer(serializers.ModelSerializer):#mrs 59
     rate_no = serializers.ReadOnlyField()
     comment_number = serializers.ReadOnlyField()
     city_name = serializers.SerializerMethodField()
-    city_name = serializers.SerializerMethodField()
     country_name = serializers.SerializerMethodField()
 
     class Meta:

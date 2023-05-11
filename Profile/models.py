@@ -1,43 +1,12 @@
 from tkinter import CASCADE
-
-
-
 from django.db import models
-
-
-
 from django.conf import settings
-
-
-
 from django.db import models#mrs
-
-
-
-
-
-
-
 # CRUD baraye safar tavassote organization va assign kardane ye tour leader baraye oon
-
-
-
-
-
-
-
 class Person(models.Model):    
-
-
-
     user_id = models.OneToOneField(settings.AUTH_USER_MODEL , on_delete=models.CASCADE , null = True)#mrs 
 
-
-
     birth_date = models.DateField(null = True)
-
-
-
     country = models.CharField(max_length = 50 , null=True) 
 
 
