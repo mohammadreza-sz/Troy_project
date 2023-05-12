@@ -32,12 +32,12 @@ class Place(models.Model):#mrs
         return self.name
 
     def update_rate_no(self):
-        self.comment_number = self.comments.count()
+        self.rate_no = self.comments.count()
         self.save()
 
     def update_comment_no(self):
         # self.rate_no = self.rates.count()
-        self.rate_no = len(rates)
+        self.commen = len(rates)
         self.save()
 
     # def update_avg_rate(self):

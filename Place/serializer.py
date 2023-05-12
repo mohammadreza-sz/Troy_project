@@ -26,23 +26,6 @@ class PlaceSerializer(serializers.ModelSerializer):#mrs 59
         model = Place
         fields = "__all__"  
         read_only_fields = ['avg_rate', 'comment_number', 'rate_no','user']
-
-        # fields = [
-        #         'country_name',
-        #         'city_name',
-        #         # 'city_id',           
-        #         'id',
-        #         'name',
-        #         'address',
-        #         'description',
-        #         'lan',
-        #         'lon',
-        #         # 'placeimage',
-        #         'rate_no',
-        #         'avg_rate',
-        #         'comment_number',
-        #     ]
-
     def get_city_name(self, obj):
         return obj.city_id.city_name
 

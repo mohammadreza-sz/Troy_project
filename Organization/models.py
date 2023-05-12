@@ -3,6 +3,7 @@ from Profile.models import Country, City
 from django.contrib.auth.models import AbstractUser
 from account.models import User
 from unicodedata import name
+from django.core.validators import MaxValueValidator, MinValueValidator
 
 class User_org(AbstractUser):
     email = models.EmailField(unique=True)
@@ -14,9 +15,9 @@ class UserOrgCode(models.Model):
 
 class Organization(models.Model):
     name_org = models.CharField(max_length=200,unique=True)
-    description = models.TextField(null = true)
+    description = models.TextField(null = True)
     city_id = models.ForeignKey(City , on_delete= models.CASCADE , null = True)# city, country
-    org_id = models.CharField(primary_key=True, max_length=11, unique=True, default=custom_id)
+    org_id = models.CharField(primary_key=True, max_length=11, unique=True)
     rate = models.DecimalField(
         max_digits=2, default=0, decimal_places=1, blank=True)
     rate_no = models.IntegerField(default=0, blank=True)
@@ -30,15 +31,15 @@ class Organization(models.Model):
         self.comment_number = self.comments.count()
         self.save()
 
-class PlaceImage(models.Model):
-    place_id = models.ForeignKey(Organization() , on_delete=models.CASCADE , null = True)
+class OrganizationImage(models.Model):
+    org_id = models.ForeignKey(Organization, on_delete=models.CASCADE , null = True)
     image = models.TextField(null = True)
 
 class Rate(models.Model):
     Organization = models.ForeignKey(
-        Place, on_delete=models.CASCADE, related_name='rates')
+        Organization, on_delete=models.CASCADE, related_name='ratesOrg')
     user = models.ForeignKey(
-        User, on_delete=models.CASCADE, related_name='rates')
+        User, on_delete=models.CASCADE, related_name='ratesOrg')
     rate = models.DecimalField(
         max_digits=2, decimal_places=1, default=5, 
         validators=[MinValueValidator(0), MaxValueValidator(5)])

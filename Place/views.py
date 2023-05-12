@@ -45,8 +45,6 @@ def get_specific_placeimage(request , place_idd):
     place_image = PlaceImage.objects.filter(place_id = place_idd)
     # print(place_image)
 
-# from django.db.models import F
-
 @api_view(['GET'])#mrs     #by default argument => GET  15
 def get_specific_place(request ,place_id = None, country_name = None , city_name = None):
     place = Place.objects.select_related('city_id' , 'country_id' ).annotate(
@@ -72,8 +70,6 @@ def get_specific_place(request ,place_id = None, country_name = None , city_name
     #     image = F('placeimage__image')
     # ).values("id" ,"name","country", "city","address" , "description","lan", "lon" , "image")
 
-
-
 class CommentViewSet(ModelViewSet):
 	queryset = Comment.objects.select_related('place').all()
 	serializer_class = CommentSerializer
@@ -88,7 +84,6 @@ class CommentViewSet(ModelViewSet):
 		context = super().get_serializer_context()
 		context['place'] = self.kwargs.get('place_pk')
 		return context
-
 
 	def create(self, request, *args, **kwargs):
 		get_object_or_404(Place.objects, pk=self.kwargs.get('place_pk'))
@@ -113,8 +108,6 @@ class CommentViewSet(ModelViewSet):
 		place.update_comment_no()
 		return response
 
-
-
 class ReplytViewSet(CommentViewSet):
 	queryset = Comment.objects.select_related('parent').all()
 	serializer_class = ReplySerializer
@@ -134,4 +127,3 @@ class ReplytViewSet(CommentViewSet):
 		get_object_or_404(Place.objects, pk=self.kwargs.get('place_pk'))
 		get_object_or_404(Comment.objects, pk=self.kwargs.get('parent_pk'))
 		return super().create(request, *args, **kwargs)
-

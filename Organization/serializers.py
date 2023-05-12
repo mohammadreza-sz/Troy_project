@@ -1,5 +1,10 @@
 from .models import *
 from rest_framework import serializers
+from account.models import User
+
+from djoser.serializers import UserCreateSerializer as BaseUserCreateSerializer , UserSerializer as BaseUserSerializer ,UserCreatePasswordRetypeSerializer as BaseUserCreatePasswordRetypeSerializer
+from djoser.serializers import  PasswordResetConfirmRetypeSerializer as BasePasswordResetConfirmRetypeSerializer
+from django.conf import settings
 
 class UserSerializer(BaseUserSerializer):#mrs#59
     class Meta(BaseUserSerializer.Meta):
@@ -18,6 +23,11 @@ class EmailUrlSerializer(serializers.Serializer):#mrs
             return serializers.ValidationError('passwords do not match')
         return data #-> dictionary
 
+class OrganizationImageSerializer(serializers.ModelSerializer):#mrs
+    class Meta:
+        model = OrganizationImage
+        fields =['id' , 'image' , 'organization_id']
+
 class Origanization(serializers.ModelsSerializer):
     rate_no = serializers.ReadOnlyField()
     city_name = serializers.SerializerMethodField()
@@ -34,13 +44,13 @@ class Origanization(serializers.ModelsSerializer):
     def get_country_name(self, obj):
         return obj.city_id.country_id.country_name
  
-class RateSerializer(serializers.ModelSerializer):#mrs 59
+class RateOrgSerializer(serializers.ModelSerializer):#mrs 59
     user = serializers.CharField(read_only = True)
     class Meta:
         model = Rate
         fields = [
             'id',
-            'place',
+            'organization',
             'user',
             'rate'
         ]

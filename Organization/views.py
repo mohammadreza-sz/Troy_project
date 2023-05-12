@@ -13,25 +13,25 @@ import requests
 from django.http import HttpResponseBadRequest, HttpResponse
 from rest_framework.views import APIView
 from Organization import serializers
-from .serializers import EmailUrlSerializer
+from .serializers import *
+import base64
+from rest_framework.permissions import IsAuthenticated
 
-class BadRequestException(Exception):
+class OrganizationViewSet(ModelViewSet):
+    queryset = Organization.objects.annotate(avg_rate=Avg('ratesOrg__rate')).all()
+    serializer_class = OrganizationSerializer
+    ordering_fields = ['-rate']
 
-    def __init__(self, message='', *args, **kwargs):
+class OrganizationImageViewSet(ModelViewSet):
+    queryset = OrganizationImage.objects.all()
+    serializer_class = OrganizationImageSerializer
 
-        self.message = message
 
-def my_view(request):
-
-    try:
-        data = get_data_from_another_func()
-    except BadRequestException as e:
-        return HttpResponseBadRequest(e.message)
-    process_data(data)
-
-    return HttpResponse('Thank you')
-
-def get_data_from_another_func():
-    raise BadRequestException(message='something wrong')
-def process_data(data):
-    pass
+class RateViewSet(ModelViewSet):
+    permission_classes=[IsAuthenticated]
+    def get_queryset(self):
+        return Rate.objects.filter(place = self.kwargs['Organization_pk'])
+    def get_serializer_context(self ):
+        return {'user_id':self.request.user}
+    serializer_class = RateOrgSerializer
+    ordering_fields = ['-rate']
