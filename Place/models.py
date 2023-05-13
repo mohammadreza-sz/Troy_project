@@ -19,15 +19,7 @@ class Place(models.Model):#mrs
         max_digits=2, default=0, decimal_places=1, blank=True)
     rate_no = models.IntegerField(default=0, blank=True)
     comment_number = models.IntegerField(default=0)
-    # avg_rate = models.IntegerField(default=0)
-    # def update_rate(self):
-    #     rates = Rate.objects.all()
-    #     self.rate_no = len(rates)
-    #     self.rate = round(sum(
-    #         [rates.rate for rates in rates]) / self.rate_no, 1)
-            # [for rate in rates.rate])/self.rate_no , 1)
-        # self.rate = sum( [for i in rates.rate] ) / self.rate_no
-        # self.save()
+
     def __str__(self) -> str:
         return self.name
 
@@ -39,15 +31,6 @@ class Place(models.Model):#mrs
         # self.rate_no = self.rates.count()
         self.commen = len(rates)
         self.save()
-
-    # def update_avg_rate(self):
-    #     rates = self.rates.all()
-    #     # rates = self.rates.all()
-    #     # self.rate_no = len(rates)
-    #     self.avg_rate = round(sum(
-    #         [rate_obj.rate for rate_obj in rates]) / self.rate_no, 1)
-    #     self.save()
-
 
 class PlaceImage(models.Model):#mrs
     place_id = models.ForeignKey(Place , on_delete=models.CASCADE , null = True)
