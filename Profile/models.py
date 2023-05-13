@@ -2,8 +2,10 @@ from tkinter import CASCADE
 from django.db import models
 from django.conf import settings
 from django.db import models
-from Organization.models import Organization
-from Place.models import Place
+# from Organization.models import Organization
+# from Place.models import Place
+# from Organization import models
+# from Organization.models import *
 
 class Person(models.Model):    
     user_id = models.OneToOneField(settings.AUTH_USER_MODEL , on_delete=models.CASCADE , null = True)
@@ -22,10 +24,10 @@ class CommenPeople(models.Model):
     friend_id = models.ManyToManyField("CommenPeople")
     def __str__(self) -> str:
         return str(self.Id)
-        
+
+
 class TourLeader(models.Model):
     Id = models.OneToOneField(Person, on_delete = models.CASCADE, primary_key = True)
-    orga_id = models.ForeignKey(Organization, on_delete = models.SET_NULL, null= True)
     
     # deleted = models.BooleanField(default=False)
     # comment : models.TextField(max_length = 250)
@@ -35,7 +37,7 @@ class TourLeader(models.Model):
 
 class Trip(models.Model):
     Trip_ID = models.IntegerField().primary_key
-    place_id = models.ForeignKey(Place, on_delete = models.SET_NULL, null= True)
+    # place_id = models.ForeignKey(Place, on_delete = models.SET_NULL, null= True)
     TourLeader_ids = models.ForeignKey(TourLeader, on_delete = models.CASCADE)
     # destination_country = models.CharField(max_length = 30 , null = True)
     # destination_city = models.CharField(max_length = 30 , null = True)

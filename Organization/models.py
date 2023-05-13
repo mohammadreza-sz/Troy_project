@@ -1,5 +1,6 @@
 from django.db import models
-from Profile.models import Country, City
+from Profile.models import Country, City, TourLeader
+# from Profile.models import *
 from django.contrib.auth.models import AbstractUser
 from account.models import User
 from unicodedata import name
@@ -18,10 +19,13 @@ class Organization(models.Model):
     description = models.TextField(null = True)
     city_id = models.ForeignKey(City , on_delete= models.CASCADE , null = True)# city, country
     org_id = models.CharField(primary_key=True, max_length=11, unique=True)
+    tourleader_id = models.ForeignKey(TourLeader, on_delete = models.SET_NULL, null= True)
+
     rate = models.DecimalField(
         max_digits=2, default=0, decimal_places=1, blank=True)
     rate_no = models.IntegerField(default=0, blank=True)
     # Logo
+    logo = models.ImageField(upload_to=f'images/organs', blank=True, null=True)
     Address =models.CharField(max_length=255)
     Phone = models.CharField(max_length=20)
     # Email

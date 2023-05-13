@@ -9,7 +9,6 @@ from django.core.validators import MaxValueValidator, MinValueValidator
 # Create your models here.
 class Place(models.Model):#mrs
     city_id = models.ForeignKey(City , on_delete= models.CASCADE , null = True)
-    # country = models.ForeignKey(country, )
     name = models.CharField( max_length=50 ,null =True )
     address = models.CharField(max_length=250 ,null =True )
     description =models.TextField(null =True )
@@ -28,8 +27,7 @@ class Place(models.Model):#mrs
         self.save()
 
     def update_comment_no(self):
-        # self.rate_no = self.rates.count()
-        self.commen = len(rates)
+        self.comment_number = len(rates)
         self.save()
 
 class PlaceImage(models.Model):#mrs

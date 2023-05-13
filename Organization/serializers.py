@@ -32,12 +32,21 @@ class Origanization(serializers.ModelsSerializer):
     rate_no = serializers.ReadOnlyField()
     city_name = serializers.SerializerMethodField()
     country_name = serializers.SerializerMethodField()
+    # user_image = serializers.SerializerMethodField('get_org_image')
 
     class Meta:
         model = Organization
         fields = "__all__"
         read_only_fields = ['avg_rate', 'rate_no','user']
 
+    # def get_org_image(self, experience):
+        # user = experience.user
+        # print(user.image)
+        # if user.image != "":
+        #     return user.image.url
+        # else:
+        #     return ""
+    
     def get_city_name(self, obj):
         return obj.city_id.city_name
 

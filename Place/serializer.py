@@ -13,9 +13,6 @@ class PlaceSerializer(serializers.ModelSerializer):#mrs 59
     #     read_only=True,
     #     slug_field='image'
     # )
-    # city = CitySerializer()
-    # city_id = serializers.CharField(max_length = 50)
-    # country_id= serializers.CharField(max_length = 50)
     # avg_rate = serializers.ReadOnlyField()
     rate_no = serializers.ReadOnlyField()
     comment_number = serializers.ReadOnlyField()
