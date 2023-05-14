@@ -168,15 +168,15 @@ class Trip(models.Model):
 
 
 
-    destination_country = models.ForeignKey(Country, null = True)
+    destination_country = models.CharField(max_length=30, null = True)
 
-    destination_city = models.ForeignKey(City, null = True)
+    destination_city = models.CharField(max_length=30, null = True)
 
 
 
-    origin_country = models.ForeignKey(Country, null = True)
+    origin_country = models.CharField(max_length=30, null = True)
 
-    origin_city = models.ForeignKey(City, null = True)
+    origin_city = models.CharField(max_length=30, null = True)
 
 
 

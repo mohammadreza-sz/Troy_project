@@ -1,4 +1,4 @@
-wfrom http import HTTPStatus
+from http import HTTPStatus
 from http.client import ResponseNotReady
 from pickle import NONE
 from django.shortcuts import render
