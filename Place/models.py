@@ -4,7 +4,7 @@ from unicodedata import name
 
 from django.db import models
 
-from Profile.models import City#mrs
+# from Profile.models import City#mrs
 
 # from Troy.settings import AUTH_USER_MODEL
 
@@ -24,7 +24,8 @@ from django.core.validators import MaxValueValidator, MinValueValidator
 
 class Place(models.Model):#mrs
 
-    city_id = models.ForeignKey(City , on_delete= models.CASCADE , null = True)
+    # city_id = models.ForeignKey(City , on_delete= models.CASCADE , null = True)
+    city_id = models.ForeignKey("Profile.City" , on_delete= models.CASCADE , null = True)
     # country = models.ForeignKey(country, )
     name = models.CharField( max_length=50 ,null =True )
 

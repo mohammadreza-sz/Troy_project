@@ -25,10 +25,10 @@ class TripFilter(FilterSet):
   class Meta:
     model = Trip
     fields = {
-      'destination_city':['iexact'],
+      # 'destination_city':['iexact'],
       # 'destination_city':['contain'],
       
-      # 'capacity':['gt' , 'lt'],
+      'capacity':['gt' , 'lt'],
     }
 
 

@@ -14,7 +14,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from .models import Person , Trip , Country , City , Favorite
 
-from .filters import ProductFilter , TripFilter ,CityFilter#, CountryFilter#mrs
+from .filters import ProductFilter  ,CityFilter#, TripFilter, CountryFilter#mrs
 from rest_framework.filters import SearchFilter, OrderingFilter#mrs
 from django_filters.rest_framework import DjangoFilterBackend#mrs
 class PersonViewSet(CreateModelMixin , RetrieveModelMixin , UpdateModelMixin , GenericViewSet ,ListModelMixin):
@@ -54,7 +54,8 @@ class TripViewSet(CreateModelMixin , RetrieveModelMixin , UpdateModelMixin , Gen
 
     serializer_class = TripSerializer
 
-    filterset_class = TripFilter#mrs
+    # filterset_class = TripFilter#mrs
+    
     # filterset_fields = ['destination_country']
     filter_backends = [DjangoFilterBackend, OrderingFilter]#mrs
     # search_fields = ['destination_country' , 'destination_city']#mrs

@@ -13,7 +13,8 @@ from django.conf import settings
 
 from django.db import models#mrs
 
-from Place.models import Place
+from Place import models as place_model
+from django.core.validators import MaxValueValidator, MinValueValidator
 
 
 
@@ -82,37 +83,50 @@ class CommenPeople(models.Model):
 
 
 
+class Country(models.Model):#mrs
+
+    country_name = models.CharField(null = True , max_length=30)
+
+    def __str__(self) -> str:
+
+        return self.country_name
+
+
+class City(models.Model):#mrs
+
+    city_name = models.CharField(null = True, max_length=30)
+
+    country_id = models.ForeignKey(Country, on_delete=models.CASCADE , null = True)
+
+    def __str__(self) -> str:
+
+        return self.city_name
 
 
 
 class Organization(models.Model):
-    user_id = models.OneToOneField(settings.AUTH_USER_MODEL , on_delete=models.CASCADE , null = True)#mrs     
+    user_id = models.OneToOneField(settings.AUTH_USER_MODEL , on_delete=models.CASCADE , null = True)
     
-    name_org = models.CharField(max_length=200,unique=True)
+    name_org = models.CharField(max_length=200,unique=True , null = True)
     description = models.TextField(null = True)
     city_id = models.ForeignKey(City , on_delete= models.CASCADE , null = True)# city, country
     # org_id = models.CharField(primary_key=True, max_length=11, unique=True)
     # tourleader_id = models.ForeignKey(TourLeader, on_delete = models.SET_NULL, null= True)
+
     rate = models.DecimalField(
-        max_digits=2, default=0, decimal_places=1, blank=True)
-    rate_no = models.IntegerField(default=0, blank=True)
-    # Logo
+        max_digits=2, default=0, decimal_places=1, blank=True , null = True)
+    rate_no = models.IntegerField(default=0, blank=True , null = True)
+    
     # logo = models.ImageField(upload_to=f'images/organs', blank=True, null=True)
     logo = models.TextField(null = True)
-    Address =models.CharField(max_length=255)
-    Phone = models.CharField(max_length=20)
+    Address =models.CharField(max_length=255 , null = True)
+    Phone = models.CharField(max_length=20 , null = True)
     # Email
     # Password
 
     def update_rate_no(self):
         self.comment_number = self.comments.count()
         self.save()
-
-
-    
-    
-
-
     # (ye ghesmat bayad dashte bashe ke tour leader hash ro neshoon bede...)
 
 
@@ -132,7 +146,7 @@ class TourLeader(models.Model):
     orga_id = models.ForeignKey(Organization, on_delete = models.SET_NULL, null= True)
 
 
-    rate = models.IntegerField(validators=[MinValueValidator(0), MaxValueValidator(5)])
+    rate = models.IntegerField(validators=[MinValueValidator(0), MaxValueValidator(5)] , null = True)
 
     # comment : models.TextField(max_length = 250)
 
@@ -140,33 +154,12 @@ class TourLeader(models.Model):
 
 
 
-class Country(models.Model):#mrs
-
-    country_name = models.CharField(null = True , max_length=30)
-
-    def __str__(self) -> str:
-
-        return self.country_name
-
-
-
-
-
-class City(models.Model):#mrs
-
-    city_name = models.CharField(null = True, max_length=30)
-
-    country_id = models.ForeignKey(Country, on_delete=models.CASCADE , null = True)
-
-    def __str__(self) -> str:
-
-        return self.city_name
 
 
 class Trip(models.Model):
 
-    place_ids = models.ManyToManyField(Place , on_delete = models.PROTECT , null = True )#, on_delete = models.PROTECT, null= True)
-    TourLeader_ids = models.ManyToManyField(TourLeader, on_delete = models.DO_NOTHING ,  null = True)
+    place_ids = models.ManyToManyField(place_model.Place , null = True )#, on_delete = models.PROTECT, null= True)
+    TourLeader_ids = models.ManyToManyField(TourLeader,   null = True)
     # destination_country = get from place
     # destination_city = get from place
     # origin_country = get from place
