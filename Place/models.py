@@ -92,7 +92,7 @@ class Rate(models.Model):
     user = models.ForeignKey(
 
         User, on_delete=models.CASCADE, related_name='rates')
-
+    #must change to integerfield
     rate = models.DecimalField(
 
         max_digits=2, decimal_places=1, default=5, 

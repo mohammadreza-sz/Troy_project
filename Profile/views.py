@@ -50,6 +50,8 @@ class TripViewSet(CreateModelMixin , RetrieveModelMixin , UpdateModelMixin , Gen
     #TODO every one can get but not update
     # queryset = Trip.objects.filter(begin_time__gt =datetime.now() ).all()#mrs change for greater than now
     queryset = Trip.objects.all()#mrs change for greater than now
+    # def get_queryset(self):#mrs
+
     serializer_class = TripSerializer
 
     filterset_class = TripFilter#mrs
