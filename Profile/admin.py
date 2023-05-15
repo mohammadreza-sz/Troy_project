@@ -4,4 +4,7 @@ from .models import *
 
 admin.site.register(City)
 admin.site.register(Country)
+admin.site.register(Organization)
+admin.site.register(TourLeader)
+admin.site.register(Trip)
 

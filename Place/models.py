@@ -106,3 +106,18 @@ class Rate(models.Model):
 
         return f"{user.name} rated {self.rate} to {self.place.name}"
 
+class Comment(models.Model):
+    place = models.ForeignKey(
+        Place, on_delete=models.CASCADE, related_name='comments')
+    user = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name='comments')
+    parent = models.ForeignKey('Comment', on_delete=models.CASCADE, 
+                        related_name='replies', null=True, blank=True)
+    created_date = models.DateTimeField(auto_now_add=True)
+    text = models.TextField()
+
+    def __str__(self):
+        return f"{self.place.title} {self.user.username}"
+
+    def is_owner(self, user):
+        return self.user == user
