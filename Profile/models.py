@@ -38,7 +38,8 @@ class City(models.Model):#mrs
         return self.city_name
 
 class Organization(models.Model):
-    user_id = models.OneToOneField(settings.AUTH_USER_MODEL , on_delete=models.CASCADE , null = True)    
+    user_id = models.OneToOneField(settings.AUTH_USER_MODEL , 
+            on_delete=models.CASCADE , null = True, related_name= 'orguser')    
     name_org = models.CharField(max_length=200,unique=True , null = True)
     description = models.TextField(null = True)
     city_id = models.ForeignKey(City , on_delete= models.CASCADE , null = True)# city, country
@@ -54,7 +55,7 @@ class Organization(models.Model):
 
 class TourLeader(models.Model):
     Id = models.OneToOneField(Person, on_delete = models.CASCADE, primary_key = True)
-    orga_id = models.ForeignKey(Organization, on_delete = models.CASCADE, null= True)
+    orga_id = models.ForeignKey(Organization, on_delete = models.CASCADE, null= True, related_name = "tourleader")
     rate = models.DecimalField(
         max_digits=2, default=0, decimal_places=1, blank=True)
     rate_no = models.IntegerField(default=0, blank=True)

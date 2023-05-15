@@ -39,13 +39,34 @@ class PersonSerializer(serializers.ModelSerializer):#lesson 59
          'bio' , 'registration_date', 'profile_image' ]
 
 class OrganizationSerializer(serializers.ModelSerializer):
-    model = Organization
-    fields = "__all__"
+    tour_leaders = serializers.SerializerMethodField()
+    org_builder = serializers.SerializerMethodField()
+    tours = serializers.SerializerMethodField()
+    class Meta:
+        model = Organization
+        fields = "__all__"
+
+    def get_tour_leaders(self, obj):
+        objj = obj.tourleader.all()
+        return TourLeaderSerializer(objj).data
+    def get_org_builder(self, obj):
+        objj = obj.orguser
+        return PersonSerializer(objj).data
+    # def get_tours(self, obj):
+        # objj = obj.
 
 class TourLeaderSerializer(serializers.ModelSerializer):
-    model = TourLeader
-    fields = "__all__"
+    organ_name = serializers.SerializerMethodField()
+    # trips = serializers.SerializerMethodField()
+    class Meta:
+        model = TourLeader
+        fields = "__all__"
+    def get_organ_name(self, obj):
+        obj.orga_id.name
 
+    # def get_trips(self , obj):
+        # objj = obj.tourleader.all()
+        # return TripSerializer(objj).data
 
 class TripSerializer(serializers.ModelSerializer):
     class Meta:

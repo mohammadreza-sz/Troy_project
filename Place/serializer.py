@@ -18,7 +18,8 @@ class PlaceSerializer(serializers.ModelSerializer):#mrs 59
     comment_number = serializers.ReadOnlyField()
     city_name = serializers.SerializerMethodField()
     country_name = serializers.SerializerMethodField()
-
+    username = serializers.SerializerMethodField()
+    
     class Meta:
         model = Place
         fields = "__all__"  
@@ -28,6 +29,9 @@ class PlaceSerializer(serializers.ModelSerializer):#mrs 59
 
     def get_country_name(self, obj):
         return obj.city_id.country_id.country_name
+
+    def get_username(self , obj):
+        return obj.user.username
 
 class RateSerializer(serializers.ModelSerializer):#mrs 59
     user = serializers.CharField(read_only = True)
