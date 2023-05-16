@@ -42,7 +42,7 @@ class Place(models.Model):#mrs
         max_digits=2, default=0, decimal_places=1, blank=True)
 
     rate_no = models.IntegerField(default=0, blank=True)
-
+    comment_number = models.IntegerField(default=0)
     # def update_rate(self):
 
     #     rates = Rate.objects.all()
@@ -63,6 +63,14 @@ class Place(models.Model):#mrs
 
         return self.name
 
+    def update_rate_no(self):
+        self.comment_number = self.comments.count()
+        self.save()
+
+    def update_comment_no(self):
+        # self.rate_no = self.rates.count()
+        self.rate_no = len(rates)
+        s
 
 import base64
 

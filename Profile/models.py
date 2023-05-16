@@ -16,7 +16,7 @@ class Person(models.Model):
     gender = models.BooleanField(null=True)
     bio = models.TextField(null=True)
     registration_date = models.DateField(auto_now= True)
-    profile_image = models.TextField(blank=True, null=True)#helen
+    profile_image = models.TextField(blank=True, null=True)
     def __str__(self):
         return str(self.user_id)
 
@@ -38,7 +38,7 @@ class City(models.Model):#mrs
         return self.city_name
 
 class Organization(models.Model):
-    user_id = models.OneToOneField(settings.AUTH_USER_MODEL , 
+    user_id = models.OneToOneField(settings.AUTH_USER_MODEL ,
             on_delete=models.CASCADE , null = True, related_name= 'orguser')    
     name_org = models.CharField(max_length=200,unique=True , null = True)
     description = models.TextField(null = True)
@@ -46,30 +46,24 @@ class Organization(models.Model):
     logo = models.TextField(blank = True, null = True)
     Address =models.CharField(max_length=255 , null = True)
     Phone = models.CharField(max_length=20 , null = True)
-    # Email
-    # Password
-    # def update_rate_no(self):
-    #     self.comment_number = self.comments.count()
-    #     self.save()
-    # (ye ghesmat bayad dashte bashe ke tour leader hash ro neshoon bede...)
 
 class TourLeader(models.Model):
-    Id = models.OneToOneField(Person, on_delete = models.CASCADE, primary_key = True)
-    orga_id = models.ForeignKey(Organization, on_delete = models.CASCADE, null= True, related_name = "tourleader")
-    rate = models.DecimalField(
-        max_digits=2, default=0, decimal_places=1, blank=True)
+    person_id = models.OneToOneField(Person, on_delete = models.CASCADE,
+                              null = True)
+    orga_id = models.ForeignKey(Organization, on_delete = models.CASCADE,
+     null= True, related_name = "tourleader")
+    rates = models.IntegerField(default=0, blank=True)
     rate_no = models.IntegerField(default=0, blank=True)
 
 class Rate_Tour(models.Model):
     tour_leader = models.ForeignKey(
-        TourLeader, on_delete=models.CASCADE, related_name='rates_Tour')
+        TourLeader, on_delete=models.CASCADE, related_name='rate_tour')
     user = models.ForeignKey(
-        User, on_delete=models.CASCADE, related_name='rates_Tour')
-    rate = models.DecimalField(
-        max_digits=2, decimal_places=1, default=5, 
+        User, on_delete=models.CASCADE, related_name='rates_tour')
+    rate = models.IntegerField(default=5, 
         validators=[MinValueValidator(0), MaxValueValidator(5)])
     def __str__(self):
-        return f"{user.name} rated {self.rate} to {self.tour_leader.name}"
+        return f"{self.user.email} rated {self.rate} to {self.tour_leader.person_id.city}"
 
 class Trip(models.Model):
     place_ids = models.ManyToManyField(place_model.Place , null = True )#, on_delete = models.PROTECT, null= True)

@@ -7,4 +7,5 @@ admin.site.register(Country)
 admin.site.register(Organization)
 admin.site.register(TourLeader)
 admin.site.register(Trip)
-
+admin.site.register(Person)
+admin.site.register(Rate_Tour)
