@@ -48,17 +48,6 @@ class PersonViewSet(CreateModelMixin , RetrieveModelMixin , UpdateModelMixin , G
             serializer.save()
             return Response({'opreation':'succesfully update'} | serializer.data ,status =status.HTTP_200_OK)
 
-# class OrganizationViewSet():
-#     queryset = Organization.objects.all()
-#     serializer_class = OrganizationSerializer
-#     permission_classes = [IsAuthenticated ]
-
-
-# class ListOrgAPIView(ListAPIView):
-#     queryset = Organization.objects.all()
-#     serializer_class = OrganizationSerializer
-#     # def get_tourl():
-#     #     retrun 
 
 # class CreateOrgAPIView(CreateAPIView):
 #     queryset = Organization.objects.all()
@@ -78,13 +67,6 @@ class PersonViewSet(CreateModelMixin , RetrieveModelMixin , UpdateModelMixin , G
 #     serializer_class = TourLeaderSerializer
 
 
-
-
-# class ListTourLeaderAPIView(ListAPIView):
-#     queryset = TourLeader.objects.all()
-#     serializer_class = TourLeaderSerializer
-    
-
 # class CreateTourLeaderAPIView(CreateAPIView):
 #     queryset = TourLeader.objects.all()
 #     serializer_class = TourLeaderSerializer
@@ -97,6 +79,13 @@ class PersonViewSet(CreateModelMixin , RetrieveModelMixin , UpdateModelMixin , G
 #     queryset = TourLeader.objects.all()
 #     serializer_class = TourLeaderSerializer
 
+@api_view(['GET'])
+def get_orgs(request):
+    orgs = Organization.objects.all()
+    if orgs is not None:
+        serializers = OrganizationSerializer(orgs, many = True)
+        return Response(serializers.data, status = 200)
+    return Response(status = 400)
 
 @api_view(['POST'])
 def get_tourleaders(request):
@@ -104,8 +93,6 @@ def get_tourleaders(request):
     if org is not None:
         tl = TourLeader.objects.filter(orga_id= org)
         tl_list = list(tl)
-        # print(tl)
-        # print("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA")
         if tl is not None:
             serializers = TourLeaderSerializer(tl_list, many = True)
             return Response(serializers.data, status = 200)
@@ -167,6 +154,38 @@ def rate_TOURL(request):
                 dictt["rate"] = rateee
 
                 serializers = Rate_TourLSerializer(data = dictt)
+                if serializers.is_valid():
+                    serializers.save()
+                    return Response(200)
+    return Response(401)
+
+
+@api_view(['POST'])
+def rate_Orgg(request):
+    # try:
+    #     exist_user_code = UserCode.objects.get(code = request.data["code"])
+    # except:
+    #     return Response("your code is invalid")
+    # try:
+    #     user = baseuser.objects.get(username = exist_user_code.user_name)
+    # except:
+    #     return Response("user doesn't exist")
+    user = User.objects.get( username = request.data["username"])
+    auth = User.objects.get( username = request.data["Organization_username"])
+
+    if request.data["rate"] is not None:
+        rateee = request.data["rate"]
+    if auth is not None:
+        person = Person.objects.get(user_id= auth)
+        if person is not None:
+            orgg = TourLeader.objects.get(person_id = person)
+            if tourl is not None:
+                dictt = {}
+                dictt["orgg"] = orgg.id
+                dictt["user"] = user.id
+                dictt["rate"] = rateee
+
+                serializers = Rate_OrgSerializer(data = dictt)
                 if serializers.is_valid():
                     serializers.save()
                     return Response(200)

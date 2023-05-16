@@ -39,9 +39,6 @@ class PersonSerializer(serializers.ModelSerializer):#lesson 59
          'bio' , 'registration_date', 'profile_image' ]
 
 class OrganizationSerializer(serializers.ModelSerializer):
-    # tour_leaders = serializers.SerializerMethodField()
-    tour_leaders = "TourLeaderSerializer(many = True)"
-    # tours = serializers.SerializerMethodField()
     country_nameOrg = serializers.SerializerMethodField()
     user_id = PersonSerializer()
     class Meta:
@@ -50,7 +47,7 @@ class OrganizationSerializer(serializers.ModelSerializer):
         read_only_fields = ["user_id"]
 
     def get_country_nameOrg(self, obj):
-        return self.city_id.country_id.country_name
+        return obj.city_id.country_id.country_name
     # def get_tours(self, obj):
         # objj = obj.tourleader.set_tour.all()
 
@@ -80,6 +77,11 @@ class TourLeaderSerializer(serializers.ModelSerializer):
     # def get_trips(self , obj):
         # objj = obj.tourleader.all()
         # return TripSerializer(objj).data
+
+class  Rate_OrgSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Rate_Org
+        fields = "__all__"
 
 class  Rate_TourLSerializer(serializers.ModelSerializer):
     # rateTL_num = serializers.SerializerMethodField()

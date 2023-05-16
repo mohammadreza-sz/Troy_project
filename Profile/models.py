@@ -38,14 +38,28 @@ class City(models.Model):#mrs
         return self.city_name
 
 class Organization(models.Model):
-    user_id = models.OneToOneField(settings.AUTH_USER_MODEL ,
-            on_delete=models.CASCADE , null = True, related_name= 'orguser')    
+    # user_id = models.OneToOneField(settings.AUTH_USER_MODEL ,
+            # on_delete=models.CASCADE , null = True, related_name= 'orguser')    
+    person_id = models.OneToOneField(Person, on_delete = models.CASCADE,
+        null = True)
+    
     name_org = models.CharField(max_length=200,unique=True , null = True)
     description = models.TextField(null = True)
     city_id = models.ForeignKey(City , on_delete= models.CASCADE , null = True)# city, country
     logo = models.TextField(blank = True, null = True)
     Address =models.CharField(max_length=255 , null = True)
     Phone = models.CharField(max_length=20 , null = True)
+    rates = models.IntegerField(default=0, blank=True)
+
+class Rate_Org(models.Model):
+    orgg = models.ForeignKey(
+        Organization, on_delete=models.CASCADE, related_name='rate_org')
+    user = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name='rates_org')
+    rate = models.IntegerField(default=5, 
+        validators=[MinValueValidator(0), MaxValueValidator(5)])
+    def __str__(self):
+        return f"{self.user.email} rated {self.rate} to {self.orgg.person_id.city}"
 
 class TourLeader(models.Model):
     person_id = models.OneToOneField(Person, on_delete = models.CASCADE,
@@ -54,6 +68,8 @@ class TourLeader(models.Model):
      null= True, related_name = "tourleader")
     rates = models.IntegerField(default=0, blank=True)
     rate_no = models.IntegerField(default=0, blank=True)
+    joindDate = models.DateTimeField(auto_now=True)
+    phonetl = models.CharField(max_length=20 , null = True)
 
 class Rate_Tour(models.Model):
     tour_leader = models.ForeignKey(

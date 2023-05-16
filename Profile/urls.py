@@ -25,9 +25,11 @@ urlpatterns = [
     # path("delete/<int:pk>/",DeleteTourLeaderAPIView.as_view(),name="delete_TourLeader"),
     path("TL_by_org/",get_tourleaders, name = "TL_by_org"),
     path("trip_by_org", get_toursfromOrg, name = "trip_by_org"),
-    
+    path("list_orgs", get_orgs, name = "list_orgs"),
     path("all_tourL", get_alltourleaders, name = "all_tourL"),
     path("RTL/", rate_TOURL, name = "RTL"),
+    path("rate_Orgg/", rate_Orgg, name = "rate_Orgg"),
+    
 ]
 # urlpatterns=[
     # path("favorite/me/<int:id>" , FavoriteView.as_view())
