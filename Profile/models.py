@@ -61,8 +61,8 @@ class Person(models.Model):
 
 
     profile_image = models.TextField(blank=True, null=True)#helen
-    def __str__(self):
-        return str(self.user_id)
+    # def __str__(self):
+    #     return str(self.user_id)
 
 
 #helen {
@@ -107,7 +107,7 @@ class City(models.Model):#mrs
 class Organization(models.Model):
     user_id = models.OneToOneField(settings.AUTH_USER_MODEL , on_delete=models.CASCADE , null = True)
     
-    name_org = models.CharField(max_length=200,unique=True , null = True)
+    name_org = models.CharField(max_length=200,unique=True , null = True)#change to organization name to more readable
     description = models.TextField(null = True)
     city_id = models.ForeignKey(City , on_delete= models.CASCADE , null = True)# city, country
     # org_id = models.CharField(primary_key=True, max_length=11, unique=True)
@@ -147,7 +147,8 @@ class TourLeader(models.Model):
 
 
     rate = models.IntegerField(validators=[MinValueValidator(0), MaxValueValidator(5)] , null = True)
-
+    def __str__(self) :
+        return "hi"
     # comment : models.TextField(max_length = 250)
 
     # rate = models.IntegerField(default = 0)  # in baraye khode tour leader hast..(faghat afrade sherkat konande)
@@ -155,15 +156,16 @@ class TourLeader(models.Model):
 
 
 
-
+from django.core.exceptions import ValidationError#mrs
 class Trip(models.Model):
 
-    place_ids = models.ManyToManyField(place_model.Place , null = True )#, on_delete = models.PROTECT, null= True)
-    TourLeader_ids = models.ManyToManyField(TourLeader,   null = True)
-    # destination_country = get from place
-    # destination_city = get from place
-    # origin_country = get from place
-    # origin_city = get from place
+    place_ids = models.ManyToManyField(place_model.Place , blank = True)#mrs can't use null here , must use blank
+    TourLeader_ids = models.ManyToManyField(TourLeader,   blank = True)#must be in same organization
+    organization_id = models.ForeignKey(Organization , on_delete=models.DO_NOTHING,null = True)
+    destination_country = models.ManyToManyField(Country , related_name= 'countries')
+    destination_city =  models.ManyToManyField(City , related_name='cities')
+    # origin_country_id = models.ForeignKey(Country , on_delete=models.PROTECT , null = True)
+    origin_city_id =  models.ForeignKey(City , on_delete=models.PROTECT , null = True)
     # image = get from placeimage
     airplane = 'A'
     ship = 'S'
@@ -178,20 +180,26 @@ class Trip(models.Model):
     ]
     departure_transport= models.CharField(max_length=1 , choices=TRANSPORT_CHOICES , null = True )
     return_transport = models.CharField(max_length=1 , choices=TRANSPORT_CHOICES , null = True )
+    departure_date = models.DateTimeField(null = True)
+    return_date =  models.DateTimeField(null = True)
 # destinations_city
     # Transport = 
     # Departure = 
     # return = --> i dont remember it..
     # Organization_id = --> you must get it from tour leader.. 
     Description = models.TextField(null = True)
-    begin_time = models.DateTimeField(null = True)
-    end_time = models.DateTimeField(null = True)
-    capacity = models.IntegerField(null = True , validators=[MinValueValidator(1)])
+    # begin_time = models.DateTimeField(null = True)#must delete it 
+    # end_time = models.DateTimeField(null = True)#must delete it 
+    capacity = models.IntegerField(null = True , validators=[MinValueValidator(1) , MaxValueValidator(50)])
     
 
-    Price = models.IntegerField(null = True , validators=[MinValueValidator(50)])
+    Price = models.IntegerField(null = True , validators=[MinValueValidator(5) , MaxValueValidator(5000)])
     # Place_id
-
+    def clean(self):#mrs
+        if self.return_date and self.departure_date :
+            if self.return_date < self.departure_date:
+                raise ValidationError('Return date cannot be earlier than departure date.')
+        
 
 
 
