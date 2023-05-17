@@ -1,7 +1,8 @@
-from django.urls import path
+from django.urls import path, include, re_path
 from .views import PersonViewSet, TripViewSet , CountryViewSet , CityViewSet , FavoriteView
 from rest_framework_nested import routers
 from .views import *
+# from django.conf.urls import url
 
 router = routers.DefaultRouter()#lesson 28 two bottom line is parent router
 router.register('Profile' , PersonViewSet)#end point => first argument without forward slash
@@ -32,7 +33,9 @@ urlpatterns = [
     path("all_tourL", get_alltourleaders, name = "all_tourL"),
     path("RTL/", rate_TOURL, name = "RTL"),
     path("rate_Orgg/", rate_Orgg, name = "rate_Orgg"),
-    
+    path("delete_trip/", delete_trip, name = "delete_trip"),
+    path('DT/', delete_trip, name='DT'),
+    # path('UT/', update_trip, name='UT'),
 ]
 
 

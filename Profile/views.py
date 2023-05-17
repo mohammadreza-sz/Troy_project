@@ -191,6 +191,76 @@ def rate_Orgg(request):
                     return Response(200)
     return Response(401)
 
+
+
+
+
+
+
+# helen
+@api_view(['POST'])
+def delete_trip(request):
+    try:
+        Trip.objects.filter(id = request.data["trip_id"]).delete()
+        return Response(200)
+    except:
+        return Response(401)
+
+# @api_view(['POST'])
+# def update_trip(request):
+#     try:
+#         country = Country.objects.get(name = request.data["country"])
+#         if country is not None:
+#             Trip.objects.filter(id = request.data["trip_id"]).update(destination_country=country)
+#             return Response(200)
+#         else:
+#             return Response(404)
+#     except:
+#         return Response(401)
+
+
+    # data = get_object_or_404(Trip, id=id) 
+
+# @api_view(['GET'])
+# def create_alltours(request):
+
+
+#     place_ids 
+#     TourLeader_ids
+#     # Organization_id
+#     destination_country
+#     destination_city
+#     origin_city_id
+#     departure_transport
+#     return_transport
+#     departure_date
+#     return_date
+#     # Description
+#     capacity
+#     Price 
+    
+#     organ = Organization.objects.get(id = request.data["organ_id"])
+#     Description = (str)(request.data["Description"])
+#     capacity = (int)(request.data["Description"])
+
+#     trip = Trip(nam)
+#         serializers = TripSerializer(tl, many = True)
+#         return Response(serializers.data, status = 200)
+#     return Response(status = 400)
+
+# @api_view(['POST'])
+# def get_alltours(request):
+#     pass
+
+# @api_view(['PUT'])
+# def get_alltours(request):
+#     pass
+
+# @api_view(['PATCH'])
+# def get_alltours(request):
+#     pass
+
+
 from datetime import datetime#mrs
 class TripViewSet(ModelViewSet):
     #TODO every one can get but not update

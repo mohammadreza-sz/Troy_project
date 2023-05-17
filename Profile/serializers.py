@@ -47,6 +47,9 @@ class OrganizationSerializer(serializers.ModelSerializer):
         fields = "__all__"
         read_only_fields = ["user_id"]
 
+
+# ["name_org","description" ,"logo","Address","Phone","rates"]
+
     def get_country_nameOrg(self, obj):
         return obj.city_id.country_id.country_name
     # def get_tours(self, obj):
