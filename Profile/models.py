@@ -37,6 +37,7 @@ class City(models.Model):#mrs
     def __str__(self) -> str:
         return self.city_name
 
+
 class Organization(models.Model):
     # user_id = models.OneToOneField(settings.AUTH_USER_MODEL ,
             # on_delete=models.CASCADE , null = True, related_name= 'orguser')    
@@ -73,19 +74,29 @@ class TourLeader(models.Model):
 
 
 
-    Id = models.OneToOneField(Person, on_delete = models.CASCADE, primary_key = True)
+    # Id = models.OneToOneField(Person, on_delete = models.CASCADE, primary_key = True)
 
 
 
-    orga_id = models.ForeignKey(Organization, on_delete = models.SET_NULL, null= True)
+    # orga_id = models.ForeignKey(Organization, on_delete = models.SET_NULL, null= True)
 
 
-    rate = models.IntegerField(validators=[MinValueValidator(0), MaxValueValidator(5)] , null = True)
+    # rate = models.IntegerField(validators=[MinValueValidator(0), MaxValueValidator(5)] , null = True)
 
     # comment : models.TextField(max_length = 250)
 
     # rate = models.IntegerField(default = 0)  # in baraye khode tour leader hast..(faghat afrade sherkat konande)
 
+
+class Rate_Tour(models.Model):
+    tour_leader = models.ForeignKey(
+        TourLeader, on_delete=models.CASCADE, related_name='rate_tour')
+    user = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name='rates_tour')
+    rate = models.IntegerField(default=5, 
+        validators=[MinValueValidator(0), MaxValueValidator(5)])
+    def __str__(self):
+        return f"{self.user.email} rated {self.rate} to {self.tour_leader.person_id.city}"
 
 
 from django.core.exceptions import ValidationError#mrs
