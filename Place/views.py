@@ -22,8 +22,9 @@ from rest_framework import status
 from django.db.models import Avg
 
 
-
+# from Profile import permissions as permi
 class PlaceViewSet(ModelViewSet):#mrs 
+    # permission_classes=[permi.CrudOrganizationReadOther]
 
     # queryset = Place.objects.prefetch_related("placeimage_set").select_related("city_id").all()   *********************
 
@@ -49,10 +50,9 @@ import base64
 
 from django.core.files.base import ContentFile
 
-
+# from rest_framework import
 
 class PlaceImageViewSet(ModelViewSet):#mrs
-
 
 
     queryset = PlaceImage.objects.all()
