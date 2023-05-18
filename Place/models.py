@@ -42,7 +42,7 @@ class Place(models.Model):#mrs
         max_digits=2, default=0, decimal_places=1, blank=True)
 
     rate_no = models.IntegerField(default=0, blank=True)
-
+    comment_number = models.IntegerField(default=0)
     # def update_rate(self):
 
     #     rates = Rate.objects.all()
@@ -63,6 +63,14 @@ class Place(models.Model):#mrs
 
         return self.name
 
+    def update_rate_no(self):
+        self.comment_number = self.comments.count()
+        self.save()
+
+    def update_comment_no(self):
+        # self.rate_no = self.rates.count()
+        self.rate_no = len(rates)
+        s
 
 import base64
 
@@ -106,3 +114,18 @@ class Rate(models.Model):
 
     #     return f"{user.name} rated {self.rate} to {self.place.name}"
 
+class Comment(models.Model):
+    place = models.ForeignKey(
+        Place, on_delete=models.CASCADE, related_name='comments')
+    user = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name='comments')
+    parent = models.ForeignKey('Comment', on_delete=models.CASCADE, 
+                        related_name='replies', null=True, blank=True)
+    created_date = models.DateTimeField(auto_now_add=True)
+    text = models.TextField()
+
+    def __str__(self):
+        return f"{self.place.title} {self.user.username}"
+
+    def is_owner(self, user):
+        return self.user == user
