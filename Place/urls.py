@@ -3,6 +3,9 @@ from django.urls import include
 
 
 from . import views
+
+
+
 from rest_framework_nested import routers
 app_name = 'places'
 router = routers.DefaultRouter()#lesson 28 two bottom line is parent router

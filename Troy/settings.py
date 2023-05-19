@@ -443,88 +443,24 @@ WSGI_APPLICATION = 'Troy.wsgi.application'
 
 
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.mysql',
+#         'NAME': 'troy',
+#         'HOST': 'localhost',
+#         'USER': 'root',
+#         'PASSWORD': 'newpassword',
+#         'PORT':'3306'
+#     }
+# }
+
+
 DATABASES = {
-
-
-
-
-
-
-
-    'default': {
-
-
-
-
-
-
-
-        'ENGINE': 'django.db.backends.mysql',
-
-
-
-
-
-
-
-        'NAME': 'troy',
-
-
-
-
-
-
-
-
-
-        'HOST': 'localhost',
-
-
-
-
-
-
-
-
-
-        'USER': 'root',
-
-
-
-
-
-
-
-
-
-        'PASSWORD': 'newpassword',
-
-
-
-
-
-
-
-
-
-        'PORT':'3306'
-
-
-
-
-
-
-
+    "default": {
+        "ENGINE": "django.db.backends.sqlite3",
+        "NAME": BASE_DIR / "db.sqlite3",
     }
-
-
-
-
-
-
-
 }
-
 
 
 # Password validation
@@ -1192,7 +1128,6 @@ EMAIL_HOST_PASSWORD ='yvcpvkazuuqnvguy'
 
 
 ALLOWED_HOSTS = ['mrsz.pythonanywhere.com' , '127.0.0.1']#mrs
-
 
 
 

@@ -7,13 +7,6 @@ from django.db import models#mrs
 from Place import models as place_model
 from django.core.validators import MaxValueValidator, MinValueValidator
 # CRUD baraye safar tavassote organization va assign kardane ye tour leader baraye oon
-
-
-
-
-
-
-
 class Person(models.Model):    
     user_id = models.OneToOneField(settings.AUTH_USER_MODEL , on_delete=models.CASCADE , null = True)#mrs 
     birth_date = models.DateField(null = True)
@@ -31,19 +24,15 @@ class CommenPeople(models.Model):
     friend_id = models.ManyToManyField("CommenPeople")
     def __str__(self) -> str:
         return str(self.Id)
-
-
-
 class Country(models.Model):#mrs
     country_name = models.CharField(null = True , max_length=30)
     def __str__(self) -> str:
         return self.country_name
-
-
 class City(models.Model):#mrs
     city_name = models.CharField(null = True, max_length=30)
     country_id = models.ForeignKey(Country, on_delete=models.CASCADE , null = True)
     def __str__(self) -> str:
+
         return self.city_name
 
 
@@ -90,8 +79,6 @@ class Rate_Tour(models.Model):
         return f"{self.user.email} rated {self.rate} to {self.tour_leader.person_id.city}"	
 
 from django.core.exceptions import ValidationError#mrs
-
-
 class Trip(models.Model):
     place_ids = models.ManyToManyField(place_model.Place , blank = True)#mrs can't use null here , must use blank
     TourLeader_ids = models.ManyToManyField(TourLeader,   blank = True)#must be in same organization
@@ -110,6 +97,7 @@ class Trip(models.Model):
         (ship , 'ship'),
         (bus , 'bus'),
         (train , 'train')
+
     ]
     departure_transport= models.CharField(max_length=1 , choices=TRANSPORT_CHOICES , null = True )
     return_transport = models.CharField(max_length=1 , choices=TRANSPORT_CHOICES , null = True )
@@ -142,12 +130,7 @@ class Trip(models.Model):
     # end_time = models.DateTimeField(null = True)
     # capacity = models.IntegerField(null = True)
 
-
-
     # image = models.ImageField(upload_to = "profile/imaged" , null = True)#mrs
-
-
-
 class Post(models.Model):
     trip_id = models.ForeignKey(Trip, on_delete = models.CASCADE, null= True)
     caption = models.TextField()
@@ -157,6 +140,12 @@ class Post_image(models.Model):
     post_image = models.TextField(blank=True, null=True)
 
 # deleted ro dobare roosh fekr kon..
+
+
+
+# }helen
+
+
 
 class Favorite(models.Model):
     favorite = models.TextField(null =True)

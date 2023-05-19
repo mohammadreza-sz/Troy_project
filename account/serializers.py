@@ -121,4 +121,3 @@ class EmailUrlSerializer(serializers.Serializer):#mrs
 #     class Meta(BaseActivationSerializer.Meta):
 
 
-

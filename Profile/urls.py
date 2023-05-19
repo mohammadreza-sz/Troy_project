@@ -3,9 +3,8 @@ from django.urls import path
 from .views import *
 
 from rest_framework_nested import routers
-from .views import *
-# from django.conf.urls import url
 
+# router = SimpleRouter()
 router = routers.DefaultRouter()#lesson 28 two bottom line is parent router
 router.register('Profile' , PersonViewSet)#end point => first argument without forward slash
 # Person_router = routers.NestedSimpleRouter(router, 'Profile', lookup='product')#lesson 28 first ARG -> parent router second ARG -> parent prefix  third ARG -> 
@@ -14,7 +13,6 @@ router.register("Trip" , TripViewSet , basename='trip')
 router.register("Country" , CountryViewSet)
 router.register("City" , CityViewSet)
 router.register("favorite" , FavoriteView)
-# router.register(prefix, viewset)
 router.register("Person" , PersonViewSet)
 urlpatterns = [		
     # (r'^ProfileInfoAPI/$', ListOrgAPIView.as_view(), name='ProfileInfoAPI'),		

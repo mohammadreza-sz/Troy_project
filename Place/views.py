@@ -70,6 +70,8 @@ class PlaceImageViewSet(ModelViewSet):#mrs
 
 
 
+
+
 class RateViewSet(ModelViewSet):
 
     # permission_classes=[IsAuthenticated]#mrs
@@ -106,25 +108,11 @@ class RateViewSet(ModelViewSet):
 
     ordering_fields = ['-rate']
 
-
-
-    
-
-
-
-
-
-
-
-
-
-
-
 @api_view(['GET'])#mrs     #by default argument => GET  15
 def get_specific_placeimage(request , place_idd):
 
 
-    # def retrieve(self, request, *args, **kwargs):
+# def retrieve(self, request, *args, **kwargs):
     # instance = self.get_object()
     # place_image = PlaceImage.objects.filter(place_id = place_idd).values("place_id" , "image")
     # serializer = PlaceImageSerializer(place_image)
@@ -133,6 +121,17 @@ def get_specific_placeimage(request , place_idd):
 
     # print(place_image)
     return Response(place_image)
+
+
+
+
+
+
+
+
+
+
+
 
 
 from django.db.models import F
