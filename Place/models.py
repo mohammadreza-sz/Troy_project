@@ -4,7 +4,7 @@ from unicodedata import name
 
 from django.db import models
 
-from Profile.models import City#mrs
+#from Profile.models import City#mrs
 
 # from Troy.settings import AUTH_USER_MODEL
 
@@ -24,7 +24,9 @@ from django.core.validators import MaxValueValidator, MinValueValidator
 
 class Place(models.Model):#mrs
 
-    city_id = models.ForeignKey(City , on_delete= models.CASCADE , null = True)
+    #city_id = models.ForeignKey(City , on_delete= models.CASCADE , null = True)
+    city_id = models.ForeignKey("Profile.City" , on_delete= models.CASCADE , null = True)
+
     # country = models.ForeignKey(country, )
     name = models.CharField( max_length=50 ,null =True )
 
@@ -91,7 +93,8 @@ class Rate(models.Model):
 
     user = models.ForeignKey(
 
-        User, on_delete=models.CASCADE, related_name='rates')
+        User, on_delete=models.CASCADE, related_name='rates')#i think this is wrong ->related_name='rates'
+    #must change to integerfield
 
     rate = models.DecimalField(
 
@@ -101,7 +104,7 @@ class Rate(models.Model):
 
 
 
-    def __str__(self):
+    #def __str__(self):
 
-        return f"{user.name} rated {self.rate} to {self.place.name}"
+    #    return f"{user.name} rated {self.rate} to {self.place.name}"
 

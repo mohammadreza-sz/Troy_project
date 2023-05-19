@@ -8,15 +8,15 @@ from rest_framework import serializers
 # User = get_user_model()
 # from django.conf import settings
 
-class UserCreateSerializer(BaseUserCreateSerializer):#helen
-    class Meta(BaseUserCreateSerializer.Meta):
-        model = settings.AUTH_USER_MODEL
-        fields = ('email', 'username', 'password' , 'first_name' , 'last_name' )
+# class UserCreateSerializer(BaseUserCreateSerializer):#helen
+#     class Meta(BaseUserCreateSerializer.Meta):
+#         model = settings.AUTH_USER_MODEL
+#         fields = ('id', 'email', 'username', 'password' , 'first_name' , 'last_name' )
 
 class UserSerializer(BaseUserSerializer):#mrs#59
     class Meta(BaseUserSerializer.Meta):
         # model = settings.AUTH_USER_MODEL
-        fields =['id'  , 'username','email' , 'first_name' ]
+        fields =['id'  , 'username','email' , 'first_name' , 'last_name']
     
 
     # email = serializers.EmailField(read_only = True)#if want to avoid to modify its own email

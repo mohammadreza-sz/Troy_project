@@ -6,7 +6,8 @@ from re import search
 
 from rest_framework import serializers
 
-from .models import Person , Trip , Country , City , Favorite
+from Place.models import Place
+from .models import Organization, Person, TourLeader , Trip , Country , City , Favorite
 
 from django.conf import settings
 
@@ -162,14 +163,84 @@ class PersonSerializer(serializers.ModelSerializer):#lesson 59
 
 
 
-class TripSerializer(serializers.ModelSerializer):
-
+#mrs
+class CityTripSerializer(serializers.ModelSerializer):
+    country_name = serializers.SerializerMethodField()
     class Meta:
+        model = City
+        fields = 'country_name','city_name'
+    def get_country_name(self, obj):
+        return obj.country_id.country_name
 
+
+class PlaceTripSerializer(serializers.ModelSerializer):
+    country = serializers.SerializerMethodField()
+    city =  serializers.SerializerMethodField()
+    class Meta:
+        model = Place
+        fields = ['name', 'city' , 'country']
+    # city_id = CityTripSerializer()
+    def get_city(self , obj):
+        return obj.city_id.city_name
+    def get_country(self , obj):
+        return obj.city_id.country_id.country_name
+
+class TransportSerializer(serializers.Serializer):#mrs
+    TRANSPORT_CHOICES = [
+        ('A' , 'airplane'),
+        ('S' , 'ship'),
+        ('B' , 'bus'),
+        ('T' , 'train')
+
+    ]
+    departure_transport = serializers.ChoiceField(choices=TRANSPORT_CHOICES)
+    return_transport = serializers.ChoiceField(choices=TRANSPORT_CHOICES)
+
+# class TripTourLeaderSerializer(serializers.ModelSerializer):#mrs
+#     name = serializers.SerializerMethodField()
+#     class Meta:
+#         model = TourLeader
+#         fields = 'Id' , 'name'
+#     def get_name(self,obj):
+#         return obj.Id.user_id.id
+
+class DestinationSerializer(serializers.Serializer):
+    country_name = serializers.CharField(max_length = 30)
+    city_name = serializers.CharField(max_length = 30)
+
+class TripSerializer(serializers.ModelSerializer):#mrs
+    # destination= CityTripSerializer(many = True , source  = 'destination_city')#mrs if want to obtain destination from place_ids
+
+    # transport = TransportSerializer(source = '' , read_only = True)#return (departure_transport , return_transport)within object
+    class Meta:
         model = Trip
+        fields = ['id'  , 'origin_city_id' ,'destination_city','destination_country','departure_transport','return_transport','departure_date','return_date' ,'Description', 'capacity' , 'Price', 'place_ids','organization_id','TourLeader_ids']
+    #     fields = ['id'  , 'origin' ,'destination','departure_date','transport','return_date' ,'Description', 'capacity' , 'Price', 'place_ids','organization_id','TourLeader_ids']
+    # origin = CityTripSerializer(source = 'origin_city_id')
 
-        fields = ['id' , 'destination_country' ,'destination_city' , 'origin_country',  'origin_city' , 'begin_time' , 'end_time' , 'capacity']
+       
+    # def to_representation(self, instance):#return (departure_transport , return_transport)within object
+    #     data = super().to_representation(instance)
+    #     data['transport'] = {
+    #         'departure_transport':instance.get_departure_transport_display(),
+    #         'return_transport': instance.get_return_transport_display()
+    #     }
+    #     return [data]
+##############################
+    # def get_transport(self , obj):
+    #     return f"{obj.departure_transport},{obj.return_transport}"
 
+    # organization_id = serializers.SerializerMethodField()#mrs for get organization from tourleader_ids but has logic error
+    # def get_organization_id(self , obj:Trip):
+    #     tour_leader = obj.TourLeader_ids.first()
+    #     if tour_leader:
+    #         return tour_leader.orga_id.id
+    #     return None
+    #     return obj.TourLeader_ids.all().first().orga_id.name_org
+    #     return [tour_leader.orga_id.name_org for tour_leader in obj.TourLeader_ids.all()]
+
+class tripserializer(serializers.Serializer):
+    id = serializers.IntegerField()
 
 
 class CitySerializer(serializers.ModelSerializer):

@@ -45,17 +45,62 @@ class PersonViewSet(CreateModelMixin , RetrieveModelMixin , UpdateModelMixin , G
 
 #}helen
 
+# mrs
+# from django.forms.models import model_to_dict
+# from rest_framework.views import APIView
+# from django.db import connection
+# from rest_framework.decorators import api_view
+# @api_view(['GET'])#mrs     #by default argument => GET  15
+# def s_trip(request):
+# class s_trip(APIView):
+#     def get(self, request):
+
+#         trip = Trip.objects.raw("SELECT * FROM profile_trip pt inner join profile_trip_place_ids ptp where pt.id = ptp.trip_id ")
+#         serializer = TripSerializer(trip , many = True)
+    # trip = Trip.objects.all().values("id","capacity","capacity","return_transport","departure_date",
+    # "departure_date","Description","begin_time","end_time","Price","place_ids","TourLeader_ids").prefetch_related('place_ids' , 'tourleader_ids')
+
+
+        # query = "SELECT id FROM profile_trip"
+
+        # with connection.cursor() as cursor:
+        #     cursor.execute(query)
+        #     rows = cursor.fetchall()
+
+        # serializer = TripSerializer(data=rows, many=True)
+        # serialized_data = serializer.is_valid(raise_exception=True)
+
+        # return Response(serialized_data)
+
+
+        # trip = TripSerializer(trip , many = True)
+        # trip = model_to_dict(trip ,fields=[field.name for field in trip._meta.fields])
+        # return Response(serializer.data)
+
+
 from datetime import datetime#mrs
-class TripViewSet(CreateModelMixin , RetrieveModelMixin , UpdateModelMixin , GenericViewSet ,ListModelMixin , DestroyModelMixin):
+class TripViewSet(ModelViewSet):
     #TODO every one can get but not update
     # queryset = Trip.objects.filter(begin_time__gt =datetime.now() ).all()#mrs change for greater than now
-    queryset = Trip.objects.all()#mrs change for greater than now
+    # queryset = Trip.objects.all()#mrs change for greater than now
+    def get_queryset(self):#mrs
+        # queryset = Trip.objects.select_related('origin_city_id' , 'origin_city_id__country_id').prefetch_related("place_ids").all()
+        queryset = Trip.objects.select_related('origin_city_id' , 'origin_city_id__country_id').prefetch_related("place_ids" , "TourLeader_ids" , 'destination_city' , 'destination_country' , "TourLeader_ids__orga_id").all()
+        return queryset
+
+    # @action(detail=False , methods=['GET' , 'PATCH'])
+    # def me(self , request):
+    #     trip = Trip.objects.all()#.prefetch_related('place_ids')
+    #     return Response(trip)
+
     serializer_class = TripSerializer
 
-    filterset_class = TripFilter#mrs
+    # filterset_class = TripFilter#mrs
     # filterset_fields = ['destination_country']
     filter_backends = [DjangoFilterBackend, OrderingFilter]#mrs
     # search_fields = ['destination_country' , 'destination_city']#mrs
+    ordering_fields = ['Price']
+
 
 
 class CountryViewSet(ModelViewSet):#mrs
