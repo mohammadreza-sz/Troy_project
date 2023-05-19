@@ -6,13 +6,21 @@ from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 from django.urls import reverse_lazy
 # from account.serializers import UserSerializer
 from .serializers import FavoriteSerializer, PersonSerializer , TripSerializer , CountrySerializer , CitySerializer, tripserializer
+from .serializers import *
 from rest_framework.mixins import CreateModelMixin , ListModelMixin , RetrieveModelMixin , UpdateModelMixin , DestroyModelMixin
 from rest_framework.viewsets import ModelViewSet , GenericViewSet
 from rest_framework.decorators import action #lesson 60
 from rest_framework.permissions import IsAuthenticated#61
 from rest_framework.response import Response
 from rest_framework import status
-from .models import Person , Trip , Country , City , Favorite
+# from .models import Person , Trip , Country , City , Favorite
+from .models import *
+from rest_framework.generics import ListAPIView	
+from rest_framework.generics import CreateAPIView	
+from rest_framework.generics import DestroyAPIView	
+from rest_framework.generics import UpdateAPIView	
+from rest_framework.decorators import api_view	
+from account.models import User
 
 from .filters import ProductFilter  ,CityFilter#, TripFilter, CountryFilter#mrs
 from rest_framework.filters import SearchFilter, OrderingFilter#mrs
@@ -143,3 +151,129 @@ class FavoriteView(ModelViewSet):
             #     return Response({'error':'foreignkey'},status= status.HTTP_405_METHOD_NOT_ALLOWED)
             favorite.delete()
             return Response(status= status.HTTP_204_NO_CONTENT)
+
+
+	
+# class CreateOrgAPIView(CreateAPIView):	
+#     queryset = Organization.objects.all()	
+#     serializer_class = OrganizationSerializer	
+# class UpdateOrgAPIView(UpdateAPIView):	
+#     queryset = Organization.objects.all()	
+#     serializer_class = OrganizationSerializer	
+# class DeleteOrgAPIView(DestroyAPIView):	
+#     queryset = Organization.objects.all()	
+#     serializer_class = OrganizationSerializer	
+# class TourLeaderViewSet():	
+#     queryset = TourLeader.objects.all()	
+#     serializer_class = TourLeaderSerializer	
+# class CreateTourLeaderAPIView(CreateAPIView):	
+#     queryset = TourLeader.objects.all()	
+#     serializer_class = TourLeaderSerializer	
+# class UpdateTourLeaderAPIView(UpdateAPIView):	
+#     queryset = TourLeader.objects.all()	
+#     serializer_class = TourLeaderSerializer	
+# class DeleteTourLeaderAPIView(DestroyAPIView):	
+#     queryset = TourLeader.objects.all()	
+#     serializer_class = TourLeaderSerializer	
+@api_view(['GET'])	
+def get_orgs(request):	
+    orgs = Organization.objects.all()	
+    if orgs is not None:	
+        serializers = OrganizationSerializer(orgs, many = True)	
+        return Response(serializers.data, status = 200)	
+    return Response(status = 400)	
+@api_view(['POST'])	
+def get_tourleaders(request):	
+    org = Organization.objects.get(name_org = request.data["name_org"])	
+    if org is not None:	
+        tl = TourLeader.objects.filter(orga_id= org)	
+        tl_list = list(tl)	
+        if tl is not None:	
+            serializers = TourLeaderSerializer(tl_list, many = True)	
+            return Response(serializers.data, status = 200)	
+    return Response(status = 400)	
+@api_view(['GET'])	
+def get_alltourleaders(request):	
+    tl = TourLeader.objects.all()	
+    if tl is not None:	
+        serializers = TourLeaderSerializer(tl, many = True)	
+        return Response(serializers.data, status = 200)	
+    return Response(status = 400)	
+@api_view(['POST'])	
+def get_toursfromOrg(request):	
+    org = Organization.objects.get(name_org = request.data["name_org"])	
+    if org is not None:	
+        tl = TourLeader.objects.filter(orga_id= org)	
+        tl_list = list(tl)	
+        tours = []	
+        if tl_list is not None:	
+            for i in tl_list:	
+                tour = Trip.objects.filter(TourLeader_ids = i) #queryset	
+                tour_list = list(tour)	
+                if tour_list is not None:	
+                    tours.append(tour_list)	
+        # print(tl)	
+        # print("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA")	
+        if tours is not None:	
+            serializers = TripSerializer(tours, many = True)	
+            return Response(serializers.data, status = 200)	
+    return Response(status = 400)	
+
+
+@api_view(['POST'])	
+def rate_TOURL(request):	
+    # try:	
+    #     exist_user_code = UserCode.objects.get(code = request.data["code"])	
+    # except:	
+    #     return Response("your code is invalid")	
+    # try:	
+    #     user = baseuser.objects.get(username = exist_user_code.user_name)	
+    # except:	
+    #     return Response("user doesn't exist")	
+    user = User.objects.get( username = request.data["username"])	
+    auth = User.objects.get( username = request.data["TourLeader_username"])	
+    if request.data["rate"] is not None:	
+        rateee = request.data["rate"]	
+    if auth is not None:	
+        person = Person.objects.get(user_id= auth)	
+        if person is not None:	
+            tourl = TourLeader.objects.get(person_id = person)	
+            if tourl is not None:	
+                dictt = {}	
+                dictt["tour_leader"] = tourl.id	
+                dictt["user"] = user.id	
+                dictt["rate"] = rateee	
+                serializers = Rate_TourLSerializer(data = dictt)	
+                if serializers.is_valid():	
+                    serializers.save()	
+                    return Response(200)	
+    return Response(401)
+
+@api_view(['POST'])	
+def rate_Orgg(request):	
+    # try:	
+    #     exist_user_code = UserCode.objects.get(code = request.data["code"])	
+    # except:	
+    #     return Response("your code is invalid")	
+    # try:	
+    #     user = baseuser.objects.get(username = exist_user_code.user_name)	
+    # except:	
+    #     return Response("user doesn't exist")	
+    user = User.objects.get( username = request.data["username"])	
+    auth = User.objects.get( username = request.data["Organization_username"])	
+    if request.data["rate"] is not None:	
+        rateee = request.data["rate"]	
+    if auth is not None:	
+        person = Person.objects.get(user_id= auth)	
+        if person is not None:	
+            orgg = TourLeader.objects.get(person_id = person)	
+            if tourl is not None:	
+                dictt = {}	
+                dictt["orgg"] = orgg.id	
+                dictt["user"] = user.id	
+                dictt["rate"] = rateee	
+                serializers = Rate_OrgSerializer(data = dictt)	
+                if serializers.is_valid():	
+                    serializers.save()	
+                    return Response(200)	
+    return Response(401)

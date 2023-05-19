@@ -1,11 +1,10 @@
-
-
-# from ..Profile.serializers import CitySerializer
+# from Profile.serializers import CitySerializer
 
 from dataclasses import fields
+# from account.models import User 
 
-from .models import Place , PlaceImage, Rate
-
+# from .models import Place , PlaceImage, Rate
+from .models import *
 from rest_framework import serializers
 # import base64
 class PlaceImageSerializer(serializers.ModelSerializer):#mrs
@@ -41,11 +40,6 @@ class PlaceImageSerializer(serializers.ModelSerializer):#mrs
 
         fields =['id' , 'image' , 'place_id']
 
-
-
-
-
-
 class PlaceSerializer(serializers.ModelSerializer):#mrs 59
 
     # placeimage_set = PlaceImageSerializer(many = True , read_only = True)
@@ -60,6 +54,10 @@ class PlaceSerializer(serializers.ModelSerializer):#mrs 59
 
     # )
 
+	# rate_no = serializers.ReadOnlyField()	
+    # comment_number = serializers.ReadOnlyField()
+    # username = serializers.SerializerMethodField()	
+    
     # city = CitySerializer()
 
     # city_id = serializers.CharField(max_length = 50)
@@ -75,41 +73,19 @@ class PlaceSerializer(serializers.ModelSerializer):#mrs 59
     class Meta:
 
         model = Place
-
         fields = [
-
                 'country_name',
-
-
-
                 'city_name',
-
-
-
                 # 'city_id',           
-
                 'id',
-
                 'name',
-
                 'address',
-
                 'description',
-
                 'lan',
-
                 'lon',
-
                 # 'placeimage',
-
                 'rate_no',
-
-
-
                 'avg_rate',
-
-
-
             ]
 
     def get_city_name(self, obj):
@@ -119,12 +95,8 @@ class PlaceSerializer(serializers.ModelSerializer):#mrs 59
     def get_country_name(self, obj):
 
         return obj.city_id.country_id.country_name
-
-    
-
-
-
-
+    # def get_username(self , obj):	
+        # return obj.user.username	
 
 class RateSerializer(serializers.ModelSerializer):#mrs 59
 
@@ -151,3 +123,42 @@ class RateSerializer(serializers.ModelSerializer):#mrs 59
         user_id = self.context['user_id']
 
         return Rate.objects.create(user = user_id  ,**validated_data)
+
+class UserCommentSerializer(serializers.ModelSerializer):	
+    class Meta:	
+        model = User	
+        fields = ['username', 'image']
+
+class ReplySerializer(serializers.ModelSerializer):	
+    user = UserCommentSerializer(read_only=True)	
+    class Meta:	
+        model = Comment	
+        fields = ['id', 'created_date', 'text', 'user']	
+        read_only_fields = ['id', 'created_date', 'user']	
+    def create(self, validated_data):	
+        request = self.context.get("request")	
+        validated_data['place_id'] = self.context.get("place")	
+        validated_data['parent_id'] = self.context.get("parent")	
+        validated_data['user'] = request.user	
+        return super().create(validated_data)	
+    def update(self, instance, validated_data):	
+        validated_data['created_date'] = datetime.now()	
+        return super().update(instance, validated_data)
+
+class CommentSerializer(serializers.ModelSerializer):	
+    replies = ReplySerializer(read_only=True, many=True)	
+    user = UserCommentSerializer(read_only=True)	
+    class Meta:	
+        model = Comment	
+        fields = ['id', 'created_date', 'text', 'user', 'replies']	
+        read_only_fields = ['id', 'created_date']	
+    def create(self, validated_data):	
+        request = self.context.get("request")	
+        validated_data['place_id'] = self.context.get("place")	
+        validated_data['user'] = request.user	
+        instance = super().create(validated_data)	
+        instance.place.update_comment_no()	
+        return instance	
+    def update(self, instance, validated_data):	
+        validated_data['created_date'] = datetime.now()	
+        return super().update(instance, validated_data)
