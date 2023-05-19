@@ -100,7 +100,7 @@ class Rate(models.Model):
 
     user = models.ForeignKey(
 
-        User, on_delete=models.CASCADE, related_name='rates')#i think this is wrong ->related_name='rates'
+        User, on_delete=models.CASCADE, related_name='rates')
     #must change to integerfield
     rate = models.DecimalField(
 
@@ -110,9 +110,9 @@ class Rate(models.Model):
 
 
 
-    # def __str__(self):
+    def __str__(self):
 
-    #     return f"{user.name} rated {self.rate} to {self.place.name}"
+        return f"{user.name} rated {self.rate} to {self.place.name}"
 
 class Comment(models.Model):
     place = models.ForeignKey(

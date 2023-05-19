@@ -15,4 +15,4 @@ class UserAdmin(BaseUserAdmin):#mrs#47
             },
         ),
     )
-admin.site.register(UserCode)
+# admin.site.register(UserCode)

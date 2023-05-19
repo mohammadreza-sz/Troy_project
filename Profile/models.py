@@ -1,12 +1,18 @@
 from statistics import mode
 from tkinter import CASCADE
+from account.models import User
 from django.db import models
 from django.conf import settings
 from django.db import models#mrs
 from Place import models as place_model
 from django.core.validators import MaxValueValidator, MinValueValidator
-from account.models import User
 # CRUD baraye safar tavassote organization va assign kardane ye tour leader baraye oon
+
+
+
+
+
+
 
 class Person(models.Model):    
     user_id = models.OneToOneField(settings.AUTH_USER_MODEL , on_delete=models.CASCADE , null = True)#mrs 
@@ -16,20 +22,23 @@ class Person(models.Model):
     gender = models.BooleanField(null=True)
     bio = models.TextField(null=True)
     registration_date = models.DateField(auto_now= True)
-    profile_image = models.TextField(blank=True, null=True)
-    def __str__(self):
-        return str(self.user_id)
-
+    profile_image = models.TextField(blank=True, null=True)#helen
+    # def __str__(self):
+    #     return str(self.user_id)
+#helen {
 class CommenPeople(models.Model):
     Id = models.OneToOneField(Person, on_delete = models.CASCADE, primary_key = True)
     friend_id = models.ManyToManyField("CommenPeople")
     def __str__(self) -> str:
         return str(self.Id)
 
+
+
 class Country(models.Model):#mrs
     country_name = models.CharField(null = True , max_length=30)
     def __str__(self) -> str:
         return self.country_name
+
 
 class City(models.Model):#mrs
     city_name = models.CharField(null = True, max_length=30)
@@ -38,72 +47,52 @@ class City(models.Model):#mrs
         return self.city_name
 
 
-class Organization(models.Model):
-    # user_id = models.OneToOneField(settings.AUTH_USER_MODEL ,
-            # on_delete=models.CASCADE , null = True, related_name= 'orguser')    
-    person_id = models.OneToOneField(Person, on_delete = models.CASCADE,
-        null = True)
-    
-    name_org = models.CharField(max_length=200,unique=True , null = True)#change to organization name to more readable
-    description = models.TextField(null = True)
-    city_id = models.ForeignKey(City , on_delete= models.CASCADE , null = True)# city, country
-    logo = models.TextField(blank = True, null = True)
-    Address =models.CharField(max_length=255 , null = True)
-    Phone = models.CharField(max_length=20 , null = True)
-    rates = models.IntegerField(default=0, blank=True)
+class Organization(models.Model):	
+    # user_id = models.OneToOneField(settings.AUTH_USER_MODEL ,	
+            # on_delete=models.CASCADE , null = True, related_name= 'orguser')    	
+    person_id = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete = models.CASCADE,	
+        null = True)	
+    	
+    name_org = models.CharField(max_length=200,unique=True , null = True)	
+    description = models.TextField(null = True)	
+    city_id = models.ForeignKey(City , on_delete= models.CASCADE , null = True)# city, country	
+    logo = models.TextField(blank = True, null = True)	
+    Address =models.CharField(max_length=255 , null = True)	
+    Phone = models.CharField(max_length=20 , null = True)	
+    rates = models.IntegerField(default=0, blank=True)	
 
-class Rate_Org(models.Model):
-    orgg = models.ForeignKey(
-        Organization, on_delete=models.CASCADE, related_name='rate_org')
-    user = models.ForeignKey(
-        User, on_delete=models.CASCADE, related_name='rates_org')
-    rate = models.IntegerField(default=5, 
-        validators=[MinValueValidator(0), MaxValueValidator(5)])
-    def __str__(self):
-        return f"{self.user.email} rated {self.rate} to {self.orgg.person_id.city}"
+class Rate_Org(models.Model):	
+    orgg = models.ForeignKey(	
+        Organization, on_delete=models.CASCADE, related_name='rate_org')	
+    user = models.ForeignKey(	
+        User, on_delete=models.CASCADE, related_name='rates_org')	
+    rate = models.IntegerField(default=5, 	
+        validators=[MinValueValidator(0), MaxValueValidator(5)])	
+    def __str__(self):	
+        return f"{self.user.email} rated {self.rate} to {self.orgg.person_id.city}"	
 
-class TourLeader(models.Model):
-    person_id = models.OneToOneField(Person, on_delete = models.CASCADE,
-                              null = True)
-    orga_id = models.ForeignKey(Organization, on_delete = models.CASCADE,
-     null= True, related_name = "tourleader")
-    rates = models.IntegerField(default=0, blank=True)
-    rate_no = models.IntegerField(default=0, blank=True)
-    joindDate = models.DateTimeField(auto_now=True)
-    phonetl = models.CharField(max_length=20 , null = True)
-
-
-
-    # Id = models.OneToOneField(Person, on_delete = models.CASCADE, primary_key = True)
-
-
-
-    # orga_id = models.ForeignKey(Organization, on_delete = models.SET_NULL, null= True)
-
-
-    # rate = models.IntegerField(validators=[MinValueValidator(0), MaxValueValidator(5)] , null = True)
-
-    # comment : models.TextField(max_length = 250)
-
-    # rate = models.IntegerField(default = 0)  # in baraye khode tour leader hast..(faghat afrade sherkat konande)
-
-
-class Rate_Tour(models.Model):
-    tour_leader = models.ForeignKey(
-        TourLeader, on_delete=models.CASCADE, related_name='rate_tour')
-    user = models.ForeignKey(
-        User, on_delete=models.CASCADE, related_name='rates_tour')
-    rate = models.IntegerField(default=5, 
-        validators=[MinValueValidator(0), MaxValueValidator(5)])
-    def __str__(self):
-        return f"{self.user.email} rated {self.rate} to {self.tour_leader.person_id.city}"
-
+class TourLeader(models.Model):	
+    person_id = models.OneToOneField(Person, on_delete = models.CASCADE, primary_key = True)	
+    orga_id = models.ForeignKey(Organization, on_delete = models.CASCADE,	
+     null= True, related_name = "tourleader")	
+    rates = models.IntegerField(default=0, blank=True)	
+    rate_no = models.IntegerField(default=0, blank=True)	
+    joindDate = models.DateTimeField(auto_now=True)	
+    phonetl = models.CharField(max_length=20 , null = True)	
+class Rate_Tour(models.Model):	
+    tour_leader = models.ForeignKey(	
+        TourLeader, on_delete=models.CASCADE, related_name='rate_tour')	
+    user = models.ForeignKey(	
+        User, on_delete=models.CASCADE, related_name='rates_tour')	
+    rate = models.IntegerField(default=5, 	
+        validators=[MinValueValidator(0), MaxValueValidator(5)])	
+    def __str__(self):	
+        return f"{self.user.email} rated {self.rate} to {self.tour_leader.person_id.city}"	
 
 from django.core.exceptions import ValidationError#mrs
 
 
 class Trip(models.Model):
-
     place_ids = models.ManyToManyField(place_model.Place , blank = True)#mrs can't use null here , must use blank
     TourLeader_ids = models.ManyToManyField(TourLeader,   blank = True)#must be in same organization
     organization_id = models.ForeignKey(Organization , on_delete=models.DO_NOTHING,null = True)
@@ -144,11 +133,6 @@ class Trip(models.Model):
             if self.return_date < self.departure_date:
                 raise ValidationError('Return date cannot be earlier than departure date.')
         
-
-
-
-
-
     # Tour_leader_id = models.ForeignKey(TourLeader, on_delete=models.SET_NULL, null= True)
     # destination_country = models.CharField(max_length=30, null = True)
     # destination_city = models.CharField(max_length=30, null = True)
@@ -157,7 +141,12 @@ class Trip(models.Model):
     # begin_time = models.DateTimeField(null = True)
     # end_time = models.DateTimeField(null = True)
     # capacity = models.IntegerField(null = True)
+
+
+
     # image = models.ImageField(upload_to = "profile/imaged" , null = True)#mrs
+
+
 
 class Post(models.Model):
     trip_id = models.ForeignKey(Trip, on_delete = models.CASCADE, null= True)
