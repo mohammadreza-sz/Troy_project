@@ -94,7 +94,7 @@ class history(APIView):#mrs
     #     return Response(serializer.data)
 
 from datetime import datetime#mrs
-from . import permissions as permi
+from . import permissions as permi#mrs
 class TripViewSet(ModelViewSet):
     permission_classes=[permi.CrudOrganizationReadOther]
 
@@ -120,8 +120,9 @@ class TripViewSet(ModelViewSet):
     ordering_fields = ['Price']
 
 
-
+from rest_framework import permissions
 class CountryViewSet(ModelViewSet):#mrs
+    permission_classes = [permi.CrudAdminReadOther]
     # filterset_class = CountryFilter#mrs
     filter_backends = [ SearchFilter]#mrs
     search_fields = ['country_name']
@@ -130,6 +131,7 @@ class CountryViewSet(ModelViewSet):#mrs
 
 
 class CityViewSet(ModelViewSet):#mrs
+    permission_classes = [permi.CrudAdminReadOther]
     filterset_class = CityFilter#mrs
     filter_backends = [ DjangoFilterBackend]#mrs
     queryset = City.objects.all()
