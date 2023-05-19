@@ -209,23 +209,23 @@ class DestinationSerializer(serializers.Serializer):
     city_name = serializers.CharField(max_length = 30)
 
 class TripSerializer(serializers.ModelSerializer):#mrs
-    # destination= CityTripSerializer(many = True , source  = 'destination_city')#mrs if want to obtain destination from place_ids
+    destination= CityTripSerializer(many = True , source  = 'destination_city')#mrs if want to obtain destination from place_ids
 
-    # transport = TransportSerializer(source = '' , read_only = True)#return (departure_transport , return_transport)within object
+    transport = TransportSerializer(source = '' , read_only = True)#return (departure_transport , return_transport)within object
     class Meta:
         model = Trip
-        fields = ['id'  , 'origin_city_id' ,'destination_city','destination_country','departure_transport','return_transport','departure_date','return_date' ,'Description', 'capacity' , 'Price', 'place_ids','organization_id','TourLeader_ids']
-    #     fields = ['id'  , 'origin' ,'destination','departure_date','transport','return_date' ,'Description', 'capacity' , 'Price', 'place_ids','organization_id','TourLeader_ids']
-    # origin = CityTripSerializer(source = 'origin_city_id')
+        # fields = ['id'  , 'origin_city_id' ,'destination_city','destination_country','departure_transport','return_transport','departure_date','return_date' ,'Description', 'capacity' , 'Price', 'place_ids','organization_id','TourLeader_ids']
+        fields = ['id'  , 'origin' ,'destination','departure_date','transport','return_date' ,'Description', 'capacity' , 'Price', 'place_ids','organization_id','TourLeader_ids' , 'image' , 'hotel_name']
+    origin = CityTripSerializer(source = 'origin_city_id')
 
        
-    # def to_representation(self, instance):#return (departure_transport , return_transport)within object
-    #     data = super().to_representation(instance)
-    #     data['transport'] = {
-    #         'departure_transport':instance.get_departure_transport_display(),
-    #         'return_transport': instance.get_return_transport_display()
-    #     }
-    #     return [data]
+    def to_representation(self, instance):#return (departure_transport , return_transport)within object
+        data = super().to_representation(instance)
+        data['transport'] = {
+            'departure_transport':instance.get_departure_transport_display(),
+            'return_transport': instance.get_return_transport_display()
+        }
+        return [data]
 ##############################
     # def get_transport(self , obj):
     #     return f"{obj.departure_transport},{obj.return_transport}"

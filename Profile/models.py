@@ -197,7 +197,8 @@ class Trip(models.Model):
     
 
     Price = models.IntegerField(null = True , validators=[MinValueValidator(5) , MaxValueValidator(5000)])
-    # Place_id
+    image = models.TextField(null =True)
+    hotel_name = models.CharField(max_length=30, null = True)
     def clean(self):#mrs
         if self.return_date and self.departure_date :
             if self.return_date < self.departure_date:
