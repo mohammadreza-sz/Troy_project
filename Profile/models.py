@@ -161,7 +161,7 @@ class TourLeader(models.Model):
 
 from django.core.exceptions import ValidationError#mrs
 class Trip(models.Model):
-
+    common_people_id = models.ManyToManyField(CommenPeople , blank = True)
     place_ids = models.ManyToManyField(place_model.Place , blank = True)#mrs can't use null here , must use blank
     TourLeader_ids = models.ManyToManyField(TourLeader,   blank = True)#must be in same organization
     organization_id = models.ForeignKey(Organization , on_delete=models.DO_NOTHING,null = True)

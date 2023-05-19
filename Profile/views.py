@@ -12,7 +12,7 @@ from rest_framework.decorators import action #lesson 60
 from rest_framework.permissions import IsAuthenticated#61
 from rest_framework.response import Response
 from rest_framework import status
-from .models import Person , Trip , Country , City , Favorite
+from .models import CommenPeople, Person , Trip , Country , City , Favorite
 
 from .filters import ProductFilter , TripFilter ,CityFilter#, CountryFilter#mrs
 from rest_framework.filters import SearchFilter, OrderingFilter#mrs
@@ -76,16 +76,34 @@ class PersonViewSet(CreateModelMixin , RetrieveModelMixin , UpdateModelMixin , G
         # trip = TripSerializer(trip , many = True)
         # trip = model_to_dict(trip ,fields=[field.name for field in trip._meta.fields])
         # return Response(serializer.data)
+from rest_framework.views import APIView
 
+class history(APIView):#mrs
+    permission_classes = [IsAuthenticated]#must add login user must be common people
+    def get(self , request):
+        c_p_id = CommenPeople.objects.select_related("Id" , "Id__user_id").filter(Id__user_id__id = request.user.id).values('Id').first()["Id"]#what is difference between this  line and next line?
+        # c_p_id = CommenPeople.objects.filter(Id__user_id__id = request.user.id).values('Id').first()["Id"]
+
+        queryset = Trip.objects.select_related('origin_city_id' , 'origin_city_id__country_id').prefetch_related("place_ids" , "TourLeader_ids" , 'destination_city' , 'destination_country' , "TourLeader_ids__orga_id" , "common_people_id").filter(common_people_id__in = [c_p_id]).all()        
+        serializer = TripSerializer(queryset , many = True)
+        return Response(serializer.data)
+    # def get(self, request): GPT recommende
+    #     c_p_id = CommenPeople.objects.filter(Id__user_id=request.user).values_list('Id', flat=True).first()
+    #     queryset = Trip.objects.select_related('origin_city_id__country_id', 'destination_city__country_id', 'TourLeader_ids__orga_id', 'common_people_id__Id__user_id').prefetch_related('place_ids').filter(common_people_id__Id__user_id=request.user)
+    #     serializer = TripSerializer(queryset, many=True)
+    #     return Response(serializer.data)
 
 from datetime import datetime#mrs
+from . import permissions as permi
 class TripViewSet(ModelViewSet):
+    permission_classes=[permi.CrudOrganizationReadOther]
+
     #TODO every one can get but not update
     # queryset = Trip.objects.filter(begin_time__gt =datetime.now() ).all()#mrs change for greater than now
     # queryset = Trip.objects.all()#mrs change for greater than now
     def get_queryset(self):#mrs
         # queryset = Trip.objects.select_related('origin_city_id' , 'origin_city_id__country_id').prefetch_related("place_ids").all()
-        queryset = Trip.objects.select_related('origin_city_id' , 'origin_city_id__country_id').prefetch_related("place_ids" , "TourLeader_ids" , 'destination_city' , 'destination_country' , "TourLeader_ids__orga_id").all()
+        queryset = Trip.objects.select_related('origin_city_id' , 'origin_city_id__country_id').prefetch_related("place_ids" , "TourLeader_ids" , 'destination_city' , 'destination_country' , "TourLeader_ids__orga_id" , "common_people_id").all()
         return queryset
 
     # @action(detail=False , methods=['GET' , 'PATCH'])
