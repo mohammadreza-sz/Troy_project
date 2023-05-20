@@ -30,13 +30,18 @@ from django.contrib.auth.models import AbstractUser #lesson 47
 
 
 
-class User(AbstractUser):#mrs       #lesson 47 we can use this user model instead of default user which django use
-
+class User(AbstractUser):#mrs       #lesson 47 we can use this user model instead of default user which django use    
+    ROLE_CHOICES = (
+        ('C','COMMON_PEOPLE'),
+        ('T','TOUR_LEADER'),
+        ('O','ORGANIZATION'),
+    )
     email = models.EmailField(unique=True)
+    role = models.CharField(max_length=1, choices=ROLE_CHOICES , null = True)
 
-    # USERNAME_FIELD = "username" by default
+    # USERNAME_FIELD = ["username" , 'email']# by default
 
-    REQUIRED_FIELDS = ["first_name" , "last_name" , "email"]
+    REQUIRED_FIELDS = ["first_name" , "last_name" , "email" , 'role']
 
     
 

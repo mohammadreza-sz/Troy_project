@@ -10,8 +10,8 @@ from rest_framework import serializers
 
 # class UserCreateSerializer(BaseUserCreateSerializer):#helen
 #     class Meta(BaseUserCreateSerializer.Meta):
-#         # model = settings.AUTH_USER_MODEL
-#         fields = ('id', 'email', 'username', 'password' , 'first_name' , 'last_name')
+#         model = settings.AUTH_USER_MODEL
+#         fields = ('id', 'email', 'username', 'password' , 'first_name' , 'last_name' )
 
 class UserSerializer(BaseUserSerializer):#mrs#59
     class Meta(BaseUserSerializer.Meta):
@@ -26,7 +26,7 @@ class UserCreatePasswordRetypeSerializer(BaseUserCreatePasswordRetypeSerializer)
     
     class Meta(BaseUserCreatePasswordRetypeSerializer.Meta):
         # model = settings.AUTH_USER_MODEL
-        fields = ('id', 'email', 'username'  ,'first_name' , 'last_name', 'password')
+        fields = ('id', 'email', 'username'  ,'first_name' , 'last_name', 'password' )
         
     # email = serializers.EmailField(read_only = True)#if want to avoid to modify its own email
     # password = serializers.CharField()

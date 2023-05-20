@@ -37,7 +37,17 @@ def process_data(data):
     pass
 
 #}helen
-
+#mrs
+from rest_framework.decorators import api_view, permission_classes#mrs
+from rest_framework.permissions import IsAuthenticated#mrs
+# from oauth2_provider.decorators import protected_resource
+# @protected_resource()
+# @csrf_exempt
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])#mrs
+def get_role(request):
+    role = request.user.role
+    return Response({"ROLE":role})
 #mrs
 
 # @api_view(['post'] )
