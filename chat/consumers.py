@@ -59,8 +59,9 @@
 
 import json
 
+
 from channels.generic.websocket import AsyncWebsocketConsumer , AsyncJsonWebsocketConsumer
-from .models import Conversation , Message
+from .models import Connection, Conversation , Message
 from jwt.exceptions import InvalidTokenError
 from rest_framework_simplejwt.exceptions import InvalidToken
 from account.models import User as UserModel
@@ -142,6 +143,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
                 await self.channel_layer.group_add(self.room_group_name, self.channel_name)#group is collection of channels
                 # print("\n\n\n"+user.first_name)
                 await self.accept()
+                await self.user_on({'user':user,'status':True})
                 conversation =await self.get_conversation(self.room_name)# Conversation.objects.get(room_name=self.room_name)#################************************
                 if conversation is not None:
                     message =await self.last_message(conversation)#perhaps doesn't return anything here but no matter
@@ -197,6 +199,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
             # pass
             # await self.close()
         # else:
+        await self.user_off(self.scope['user'])
         await self.channel_layer.group_discard(self.room_group_name, self.channel_name)
 
 
@@ -267,6 +270,23 @@ class ChatConsumer(AsyncWebsocketConsumer):
         for message in messages:
             result.append(self.message_to_json(message))
         return result
+        
+    @database_sync_to_async
+    def user_off(self , user):
+        obj = Connection.objects.get(user = user)
+        obj.status=False
+        obj.save()
+    @database_sync_to_async
+    def user_on(self , data):
+        obj, created = Connection.objects.get_or_create(
+        user=data['user'],
+        # field2=data['status']
+    )
+        obj.status = data['status']
+        obj.save()
+        # return obj
+
+
     @database_sync_to_async
     def create_conversation(self, room_namee):
         new_conversation = Conversation(room_name = room_namee)
