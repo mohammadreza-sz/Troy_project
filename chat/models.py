@@ -9,8 +9,8 @@ from django.conf import settings
 
 class Conversation(models.Model):
     room_name = models.CharField(max_length=10 , primary_key=True)
-    participants = models.ManyToManyField(settings.AUTH_USER_MODEL)
-    created_at = models.DateTimeField(auto_now_add=True)
+    # participants = models.ManyToManyField(settings.AUTH_USER_MODEL)
+    created_at = models.DateTimeField(auto_now_add=True , null = True)
 
 class Message(models.Model):
     sender = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='sent_messages')
@@ -24,11 +24,11 @@ class Message(models.Model):
 #     message = models.TextField()
 #     timestamp = models.DateTimeField(auto_now_add=True)
 
-# class Connection(models.Model):
-#     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-#     status = models.BooleanField(default=False)
-#     last_seen = models.DateTimeField(auto_now=True)
-#     device_info = models.CharField(max_length=255, blank=True)
+class Connection(models.Model):
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE , null =True)
+    status = models.BooleanField(default=False , null =True)
+    last_seen = models.DateTimeField(auto_now=True , null = True)
+    device_info = models.CharField(max_length=255, blank=True , null = True)
 
 # class Group(models.Model):
 #     name = models.CharField(max_length=50, unique=True)

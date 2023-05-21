@@ -482,7 +482,7 @@ DATABASES = {
 
 
 
-        'NAME': 'troy',
+        'NAME': 'chat',
 
 
 

@@ -20,12 +20,12 @@
             + roomName
             + '/'
         );
-        {% comment %} chatSocket.onopen = function(e) {
+        chatSocket.onopen = function(e) {
             fetchMessages();
           }
         function fetchMessages() {
-            chatSocket.send(JSON.stringify({'command': 'fetch_messages' }));
-          } {% endcomment %}
+            chatSocket.send(JSON.stringify({'receiver_id': 2 }));
+          }
         chatSocket.onmessage = function(e) {
             const data = JSON.parse(e.data);
             document.querySelector('#chat-log').value += (data.message + '\n');
@@ -46,7 +46,7 @@
             const messageInputDom = document.querySelector('#chat-message-input');
             const message = messageInputDom.value;
             chatSocket.send(JSON.stringify({
-                {% comment %} 'type':'chat_message', {% endcomment %}
+                'type':'chat_message',
                 'message': message
             }));
             messageInputDom.value = '';

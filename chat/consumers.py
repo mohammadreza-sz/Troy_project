@@ -67,6 +67,8 @@ from account.models import User as UserModel
 from channels.generic.websocket import WebsocketConsumer
 from channels.db import database_sync_to_async
 from asgiref.sync import async_to_sync
+import json
+
 
 
 class ChatConsumer(AsyncWebsocketConsumer):
@@ -103,14 +105,15 @@ class ChatConsumer(AsyncWebsocketConsumer):
             # token = self.scope['headers'][b'authorization'][0].decode('utf-8').split(' ')[1]
             # t = "fjksl"
         index = self.get_index_of_jwt_token()
-        if index != -1:                            
+        if index != -1:                     
             token = self.scope['headers'][index][1].decode('utf-8').split(' ')[1]
-        else:
+        else:#if user not login or front doesn't pass authorization header
             # await self.websocket.close(code=1000)
             self.room_name = self.scope["url_route"]["kwargs"]["room_name"]
             self.room_group_name = "chat_%s" % self.room_name
             await self.channel_layer.group_add(self.room_group_name, self.channel_name)
             await self.accept()            
+            await self.send_json({'error': 'User is not authenticated'})
             await self.close()
             # await self.send({"type": "websocket.close", "code": 1009})
             return
@@ -134,18 +137,29 @@ class ChatConsumer(AsyncWebsocketConsumer):
                 self.room_group_name = "chat_%s" % self.room_name
                 self.scope['user'] = user
                 # Join room group
-                await self.channel_layer.group_add(self.room_group_name, self.channel_name)
-                print("\n\n\n"+user.first_name)
+                # if channle count more than two must diconnected********************************
+                # await check_duplicat_room()
+                await self.channel_layer.group_add(self.room_group_name, self.channel_name)#group is collection of channels
+                # print("\n\n\n"+user.first_name)
                 await self.accept()
-                # conversation =await self.get_conversation(self.room_name)# Conversation.objects.get(room_name=self.room_name)#################************************
-                # if conversation is None:
-                #     message =await self.last_message(conversation)
-                #     await self.send_json(message)
+                conversation =await self.get_conversation(self.room_name)# Conversation.objects.get(room_name=self.room_name)#################************************
+                if conversation is not None:
+                    message =await self.last_message(conversation)#perhaps doesn't return anything here but no matter
+                    for m in message:
+                        await self.receive(json.dumps({"fetch_message":m.text}))
+                    # await self.send_json(message)
+                else:
+                    await self.create_conversation(self.room_name)
 
             else:
                 await self.send_json({'error': 'User is not authenticated'})            
+                self.room_name = self.scope["url_route"]["kwargs"]["room_name"]
+                self.room_group_name = "chat_%s" % self.room_name
+                await self.channel_layer.group_add(self.room_group_name, self.channel_name)
+                await self.accept()
                 await self.close()
         except (InvalidTokenError, InvalidToken):
+            await self.send_json({'error': 'User is not authenticated'})            
             self.room_name = self.scope["url_route"]["kwargs"]["room_name"]
             self.room_group_name = "chat_%s" % self.room_name
             await self.channel_layer.group_add(self.room_group_name, self.channel_name)
@@ -189,39 +203,83 @@ class ChatConsumer(AsyncWebsocketConsumer):
     async def send_json(self, content):
         await self.send(text_data=json.dumps(content))
 
-
+    def set_variable(self, value):
+        setattr(self.__class__, 'new_variable', value)
     # Receive message from WebSocket
-    async def receive(self, text_data):
+    async def receive(self, text_data:dict):
         text_data_json = json.loads(text_data)
-        message = text_data_json["message"]
-         # Save message to database
-        # conversation = Conversation.objects.get(room_name=self.room_name)#################************************
-        # conversation =await self.get_conversation(self.room_name)# Conversation.objects.get(room_name=self.room_name)#################************************
-        
-        # sender = self.scope['user']
-        # receiver = conversation.participants.exclude(id=sender.id).first()
-        # receiver = await self.get_receiver(sender.id)
+        if "receiver_id" in text_data_json:
+            print ("\n\n\n\n\n receiver_id :" , text_data_json["receiver_id"])
+            async_to_sync( setattr(self.__class__, 'receiver_id', text_data_json["receiver_id"]))
+            # await self.set_variable( text_data_json["receiver_id"])
+            print("\nnew variable set\n")
 
-        # new_message = Message(sender=sender, receiver=receiver, text=message, conversation=conversation)
-        # new_message.save()
-        # await self.create_message(sender , receiver , conversation , message)
-        # Send message to room group
-        await self.channel_layer.group_send(
-            self.room_group_name, {"type": "chat_message", "message": message}
-            # self.room_group_name, {"type": "chat_message2", "message": message}
-        )
+            # messages = message.last_30_messages(message)
+            # content = {
+            # # 'command': 'fetch-messages',
+            # 'messages': await self.messages_to_json(messages)
+            # }
+            # self.send_message(content)
+            # print("\n\n\n\n\n" , content)
+        elif "fetch_message" in text_data_json:
+            message = text_data_json["fetch_message"]
+            # await self.channel_layer.group_send(
+            #     self.room_group_name, {"type": "chat_message", "message": message}
+            #     # self.room_group_name, {"type": "chat_message2", "message": message}
+            # )
+            await self.channel_layer.send(self.channel_name, {
+                "type": "send_to_single_channel",
+                "message": message,
+})
+        else:
+            message = text_data_json["message"]
+            # Save message to database
+            # conversation = Conversation.objects.get(room_name=self.room_name)#################************************
+            conversation =await self.get_conversation(self.room_name)# Conversation.objects.get(room_name=self.room_name)#################************************
+            
+            sender = self.scope['user']
+            # receiver = conversation.participants.exclude(id=sender.id).first()
+            receiver = await self.get_user(self.receiver_id)
+
+            # new_message = Message(sender=sender, receiver=receiver, text=message, conversation=conversation)
+            # new_message.save()
+            await self.create_message(sender , receiver , conversation , message)
+            # Send message to room group
+            await self.channel_layer.group_send(
+                self.room_group_name, {"type": "send_to_all_channels", "message": message}
+                # self.room_group_name, {"type": "chat_message2", "message": message}
+            )
+        return 
 
     # Receive message from room group
-    async def chat_message(self, event):
+    async def send_to_all_channels(self, event):
         message = event["message"]
         # username = event['username']
 
         # Send message to WebSocket
         await self.send(text_data=json.dumps({"message": message }))#,"username": username}))
-    
+    async def send_to_single_channel(self ,event):
+        message = event["message"]
+        await self.send(text_data=json.dumps({"message": message }))#,"username": username}))
+        # pass
+    def messages_to_json(self, messages):
+        result = []
+        for message in messages:
+            result.append(self.message_to_json(message))
+        return result
+    @database_sync_to_async
+    def create_conversation(self, room_namee):
+        new_conversation = Conversation(room_name = room_namee)
+        new_conversation.save()
     @database_sync_to_async
     def last_message(self , conversationn):
-        return  Conversation.objects.order_by('-timestamp').filter(conversation = conversationn)[:2]
+        qs=  Message.objects.order_by('timestamp').filter(conversation = conversationn).all()
+        # for mess in qs.values('room_name'):
+        #     print(mess.room_name , "\n\n\n")
+        #     # people_list.append(person_obj)
+        # for message in m:
+        #     self.receive({"message":message.text})
+        return list(qs)
     @database_sync_to_async
     def create_message(self , sender , receiver , conversation , message):
         new_message = Message(sender=sender, receiver=receiver, text=message, conversation=conversation)
@@ -230,13 +288,14 @@ class ChatConsumer(AsyncWebsocketConsumer):
     @database_sync_to_async
     def get_conversation(self, room_namee):
         try:
-            return Conversation.objects.filter(room_name=room_namee)
+            return Conversation.objects.filter(room_name=room_namee).first()
         except UserModel.DoesNotExist:
             return None
         # return 
     @database_sync_to_async
     def get_receiver(self ,sender_id):
         return Conversation.participants.exclude(id=sender_id).first()
+        # return 
 
     @database_sync_to_async
     def get_user(self, user_id):
