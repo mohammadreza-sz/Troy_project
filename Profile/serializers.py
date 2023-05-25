@@ -1,4 +1,7 @@
+from ast import expr_context
+from asyncio.windows_events import NULL
 from dataclasses import fields
+from email.policy import default
 
 
 
@@ -11,6 +14,8 @@ from itertools import count
 
 
 from re import search
+from unittest.util import _MAX_LENGTH
+from wsgiref import validate
 
 
 
@@ -496,17 +501,17 @@ class PersonSerializer(serializers.ModelSerializer):#lesson 59
 
 class CityTripSerializer(serializers.ModelSerializer):
 
-    country_name = serializers.SerializerMethodField()
-
+    # country_name = serializers.SerializerMethodField()
+    country_name = serializers.StringRelatedField(source = 'country_id')
     class Meta:
 
         model = City
 
-        fields = 'country_name','city_name'
+        fields =( 'country_name','city_name')
 
-    def get_country_name(self, obj):
+    # def get_country_name(self, obj):
 
-        return obj.country_id.country_name
+    #     return obj.country_id.country_name
 
 
 
@@ -582,26 +587,137 @@ class DestinationSerializer(serializers.Serializer):
 
     city_name = serializers.CharField(max_length = 30)
 
+# def to_internal_value(self, data):
+#     trans_dict = data.pop('transport')
+#     departure_transport = trans_dict.pop('departure_transport')
+#     return_transport_display = trans_dict.pop('return_transport')
+#     return_transport = dict(MyModel.TRANSPORT_CHOICES).get(return_transport_display)
+#     data['departure_transport'] = departure_transport
+#     data['return_transport'] = return_transport
 
-
+#     return data
 class TripSerializer(serializers.ModelSerializer):#mrs
-    destination= CityTripSerializer(many = True , source  = 'destination_city')#mrs if want to obtain destination from place_ids
-    transport = TransportSerializer(source = '' , read_only = True)#return (departure_transport , return_transport)within object
+    destination= CityTripSerializer(many = True , source  = 'destination_city')#mrs if want to obtain destination from place_ids ************ this approach can't handle city name which exist in multiple country
+    # transport = TransportSerializer(source = '' )#return (departure_transport , return_transport)within object
+    # transport = serializers.CharField(default = "C") #we can use this instead use nested serializer
+    
+
+
     class Meta:
         model = Trip
         # fields = ['id'  , 'origin_city_id' ,'destination_city','destination_country','departure_transport','return_transport','departure_date','return_date' ,'Description', 'capacity' , 'Price', 'place_ids','organization_id','TourLeader_ids']
-        fields = ['id'  , 'origin' ,'destination','departure_date','transport','return_date' ,'Description', 'capacity' , 'Price', 'place_ids','organization_id','TourLeader_ids' , 'image' , 'hotel_name']
+        # fields = ['id'  , 'origin' ,'destination','departure_date','transport','return_date' ,'Description', 'capacity' , 'Price', 'place_ids','organization_id','TourLeader_ids' , 'image' , 'hotel_name']
+        fields = ['id' ,'origin','destination','departure_transport','return_transport','return_date','Description','capacity', 'Price' ,'place_ids','organization_id','TourLeader_ids' ,'image' , 'hotel_name']
 
     origin = CityTripSerializer(source = 'origin_city_id')
-
+    # origin = serializers.SerializerMethodField(source = 'origin_city_id')
+    # def get_origin(self , obj):
+    #     if obj.origin_city_id != None:
+    #         return obj.origin_city_id.city_name
+    #     else :
+    #         return None
     def to_representation(self, instance):#return (departure_transport , return_transport)within object
         data = super().to_representation(instance)
+        departure_transport = data.pop('departure_transport')
+        return_transport = data.pop('return_transport')
         data['transport'] = {
-            'departure_transport':instance.get_departure_transport_display(),
+            # 'departure_transport':instance.get_departure_transport_display(),#get_departure_transport_display for return human readable of choice field
+            # 'return_transport': instance.get_return_transport_display()
+            'departure_transport':departure_transport,
+            'return_transport': return_transport
 
-            'return_transport': instance.get_return_transport_display()
         }
-        return [data]
+        return data
+    def to_internal_value(self, data):
+        if 'transport' in data:#when use patch method , maybe transport doesn't exist in data
+            trans_dict = data.pop('transport')
+            if("departure_transport" in trans_dict):#maybe just want update departure_transport
+                departure_transport = trans_dict.pop('departure_transport')
+                data['departure_transport']=departure_transport
+
+            if("return_transport" in trans_dict):#maybe just want update departure_transport
+                return_transport = trans_dict.pop('return_transport')
+                data['return_transport']=return_transport        
+        
+        # departure_transport =self.convert_choice_field(departure_transport)
+        # return_transport = self.convert_choice_field(return_transport)
+        # print("departure",departure_transport)
+        
+        # print("data:",data)
+
+        # data['departure_transport']=value.get_foo
+        # data['return_transport']=return_transport
+        return super().to_internal_value(data )
+        # return data
+    def convert_choice_field(self , str:str):
+        if str == "bus":
+            return 'B'
+        if str == "airplane":
+            return 'A'
+        if str == "ship":
+            return 'S'
+        if str == "train":
+            return 'T'
+
+    def create(self , validated_data):
+        origin_data = validated_data.pop('origin_city_id')
+        city_name = origin_data.pop('city_name')
+        try:
+            city = City.objects.get(city_name = city_name)
+        except:
+            raise ValidationError({"error": "this city name for origin doesn't exist"})
+        destination_data = validated_data.pop('destination_city' , [])
+        places_data = validated_data.pop('place_ids', [])
+        tourleader_data = validated_data.pop('TourLeader_ids', [])
+        # destiantion_id = (for dest in destination_data)
+        # validated_data['origin_city_id'] = city
+        trip = Trip.objects.create( origin_city_id = city,**validated_data)
+        try:
+            trip.destination_city.set([City.objects.get(city_name = dest['city_name']).id for dest in destination_data])
+        except:
+            raise ValidationError({"error":"this city name doesn't exist for destination field"})
+        trip.place_ids.set([place.id for place in places_data])
+        # trip.place_ids.set(places for place in places_data)
+        trip.TourLeader_ids.set([str(tourl.person_id_id) for tourl in tourleader_data])
+
+        return trip
+    def update(self, instance, validated_data):
+        if 'origin_city_id' in validated_data:
+            try:
+                origin = validated_data.pop('origin_city_id')
+                city_name = origin.pop('city_name')
+                city = City.objects.get(city_name = city_name)
+            except:
+                raise ValidationError({"error": "this city name for origin doesn't exist"})
+
+            instance.origin_city_id =city
+            # instance.save()
+        if 'destination_city' in validated_data:
+            try:
+                destination_data = validated_data.pop('destination_city' , [])
+                instance.destination_city.set([City.objects.get(city_name = dest['city_name']).id for dest in destination_data])
+            except:
+                raise ValidationError({"error":"this city name doesn't exist for destination field"})
+
+            instance.save()
+            
+        # instance.content = validated_data.get('content', instance.content)
+        # instance.created = validated_data.get('created', instance.created)
+        instance = super().update(instance, validated_data)
+        # instance.save()
+        return instance
+        # transport_data = validated_data.pop('transport')
+        # validated_data.push(transport_data['departure_transport'])
+        # validated_data.push(transport_data['return_transport'])
+
+        # trip =Trip.objects.create(**validated_data)
+        # return trip
+
+        # user = User.objects.create(**validated_data)
+        # Profile.objects.create(user=user, **profile_data)
+        # return user
+    # def save(self):
+
 ##############################
 
     # def get_transport(self , obj):
@@ -641,26 +757,21 @@ class tripserializer(serializers.Serializer):
 
 
 class CitySerializer(serializers.ModelSerializer):
-
-
-
-
-
+    # country_name = serializers.StringRelatedField(source = 'country_id' , read_only = False)
+    country_name = serializers.SerializerMethodField()
     class Meta:
-
-
-
-
-
         model = City
-
-
-
-
-
-        fields = ['city_name' , 'country_id']
-
-
+        fields = ['city_name' , 'country_name']
+    def get_country_name(self, obj):
+        return obj.country_id.country_name
+    
+    # def to_internal_value(self, data):
+    #     return data
+    # def create(self , validated_data):
+    #     country_name = validated_data.pop('country_name')
+    #     country = Country.objects.create(country_name = country_name)
+    #     city = City.objects.create(country_id = country , **validated_data)
+    #     return city
 
 class OrganizationSerializer(serializers.ModelSerializer):	
 

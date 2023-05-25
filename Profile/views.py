@@ -230,7 +230,10 @@ class TripViewSet(ModelViewSet):
 
         return queryset
 
-
+    def retrieve(self, request, *args, **kwargs):#mrs
+        qs = Trip.objects.select_related('origin_city_id' , 'origin_city_id__country_id').prefetch_related("place_ids" , "TourLeader_ids" , 'destination_city' , 'destination_country' , "TourLeader_ids__orga_id" , "common_people_id").get(id = self.kwargs["pk"])
+        serializer = TripSerializer(qs )
+        return Response(serializer.data)
 
     # @action(detail=False , methods=['GET' , 'PATCH'])
 
@@ -284,13 +287,13 @@ class CountryViewSet(ModelViewSet):#mrs
 
 class CityViewSet(ModelViewSet):#mrs
 
-    permission_classes = [permi.CrudAdminReadOther]
+    # permission_classes = [permi.CrudAdminReadOther]
 
     filterset_class = CityFilter#mrs
 
     filter_backends = [ DjangoFilterBackend]#mrs
 
-    queryset = City.objects.all()
+    queryset = City.objects.select_related('country_id').all()
 
     serializer_class = CitySerializer
 

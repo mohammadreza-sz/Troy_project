@@ -64,14 +64,11 @@ class Country(models.Model):#mrs
 
 class City(models.Model):#mrs
 
-    city_name = models.CharField(null = True, max_length=30)
+    city_name = models.CharField(null = True, max_length=30)#this approach can't handle city name which exist in multiple country must change it to unique
 
     country_id = models.ForeignKey(Country, on_delete=models.CASCADE , null = True)
 
     def __str__(self) -> str:
-
-
-
         return self.city_name
 
 from django.core.exceptions import ValidationError#mrs
