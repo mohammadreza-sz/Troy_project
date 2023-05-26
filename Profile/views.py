@@ -1,7 +1,3 @@
-from urllib import request
-
-from django.shortcuts import render
-
 #helen{
 
 from django.views import generic
@@ -46,7 +42,7 @@ from account.models import User
 
 
 
-from .filters import ProductFilter  ,CityFilter#, TripFilter, CountryFilter#mrs
+from .filters import ProductFilter  ,CityFilter ,TripFilter#, CountryFilter#mrs
 
 from rest_framework.filters import SearchFilter, OrderingFilter#mrs
 
@@ -251,17 +247,17 @@ class TripViewSet(ModelViewSet):
 
 
 
-    # filterset_class = TripFilter#mrs
+    filterset_class = TripFilter#mrs
 
     
 
     # filterset_fields = ['destination_country']
 
-    filter_backends = [DjangoFilterBackend, OrderingFilter]#mrs
+    filter_backends = [DjangoFilterBackend,SearchFilter, OrderingFilter]#mrs
 
-    # search_fields = ['destination_country' , 'destination_city']#mrs
+    search_fields = ['hotel_name' , 'Description']#mrs
 
-    ordering_fields = ['Price']
+    ordering_fields = ['Price' , 'capacity']
 
 
 

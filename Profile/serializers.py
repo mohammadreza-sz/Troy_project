@@ -1,5 +1,4 @@
 from ast import expr_context
-from asyncio.windows_events import NULL
 from dataclasses import fields
 from email.policy import default
 
@@ -607,7 +606,7 @@ class TripSerializer(serializers.ModelSerializer):#mrs
         model = Trip
         # fields = ['id'  , 'origin_city_id' ,'destination_city','destination_country','departure_transport','return_transport','departure_date','return_date' ,'Description', 'capacity' , 'Price', 'place_ids','organization_id','TourLeader_ids']
         # fields = ['id'  , 'origin' ,'destination','departure_date','transport','return_date' ,'Description', 'capacity' , 'Price', 'place_ids','organization_id','TourLeader_ids' , 'image' , 'hotel_name']
-        fields = ['id' ,'origin','destination','departure_transport','return_transport','return_date','Description','capacity', 'Price' ,'place_ids','organization_id','TourLeader_ids' ,'image' , 'hotel_name']
+        fields = ['id' ,'origin','destination','departure_transport','return_transport','departure_date','return_date','Description','capacity', 'Price' ,'place_ids','organization_id','TourLeader_ids' ,'image' , 'hotel_name']
 
     origin = CityTripSerializer(source = 'origin_city_id')
     # origin = serializers.SerializerMethodField(source = 'origin_city_id')
