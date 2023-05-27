@@ -112,7 +112,8 @@ class Rate(models.Model):
 
     def __str__(self):
 
-        return f"{user.name} rated {self.rate} to {self.place.name}"
+        return f"{self.user.username} rated {self.rate} to {self.place.name}"
+        # return f"rated {self.rate} to {self.place.name}"
 
 class Comment(models.Model):
     place = models.ForeignKey(

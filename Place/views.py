@@ -70,8 +70,6 @@ class PlaceImageViewSet(ModelViewSet):#mrs
 
 
 
-
-
 class RateViewSet(ModelViewSet):
 
     # permission_classes=[IsAuthenticated]#mrs
@@ -100,7 +98,7 @@ class RateViewSet(ModelViewSet):
 
     def get_serializer_context(self ):
 
-        return {'user_id':self.request.user}
+        return {'user_username':self.request.user}
 
     serializer_class = RateSerializer
 

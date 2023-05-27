@@ -260,11 +260,31 @@ class OrganizationSerializer(serializers.ModelSerializer):
     # def get_tours(self, obj):	
         # objj = obj.tourleader.set_tour.all()
 
+# class  Rate_OrgSerializer(serializers.ModelSerializer):	
+#     class Meta:	
+#         model = Rate_Org	
+#         fields = "__all__"	
+
 class  Rate_OrgSerializer(serializers.ModelSerializer):	
+    usernm = serializers.CharField(source='user.username', read_only=True)
+    user_name = serializers.SerializerMethodField()
     class Meta:	
         model = Rate_Org	
-        fields = "__all__"	
+        # fields = "__all__"	
+        fields = [
+            'id',
+            'orgg',
+            'usernm',
+            'user_name',
+            'rate',
+        ]
 
+    def get_user_name(self, obj):
+        return obj.user.username
+    def create(self , validated_data):
+        # user_id = self.context['user_id']#mrsz
+        user_name = self.context['user_username']
+        return Rate.objects.create(user = user_name  ,**validated_data)
 
 class TourLeaderSerializer(serializers.ModelSerializer):	
     # organ_name = serializers.SerializerMethodField()	
@@ -292,19 +312,25 @@ class TourLeaderSerializer(serializers.ModelSerializer):
         # return TripSerializer(objj).data
 
 class  Rate_TourLSerializer(serializers.ModelSerializer):	
-    # rateTL_num = serializers.SerializerMethodField()	
-    # tour_leader_username = serializers.SerializerMethodField()	
-    # user_username = serializers.SerializerMethodField()	
-    class Meta:	
-        model = Rate_Tour	
-        # fields = ["rate"]	
-        fields = "__all__"	
-    # def get_tour_leader_username(self , obj):	
-    #     return obj.tour_leader.Id.user_id.username	
-    # def user_username(self , obj):	
-    #     return obj.user.username	
-    # def get_rateTL_num(self, obj):	
-    #     self.rate_no = len(obj.rates_tour)
+    usernm = serializers.CharField(source='user.username', read_only=True)
+    user_name = serializers.SerializerMethodField()
+    class Meta:
+        model = Rate_Tour #this is for tourleader not for tours..
+        fields = [
+            'id',
+            'tour_leader',
+            'usernm',
+            'user_name',
+            'rate',
+        ]
+
+    def get_user_name(self, obj):
+        return obj.user.username
+    def create(self , validated_data):
+        # user_id = self.context['user_id']#mrsz
+        user_name = self.context['user_username']#mrsz
+        return Rate.objects.create(user = user_name  ,**validated_data)
+
 
 class CountrySerializer(serializers.ModelSerializer):#mrs
 

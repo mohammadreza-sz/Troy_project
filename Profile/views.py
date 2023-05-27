@@ -5,7 +5,7 @@ from django.views import generic
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 from django.urls import reverse_lazy
 # from account.serializers import UserSerializer
-from .serializers import FavoriteSerializer, PersonSerializer , TripSerializer , CountrySerializer , CitySerializer, tripserializer
+# from .serializers import FavoriteSerializer, PersonSerializer , TripSerializer , CountrySerializer , CitySerializer, tripserializer
 from .serializers import *
 from rest_framework.mixins import CreateModelMixin , ListModelMixin , RetrieveModelMixin , UpdateModelMixin , DestroyModelMixin
 from rest_framework.viewsets import ModelViewSet , GenericViewSet
@@ -25,6 +25,22 @@ from account.models import User
 from .filters import ProductFilter  ,CityFilter#, TripFilter, CountryFilter#mrs
 from rest_framework.filters import SearchFilter, OrderingFilter#mrs
 from django_filters.rest_framework import DjangoFilterBackend#mrs
+
+
+from http import HTTPStatus
+from http.client import ResponseNotReady	
+from pickle import NONE	
+
+from rest_framework.decorators import api_view	
+from rest_framework.response import Response	
+from rest_framework.viewsets import ModelViewSet	
+from rest_framework.viewsets import ModelViewSet #mrs	
+from rest_framework.permissions import AllowAny, IsAdminUser, IsAuthenticated, IsAuthenticatedOrReadOnly	
+from rest_framework import permissions #mrs  #61	
+from rest_framework import status	
+from django.db.models import Avg	
+from django.core.files.base import ContentFile
+
 class PersonViewSet(CreateModelMixin , RetrieveModelMixin , UpdateModelMixin , GenericViewSet ,ListModelMixin):
     filterset_class = ProductFilter#mrs
     filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]#mrs
@@ -230,7 +246,9 @@ def rate_TOURL(request):
     #     user = baseuser.objects.get(username = exist_user_code.user_name)	
     # except:	
     #     return Response("user doesn't exist")	
+    # user = User.objects.get( username = request.data["username"])	
     user = User.objects.get( username = request.data["username"])	
+
     auth = User.objects.get( username = request.data["TourLeader_username"])	
     if request.data["rate"] is not None:	
         rateee = request.data["rate"]	
@@ -249,31 +267,75 @@ def rate_TOURL(request):
                     return Response(200)	
     return Response(401)
 
-@api_view(['POST'])	
-def rate_Orgg(request):	
-    # try:	
-    #     exist_user_code = UserCode.objects.get(code = request.data["code"])	
-    # except:	
-    #     return Response("your code is invalid")	
-    # try:	
-    #     user = baseuser.objects.get(username = exist_user_code.user_name)	
-    # except:	
-    #     return Response("user doesn't exist")	
-    user = User.objects.get( username = request.data["username"])	
-    auth = User.objects.get( username = request.data["Organization_username"])	
-    if request.data["rate"] is not None:	
-        rateee = request.data["rate"]	
-    if auth is not None:	
-        person = Person.objects.get(user_id= auth)	
-        if person is not None:	
-            orgg = TourLeader.objects.get(person_id = person)	
-            if tourl is not None:	
-                dictt = {}	
-                dictt["orgg"] = orgg.id	
-                dictt["user"] = user.id	
-                dictt["rate"] = rateee	
-                serializers = Rate_OrgSerializer(data = dictt)	
-                if serializers.is_valid():	
-                    serializers.save()	
-                    return Response(200)	
-    return Response(401)
+# @api_view(['POST'])	
+# def rate_Orgg(request):	
+#     # try:	
+#     #     exist_user_code = UserCode.objects.get(code = request.data["code"])	
+#     # except:	
+#     #     return Response("your code is invalid")	
+#     # try:	
+#     #     user = baseuser.objects.get(username = exist_user_code.user_name)	
+#     # except:	
+#     #     return Response("user doesn't exist")	
+#     user = User.objects.get( username = request.data["username"])	
+#     auth = User.objects.get( username = request.data["Organization_username"])	
+#     if request.data["rate"] is not None:	
+#         rateee = request.data["rate"]	
+#     if auth is not None:	
+#         person = Person.objects.get(user_id= auth)	
+#         if person is not None:	
+#             orgg = TourLeader.objects.get(person_id = person)	
+#             if tourl is not None:	
+#                 dictt = {}	
+#                 dictt["orgg"] = orgg.id	
+#                 dictt["user"] = user.id	
+#                 dictt["rate"] = rateee	
+#                 serializers = Rate_OrgSerializer(data = dictt)	
+#                 if serializers.is_valid():	
+#                     serializers.save()	
+#                     return Response(200)	
+#     return Response(401)
+
+
+class Rate_orgViewSet(ModelViewSet):
+    def get_permissions(self):#mrs #61
+        if self.request.method in ['POST','PUT','DELETE' ,'PATCH']:
+            return [permissions.IsAuthenticated()]
+        else:
+            return[permissions.AllowAny()]
+    def get_queryset(self):
+        rate = Rate_Org.objects.select_related('orgg').filter(orgg = self.kwargs.get('Organization_pk'))
+        return rate
+    def create(self, request, *args, **kwargs):        
+        user = self.request.user
+        user_object = Rate_Org.objects.filter(user = user , orgg = self.kwargs.get('Organization_pk'))
+        if user_object.count() >= 1:
+            return Response("you can't have duplicate rate" , status=status.HTTP_403_FORBIDDEN)
+        else :
+            return super().create(request, *args, **kwargs)
+    def get_serializer_context(self ):
+        return {'user_username':self.request.user}
+    serializer_class = Rate_OrgSerializer
+    ordering_fields = ['-rate']
+
+class Rate_TourLViewSet(ModelViewSet):
+    def get_permissions(self):#mrs #61
+        if self.request.method in ['POST','PUT','DELETE' ,'PATCH']:
+  
+            return [permissions.IsAuthenticated()]
+        else:
+            return[permissions.AllowAny()]
+    def get_queryset(self):
+        rate = Rate_Tour.objects.select_related('tour_leader').filter(tour_leader = self.kwargs.get('TourLeader_pk'))
+        return rate
+    def create(self, request, *args, **kwargs):        
+        user = self.request.user
+        user_object = Rate_Tour.objects.filter(user = user , tour_leader = self.kwargs.get('TourLeader_pk'))
+        if user_object.count() >= 1:
+            return Response("you can't have duplicate rate" , status=status.HTTP_403_FORBIDDEN)
+        else :
+            return super().create(request, *args, **kwargs)
+    def get_serializer_context(self ):
+        return {'user_username':self.request.user}
+    serializer_class = Rate_TourLSerializer
+    ordering_fields = ['-rate']

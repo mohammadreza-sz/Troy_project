@@ -14,6 +14,9 @@ router.register("Country" , CountryViewSet)
 router.register("City" , CityViewSet)
 router.register("favorite" , FavoriteView)
 router.register("Person" , PersonViewSet)
+router.register("Rate_org", Rate_orgViewSet, basename='Rate_org')#helen
+router.register("Rate_TL",Rate_TourLViewSet, basename='Rate_TL')#helen
+
 urlpatterns = [		
     # (r'^ProfileInfoAPI/$', ListOrgAPIView.as_view(), name='ProfileInfoAPI'),		
     # path("org/",ListOrgAPIView.as_view(),name="Org_list"),		
@@ -28,18 +31,15 @@ urlpatterns = [
     path("trip_by_org", get_toursfromOrg, name = "trip_by_org"),		
     path("list_orgs", get_orgs, name = "list_orgs"),		
     path("all_tourL", get_alltourleaders, name = "all_tourL"),		
-    path("RTL/", rate_TOURL, name = "RTL"),		
-    path("rate_Orgg/", rate_Orgg, name = "rate_Orgg"),		
+    # path("RTL/", rate_TOURL, name = "RTL"),		
+    # path("rate_Orgg/", rate_Orgg, name = "rate_Orgg"),		
     		
 ]
 
 # urlpatterns=[
 # path("trip/" , s_trip.as_view())
 # ]
-urlpatterns += router.urls#lesson 28
-# print(urlpatterns)
-# urlpatterns = router.urls + Person_router.urls #lesson 28
-
+urlpatterns += router.urls #lesson 28
     # path('users/<int:id>/', UserUpdateView.as_view()),
 # print(urlpatterns)
 

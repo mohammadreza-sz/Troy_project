@@ -55,10 +55,12 @@ class Rate_Org(models.Model):
         Organization, on_delete=models.CASCADE, related_name='rate_org')	
     user = models.ForeignKey(	
         User, on_delete=models.CASCADE, related_name='rates_org')	
-    rate = models.IntegerField(default=5, 	
+    rate = models.IntegerField(default=0, 	
         validators=[MinValueValidator(0), MaxValueValidator(5)])	
-    def __str__(self):	
-        return f"{self.user.email} rated {self.rate} to {self.orgg.person_id.city}"	
+
+    def __str__(self):
+        return f"{self.user.username} rated {self.rate} to {self.orgg.name_org}"
+        # return f"rated {self.rate} to {self.place.name}"
 
 class TourLeader(models.Model):	
     person_id = models.OneToOneField(Person, on_delete = models.CASCADE, primary_key = True)	
@@ -103,7 +105,7 @@ class Trip(models.Model):
     return_transport = models.CharField(max_length=1 , choices=TRANSPORT_CHOICES , null = True )
     departure_date = models.DateTimeField(null = True)
     return_date =  models.DateTimeField(null = True)
-# destinations_city
+  # destinations_city
     # Transport = 
     # Departure = 
     # return = --> i dont remember it..
