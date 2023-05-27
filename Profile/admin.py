@@ -4,8 +4,9 @@ from .models import *
 
 admin.site.register(City)
 admin.site.register(Country)
-admin.site.register(Organization)
-admin.site.register(TourLeader)
 admin.site.register(Trip)
 admin.site.register(Person)
-admin.site.register(Rate_Tour)
+admin.site.register(TourLeader)
+admin.site.register(Rate_Tour)# this is for tourleader not for tours.
+admin.site.register(Organization)
+admin.site.register(Rate_Org)#helen

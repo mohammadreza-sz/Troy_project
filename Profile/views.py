@@ -1,69 +1,33 @@
-#helen{
-
 from django.views import generic
-
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
-
 from django.urls import reverse_lazy
-
 # from account.serializers import UserSerializer
-
-from .serializers import FavoriteSerializer, PersonSerializer , TripSerializer , CountrySerializer , CitySerializer, tripserializer
-
 from .serializers import *
-
 from rest_framework.mixins import CreateModelMixin , ListModelMixin , RetrieveModelMixin , UpdateModelMixin , DestroyModelMixin
-
 from rest_framework.viewsets import ModelViewSet , GenericViewSet
-
 from rest_framework.decorators import action #lesson 60
-
 from rest_framework.permissions import IsAuthenticated#61
-
 from rest_framework.response import Response
-
 from rest_framework import status
-
 # from .models import Person , Trip , Country , City , Favorite
-
 from .models import *
-
 from rest_framework.generics import ListAPIView	
-
 from rest_framework.generics import CreateAPIView	
-
 from rest_framework.generics import DestroyAPIView	
-
 from rest_framework.generics import UpdateAPIView	
-
 from rest_framework.decorators import api_view	
-
 from account.models import User
-
-
-
 from .filters import ProductFilter  ,CityFilter ,TripFilter#, CountryFilter#mrs
-
 from rest_framework.filters import SearchFilter, OrderingFilter#mrs
-
 from django_filters.rest_framework import DjangoFilterBackend#mrs
 
 class PersonViewSet(CreateModelMixin , RetrieveModelMixin , UpdateModelMixin , GenericViewSet ,ListModelMixin):
-
     filterset_class = ProductFilter#mrs
-
     filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]#mrs
-
-
-
     queryset = Person.objects.all()
-
     serializer_class = PersonSerializer
-
     # permission_classes=[IsAuthenticated]#helen
-
     #lookup_field = 'id' #helen
-
     @action(detail=False , methods=['GET' , 'PUT'])#mrs , permission_classes=[IsAuthenticated])#lesson 60 , permi... -> 61
 
     def me(self:Person, request):#lesson 60
@@ -98,14 +62,6 @@ class PersonViewSet(CreateModelMixin , RetrieveModelMixin , UpdateModelMixin , G
 
             return Response({'opreation':'succesfully update'} | serializer.data ,status =status.HTTP_200_OK)
 
-
-
-#}helen
-
-
-
-# mrs
-
 # from django.forms.models import model_to_dict
 
 # from rest_framework.views import APIView
@@ -121,9 +77,6 @@ class PersonViewSet(CreateModelMixin , RetrieveModelMixin , UpdateModelMixin , G
 # class s_trip(APIView):
 
 #     def get(self, request):
-
-
-
 #         trip = Trip.objects.raw("SELECT * FROM profile_trip pt inner join profile_trip_place_ids ptp where pt.id = ptp.trip_id ")
 
 #         serializer = TripSerializer(trip , many = True)
@@ -131,35 +84,15 @@ class PersonViewSet(CreateModelMixin , RetrieveModelMixin , UpdateModelMixin , G
     # trip = Trip.objects.all().values("id","capacity","capacity","return_transport","departure_date",
 
     # "departure_date","Description","begin_time","end_time","Price","place_ids","TourLeader_ids").prefetch_related('place_ids' , 'tourleader_ids')
-
-
-
-
-
         # query = "SELECT id FROM profile_trip"
-
-
-
         # with connection.cursor() as cursor:
-
         #     cursor.execute(query)
 
         #     rows = cursor.fetchall()
-
-
-
         # serializer = TripSerializer(data=rows, many=True)
 
         # serialized_data = serializer.is_valid(raise_exception=True)
-
-
-
         # return Response(serialized_data)
-
-
-
-
-
         # trip = TripSerializer(trip , many = True)
 
         # trip = model_to_dict(trip ,fields=[field.name for field in trip._meta.fields])
@@ -238,31 +171,14 @@ class TripViewSet(ModelViewSet):
     #     trip = Trip.objects.all()#.prefetch_related('place_ids')
 
     #     return Response(trip)
-
-
-
-
-
     serializer_class = TripSerializer
-
-
-
     filterset_class = TripFilter#mrs
-
-    
-
     # filterset_fields = ['destination_country']
-
     filter_backends = [DjangoFilterBackend,SearchFilter, OrderingFilter]#mrs
-
     search_fields = ['hotel_name' , 'Description']#mrs
-
     ordering_fields = ['Price' , 'capacity']
 
-
-
 from rest_framework import permissions
-
 class CountryViewSet(ModelViewSet):#mrs
 
     permission_classes = [permi.CrudAdminReadOther]
@@ -277,36 +193,17 @@ class CountryViewSet(ModelViewSet):#mrs
 
     serializer_class = CountrySerializer
 
-
-
-
-
 class CityViewSet(ModelViewSet):#mrs
-
     # permission_classes = [permi.CrudAdminReadOther]
-
     filterset_class = CityFilter#mrs
-
     filter_backends = [ DjangoFilterBackend]#mrs
-
     queryset = City.objects.select_related('country_id').all()
-
     serializer_class = CitySerializer
 
-
-
-
-
 # from rest_framework import generics, mixins
-
 class FavoriteView(ModelViewSet):
-
     queryset = Favorite.objects.all()
-
     serializer_class = FavoriteSerializer
-
-
-
     @action(detail=False , methods=['GET' , 'PUT' , 'POST' , 'DELETE'], permission_classes=[IsAuthenticated])#lesson 60 , permi... -> 61
 
     def me(self , request):
@@ -348,54 +245,6 @@ class FavoriteView(ModelViewSet):
             favorite.delete()
 
             return Response(status= status.HTTP_204_NO_CONTENT)
-
-
-
-
-
-	
-
-# class CreateOrgAPIView(CreateAPIView):	
-
-#     queryset = Organization.objects.all()	
-
-#     serializer_class = OrganizationSerializer	
-
-# class UpdateOrgAPIView(UpdateAPIView):	
-
-#     queryset = Organization.objects.all()	
-
-#     serializer_class = OrganizationSerializer	
-
-# class DeleteOrgAPIView(DestroyAPIView):	
-
-#     queryset = Organization.objects.all()	
-
-#     serializer_class = OrganizationSerializer	
-
-# class TourLeaderViewSet():	
-
-#     queryset = TourLeader.objects.all()	
-
-#     serializer_class = TourLeaderSerializer	
-
-# class CreateTourLeaderAPIView(CreateAPIView):	
-
-#     queryset = TourLeader.objects.all()	
-
-#     serializer_class = TourLeaderSerializer	
-
-# class UpdateTourLeaderAPIView(UpdateAPIView):	
-
-#     queryset = TourLeader.objects.all()	
-
-#     serializer_class = TourLeaderSerializer	
-
-# class DeleteTourLeaderAPIView(DestroyAPIView):	
-
-#     queryset = TourLeader.objects.all()	
-
-#     serializer_class = TourLeaderSerializer	
 
 @api_view(['GET'])	
 
@@ -454,149 +303,148 @@ def get_toursfromOrg(request):
     if org is not None:	
 
         tl = TourLeader.objects.filter(orga_id= org)	
-
         tl_list = list(tl)	
-
         tours = []	
-
         if tl_list is not None:	
-
             for i in tl_list:	
-
                 tour = Trip.objects.filter(TourLeader_ids = i) #queryset	
-
                 tour_list = list(tour)	
-
                 if tour_list is not None:	
-
                     tours.append(tour_list)	
 
-        # print(tl)	
-
-        # print("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA")	
-
         if tours is not None:	
-
             serializers = TripSerializer(tours, many = True)	
-
             return Response(serializers.data, status = 200)	
-
     return Response(status = 400)	
 
+# @api_view(['POST'])	
+
+# def rate_TOURL(request):	
+
+#     # try:	
+
+#     #     exist_user_code = UserCode.objects.get(code = request.data["code"])	
+
+#     # except:	
+
+#     #     return Response("your code is invalid")	
+
+#     # try:	
+
+#     #     user = baseuser.objects.get(username = exist_user_code.user_name)	
+
+#     # except:	
+
+#     #     return Response("user doesn't exist")	
+
+#     user = User.objects.get( username = request.data["username"])	
+
+#     auth = User.objects.get( username = request.data["TourLeader_username"])	
+
+#     if request.data["rate"] is not None:	
+
+#         rateee = request.data["rate"]	
+
+#     if auth is not None:	
+
+#         person = Person.objects.get(user_id= auth)	
+
+#         if person is not None:	
+
+    #         tourl = TourLeader.objects.get(person_id = person)	
+
+    #         if tourl is not None:	
+
+    #             dictt = {}	
+
+    #             dictt["tour_leader"] = tourl.id	
+
+    #             dictt["user"] = user.id	
+
+    #             dictt["rate"] = rateee	
+
+    #             serializers = Rate_TourLSerializer(data = dictt)	
+
+    #             if serializers.is_valid():	
+
+    #                 serializers.save()	
+
+    #                 return Response(200)	
+
+    # return Response(401)
 
 
 
+# @api_view(['POST'])	
 
-@api_view(['POST'])	
-
-def rate_TOURL(request):	
-
-    # try:	
-
-    #     exist_user_code = UserCode.objects.get(code = request.data["code"])	
-
-    # except:	
-
-    #     return Response("your code is invalid")	
-
-    # try:	
-
-    #     user = baseuser.objects.get(username = exist_user_code.user_name)	
-
-    # except:	
-
-    #     return Response("user doesn't exist")	
-
-    user = User.objects.get( username = request.data["username"])	
-
-    auth = User.objects.get( username = request.data["TourLeader_username"])	
-
-    if request.data["rate"] is not None:	
-
-        rateee = request.data["rate"]	
-
-    if auth is not None:	
-
-        person = Person.objects.get(user_id= auth)	
-
-        if person is not None:	
-
-            tourl = TourLeader.objects.get(person_id = person)	
-
-            if tourl is not None:	
-
-                dictt = {}	
-
-                dictt["tour_leader"] = tourl.id	
-
-                dictt["user"] = user.id	
-
-                dictt["rate"] = rateee	
-
-                serializers = Rate_TourLSerializer(data = dictt)	
-
-                if serializers.is_valid():	
-
-                    serializers.save()	
-
-                    return Response(200)	
-
-    return Response(401)
+# def rate_Orgg(request):	
+#     # try:	
+#     #     exist_user_code = UserCode.objects.get(code = request.data["code"])	
+#     # except:	
+#     #     return Response("your code is invalid")	
+#     # try:	
+#     #     user = baseuser.objects.get(username = exist_user_code.user_name)	
+#     # except:	
+#     #     return Response("user doesn't exist")	
+#     user = User.objects.get( username = request.data["username"])	
+#     auth = User.objects.get( username = request.data["Organization_username"])	
+#     if request.data["rate"] is not None:	
+#         rateee = request.data["rate"]	
+#     if auth is not None:	
+#         person = Person.objects.get(user_id= auth)	
+#         if person is not None:	
+#             orgg = TourLeader.objects.get(person_id = person)	
+#             if tourl is not None:	
+#                 dictt = {}	
+#                 dictt["orgg"] = orgg.id	
+#                 dictt["user"] = user.id	
+#                 dictt["rate"] = rateee	
+#                 serializers = Rate_OrgSerializer(data = dictt)	
+#                 if serializers.is_valid():	
+#                     serializers.save()	
+#                     return Response(200)	
+#     return Response(401)
 
 
+class Rate_orgViewSet(ModelViewSet):
+    def get_permissions(self):#mrs #61
+        if self.request.method in ['POST','PUT','DELETE' ,'PATCH']:
+            return [permissions.IsAuthenticated()]
+        else:
+            return[permissions.AllowAny()]
+    def get_queryset(self):
+        rate = Rate_Org.objects.select_related('orgg').filter(orgg = self.kwargs.get('Organization_pk'))
+        return rate
+    def create(self, request, *args, **kwargs):        
+        user = self.request.user
+        user_object = Rate_Org.objects.filter(user = user , orgg = self.kwargs.get('Organization_pk'))
+        if user_object.count() >= 1:
+            return Response("you can't have duplicate rate" , status=status.HTTP_403_FORBIDDEN)
+        else :
+            return super().create(request, *args, **kwargs)
+    def get_serializer_context(self ):
+        return {'user_username':self.request.user}
+    serializer_class = Rate_OrgSerializer
+    ordering_fields = ['-rate']
 
-@api_view(['POST'])	
-
-def rate_Orgg(request):	
-
-    # try:	
-
-    #     exist_user_code = UserCode.objects.get(code = request.data["code"])	
-
-    # except:	
-
-    #     return Response("your code is invalid")	
-
-    # try:	
-
-    #     user = baseuser.objects.get(username = exist_user_code.user_name)	
-
-    # except:	
-
-    #     return Response("user doesn't exist")	
-
-    user = User.objects.get( username = request.data["username"])	
-
-    auth = User.objects.get( username = request.data["Organization_username"])	
-
-    if request.data["rate"] is not None:	
-
-        rateee = request.data["rate"]	
-
-    if auth is not None:	
-
-        person = Person.objects.get(user_id= auth)	
-
-        if person is not None:	
-
-            orgg = TourLeader.objects.get(person_id = person)	
-
-            if tourl is not None:	
-
-                dictt = {}	
-
-                dictt["orgg"] = orgg.id	
-
-                dictt["user"] = user.id	
-
-                dictt["rate"] = rateee	
-
-                serializers = Rate_OrgSerializer(data = dictt)	
-
-                if serializers.is_valid():	
-
-                    serializers.save()	
-
-                    return Response(200)	
-
-    return Response(401)
+class Rate_TourLViewSet(ModelViewSet):
+    def get_permissions(self):#mrs #61
+        if self.request.method in ['POST','PUT','DELETE' ,'PATCH']:
+  
+            return [permissions.IsAuthenticated()]
+        else:
+            return[permissions.AllowAny()]
+    def get_queryset(self):
+        rate = Rate_Tour.objects.select_related('tour_leader').filter(tour_leader = self.kwargs.get('TourLeader_pk'))
+        return rate
+    def create(self, request, *args, **kwargs):        
+        user = self.request.user
+        user_object = Rate_Tour.objects.filter(user = user , tour_leader = self.kwargs.get('TourLeader_pk'))
+        if user_object.count() >= 1:
+            return Response("you can't have duplicate rate" , status=status.HTTP_403_FORBIDDEN)
+        else :
+            return super().create(request, *args, **kwargs)
+    def get_serializer_context(self ):
+        return {'user_username':self.request.user}
+    serializer_class = Rate_TourLSerializer
+    ordering_fields = ['-rate']

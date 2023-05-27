@@ -1,509 +1,56 @@
 from ast import expr_context
 from dataclasses import fields
 from email.policy import default
-
-
-
-
-
 from itertools import count
-
-
-
-
-
 from re import search
 from unittest.util import _MAX_LENGTH
 from wsgiref import validate
-
-
-
-
-
 from rest_framework import serializers
-
-
-
-
-
 from Place.models import Place
-
 # from .models import Organization, Person, TourLeader , Trip , Country , City , Favorite
-
 from .models import *
-
-
-
 from django.conf import settings
-
-
-
-
-
 # from base64.fields import Base64ImageField #helen
-
-
-
-
-
 #helen{
-
-
-
-
-
 #class Base64ImageField(serializers.ImageField):
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 #    def to_internal_value(self, data):
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 #        if isinstance(data, six.string_types):
-
-
-
-
-
-
-
-
-
-
-
 #            if 'data:' in data and ';base64,' in data:
-
-
-
-
-
-
-
-
-
-
-
 #               header, data = data.split(';base64,')
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 #            try:
-
-
-
-
-
-
-
-
-
-
-
 #                decoded_file = base64.b64decode(data)
-
-
-
-
-
-
-
-
-
-
-
 #            except TypeError:
-
-
-
-
-
-
-
-
-
-
-
 #                self.fail('invalid_image')
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 #            file_name = str(uuid.uuid4())[:16]
-
-
-
-
-
-
-
-
-
-
-
 #            file_extension = self.get_file_extension(file_name, decoded_file)
-
-
-
-
-
-
-
-
-
-
-
- #           complete_file_name = "%s.%s" % (file_name, file_extension, )
-
-
-
-
-
-
-
-
-
-
-
+#           complete_file_name = "%s.%s" % (file_name, file_extension, )
  #           data = ContentFile(decoded_file, name=complete_file_name)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 #            return super(Base64ImageField, self).to_internal_value(data)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 #    def get_file_extension(self, file_name, decoded_file):
-
-
-
-
-
-
-
-
-
-
-
  #       import imghdr
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 #        extension = imghdr.what(file_name, decoded_file)
-
-
-
-
-
-
-
-
-
-
-
 #        extension = "jpg" if extension == "jpeg" else extension
-
-
-
-
-
 #
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 #        return extension
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 #    def to_representation(self, instance):
-
-
-
-
-
-
-
-
-
-
-
 #        if instance.name:
-
-
-
-
-
-
-
-
-
-
-
 #            return(settings.BASE_URL+reverse('download', args=[instance.name]))
-
-
-
-
-
-
-
-
-
-
-
 #        else:
-
-
-
-
-
-
-
-
-
-
-
 #            return None
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 #}helen
-
-
-
-
-
 class PersonSerializer(serializers.ModelSerializer):#lesson 59
-
-
-
-
-
     # gender = serializers.BooleanField(initial=True)
-
-
-
-
-
-
-
-
-
-
-
     #profile_image = Base64ImageField(required=False) #helen
-
-
-
-
-
-
-
-
-
-
-
     class Meta:
-
-
-
-
-
         model = Person
-
-
-
-
-
         fields =['birth_date' , 'country' , 'city' , 'gender',
-
-
-
-
-
          'bio' , 'registration_date', 'profile_image' ]
-
-
-
-
-
-    # user =
-
-
-
-
-
-
-
-
-
-
-
-#helen
-
-
-
-
-
-
-
-
-
-
-
-#mrs
 
 class CityTripSerializer(serializers.ModelSerializer):
 
     # country_name = serializers.SerializerMethodField()
     country_name = serializers.StringRelatedField(source = 'country_id')
     class Meta:
-
         model = City
 
         fields =( 'country_name','city_name')
@@ -511,10 +58,6 @@ class CityTripSerializer(serializers.ModelSerializer):
     # def get_country_name(self, obj):
 
     #     return obj.country_id.country_name
-
-
-
-
 
 class PlaceTripSerializer(serializers.ModelSerializer):
 
@@ -538,8 +81,6 @@ class PlaceTripSerializer(serializers.ModelSerializer):
 
         return obj.city_id.country_id.country_name
 
-
-
 class TransportSerializer(serializers.Serializer):#mrs
 
     TRANSPORT_CHOICES = [
@@ -551,12 +92,7 @@ class TransportSerializer(serializers.Serializer):#mrs
         ('B' , 'bus'),
 
         ('T' , 'train')
-
-
-
     ]
-
-
 
     departure_transport = serializers.ChoiceField(choices=TRANSPORT_CHOICES)
 
@@ -717,7 +253,7 @@ class TripSerializer(serializers.ModelSerializer):#mrs
         # return user
     # def save(self):
 
-##############################
+    ##############################
 
     # def get_transport(self , obj):
 
@@ -773,7 +309,6 @@ class CitySerializer(serializers.ModelSerializer):
     #     return city
 
 class OrganizationSerializer(serializers.ModelSerializer):	
-
     country_nameOrg = serializers.SerializerMethodField()	
 
     user_id = PersonSerializer()	
@@ -794,19 +329,33 @@ class OrganizationSerializer(serializers.ModelSerializer):
 
         # objj = obj.tourleader.set_tour.all()
 
+# class  Rate_OrgSerializer(serializers.ModelSerializer):	
+#     class Meta:	
+#         model = Rate_Org	
+#         fields = "__all__"	
 
 
 class  Rate_OrgSerializer(serializers.ModelSerializer):	
-
+    usernm = serializers.CharField(source='user.username', read_only=True)
+    user_name = serializers.SerializerMethodField()
     class Meta:	
 
         model = Rate_Org	
+        # fields = "__all__"	
+        fields = [
+            'id',
+            'orgg',
+            'usernm',
+            'user_name',
+            'rate',
+        ]
 
-        fields = "__all__"	
-
-
-
-
+    def get_user_name(self, obj):
+        return obj.user.username
+    def create(self , validated_data):
+        # user_id = self.context['user_id']#mrsz
+        user_name = self.context['user_username']
+        return Rate.objects.create(user = user_name  ,**validated_data)
 
 class TourLeaderSerializer(serializers.ModelSerializer):	
 
@@ -856,117 +405,39 @@ class TourLeaderSerializer(serializers.ModelSerializer):
 
         # return TripSerializer(objj).data
 
-
-
-
-
-
-
-
-
 class  Rate_TourLSerializer(serializers.ModelSerializer):	
+    usernm = serializers.CharField(source='user.username', read_only=True)
+    user_name = serializers.SerializerMethodField()
+    class Meta:
+        model = Rate_Tour #this is for tourleader not for tours..
+        fields = [
+            'id',
+            'tour_leader',
+            'usernm',
+            'user_name',
+            'rate',
+        ]
 
-    # rateTL_num = serializers.SerializerMethodField()	
-
-    # tour_leader_username = serializers.SerializerMethodField()	
-
-    # user_username = serializers.SerializerMethodField()	
-
-    class Meta:	
-
-        model = Rate_Tour	
-
-        # fields = ["rate"]	
-
-        fields = "__all__"	
-
-    # def get_tour_leader_username(self , obj):	
-
-    #     return obj.tour_leader.Id.user_id.username	
-
-    # def user_username(self , obj):	
-
-    #     return obj.user.username	
-
-    # def get_rateTL_num(self, obj):	
-
-    #     self.rate_no = len(obj.rates_tour)
-
-
+    def get_user_name(self, obj):
+        return obj.user.username
+    def create(self , validated_data):
+        # user_id = self.context['user_id']#mrsz
+        user_name = self.context['user_username']#mrsz
+        return Rate.objects.create(user = user_name  ,**validated_data)
 
 class CountrySerializer(serializers.ModelSerializer):#mrs
-
-
-
-
-
     class Meta:
-
-
-
-
-
         model = Country
-
-
-
-
-
         fields = ['country_name' , 'city_set' ]#] 'city_set__city_name']
-
-
-
-
-
     city_set = CitySerializer(read_only = True , many = True)
 
-
-
-
-
-
-
-
-
 class FavoriteSerializer(serializers.ModelSerializer):
-
-
-
     # common_people_id = serializers.CharField()
-
-
-
     class Meta:
-
-
-
         model = Favorite
-
-
-
         fields = ['favorite' , 'common_people_id']
-
-
-
-
-
     # def create(self  ,validated_data):#validated_data ->dictionary #lesson 17
-
-
-
     #     favorite = Favorite(**validated_data)#umpack dictionary
-
-
-
     #     favorite.common_people_id = 1
-
-
-
     #     favorite.save() 
-
-
-
     #     return favorite
-
-
-

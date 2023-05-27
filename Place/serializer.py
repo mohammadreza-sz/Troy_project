@@ -1,9 +1,6 @@
-# from Profile.serializers import CitySerializer
-
 from dataclasses import fields
 # from account.models import User 
 
-# from .models import Place , PlaceImage, Rate
 from .models import *
 from rest_framework import serializers
 # import base64
@@ -100,40 +97,39 @@ class PlaceSerializer(serializers.ModelSerializer):#mrs 59
 
 class RateSerializer(serializers.ModelSerializer):#mrs 59
 
-    user = serializers.CharField(read_only = True)
-
+    usernm = serializers.CharField(source='user.username', read_only=True)
+    user_name = serializers.SerializerMethodField()
+    # user = serializers.CharField(read_only = True)
     class Meta:
-
         model = Rate
-
         fields = [
-
             'id',
-
             'place',
-
-            'user',
-
-            'rate'
-
+            'usernm',
+            'user_name',
+            'rate',
         ]
 
+    def get_user_name(self, obj):
+        return obj.user.username
     def create(self , validated_data):
 
-        user_id = self.context['user_id']
+        # user_id = self.context['user_id']#mrsz
+        user_name = self.context['user_username']#mrsz
 
-        return Rate.objects.create(user = user_id  ,**validated_data)
+        return Rate.objects.create(user = user_name  ,**validated_data)
 
 class UserCommentSerializer(serializers.ModelSerializer):	
     class Meta:	
         model = User	
-        fields = ['username', 'image']
+        fields = ['username']
 
 class ReplySerializer(serializers.ModelSerializer):	
     user = UserCommentSerializer(read_only=True)	
     class Meta:	
         model = Comment	
-        fields = ['id', 'created_date', 'text', 'user']	
+        fields = ['id', 'created_date', 'text', 'user', 'place']	
+        # fields = "__all__"
         read_only_fields = ['id', 'created_date', 'user']	
     def create(self, validated_data):	
         request = self.context.get("request")	
