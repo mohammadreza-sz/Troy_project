@@ -124,13 +124,14 @@ class RateSerializer(serializers.ModelSerializer):#mrs 59
 class UserCommentSerializer(serializers.ModelSerializer):	
     class Meta:	
         model = User	
-        fields = ['username', 'image']
+        fields = ['username']
 
 class ReplySerializer(serializers.ModelSerializer):	
     user = UserCommentSerializer(read_only=True)	
     class Meta:	
         model = Comment	
-        fields = ['id', 'created_date', 'text', 'user']	
+        fields = ['id', 'created_date', 'text', 'user', 'place']	
+        # fields = "__all__"
         read_only_fields = ['id', 'created_date', 'user']	
     def create(self, validated_data):	
         request = self.context.get("request")	

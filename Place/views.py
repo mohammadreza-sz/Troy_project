@@ -83,7 +83,7 @@ class RateViewSet(ModelViewSet):
     # queryset = Rate.objects.all()
 
     def get_queryset(self):#mrs
-        rate = Rate.objects.select_related('place').filter(place = self.kwargs['Place_pk'])
+        rate = Rate.objects.select_related('place').filter(place = self.kwargs.get('Place_pk'))
         return rate
     def create(self, request, *args, **kwargs):        
 
@@ -229,14 +229,14 @@ class CommentViewSet(ModelViewSet):
 	permission_classes = [IsAuthenticatedOrReadOnly]	
 	def get_queryset(self):	
 		return Comment.objects.filter(	
-			place_id=self.kwargs.get('place_pk'), parent=None).order_by('-created_date')	
+			place_id=self.kwargs.get('Place_pk'), parent=None).order_by('-created_date')	
 		
 	def get_serializer_context(self):	
 		context = super().get_serializer_context()	
-		context['place'] = self.kwargs.get('place_pk')	
+		context['place'] = self.kwargs.get('Place_pk')	
 		return context	
 	def create(self, request, *args, **kwargs):	
-		get_object_or_404(Place.objects, pk=self.kwargs.get('place_pk'))	
+		get_object_or_404(Place.objects, pk=self.kwargs.get('Place_pk'))	
 		return super().create(request, *args, **kwargs)	
 	def update(self, request, *args, **kwargs):	
 		return self.perform_change(request, 'update', *args, **kwargs)	

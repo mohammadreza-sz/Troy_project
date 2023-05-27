@@ -126,7 +126,7 @@ class Comment(models.Model):
     text = models.TextField()
 
     def __str__(self):
-        return f"{self.place.title} {self.user.username}"
+        return f"{self.place.name} {self.user.username}"
 
     def is_owner(self, user):
         return self.user == user
