@@ -1,26 +1,94 @@
 from http import HTTPStatus	
+
 from http.client import ResponseNotReady	
+
 from pickle import NONE	
+
 from django.shortcuts import render	
+
 # from .models import Place , PlaceImage, Rate	
+
 from .models import *	
+
 # from .serializer import PlaceImageSerializer, PlaceSerializer, RateSerializer	
+
 from .serializer import *	
+
 from rest_framework.decorators import api_view	
+
 from rest_framework.response import Response	
+
 from rest_framework.viewsets import ModelViewSet	
+
 from rest_framework.viewsets import ModelViewSet #mrs	
+
 from rest_framework.permissions import AllowAny, IsAdminUser, IsAuthenticated, IsAuthenticatedOrReadOnly	
+
 from rest_framework import permissions #mrs  #61	
+
 from rest_framework import status	
+
 from django.db.models import Avg	
+
 from Place import serializer #mrs
+
 import base64
+
 from django.core.files.base import ContentFile
+
+
+
+from .models import Place , PlaceImage, Rate
+
+
+
+from .serializer import PlaceImageSerializer, PlaceSerializer, RateSerializer
+
+
+
+from rest_framework.decorators import api_view
+
+
+
+from rest_framework.response import Response
+
+
+
+from rest_framework.viewsets import ModelViewSet
+
+
+
+from rest_framework.viewsets import ModelViewSet #mrs
+
+
+
+from rest_framework import permissions #mrs  #61
+
+
+
+from rest_framework import status
+
+
+
+from django.db.models import Avg
+
+
+
+
+
+# from Profile import permissions as permi
 
 class PlaceViewSet(ModelViewSet):#mrs 
 
+    # permission_classes=[permi.CrudOrganizationReadOther]
+
+
+
     # queryset = Place.objects.prefetch_related("placeimage_set").select_related("city_id").all()   *********************
+
+
+
+
 
 
 
@@ -28,9 +96,19 @@ class PlaceViewSet(ModelViewSet):#mrs
 
 
 
+
+
+
+
     queryset = Place.objects.annotate(avg_rate=Avg('rates__rate')).all()
 
+
+
     serializer_class = PlaceSerializer
+
+
+
+
 
 
 
@@ -38,7 +116,13 @@ class PlaceViewSet(ModelViewSet):#mrs
 
 
 
+
+
+
+
 class PlaceImageViewSet(ModelViewSet):#mrs
+
+
 
 
 
@@ -46,23 +130,47 @@ class PlaceImageViewSet(ModelViewSet):#mrs
 
 
 
+
+
+
+
     serializer_class = PlaceImageSerializer
+
+
 
     # def post(self, request , *args , **kwargs):
 
+
+
     #     img_b64 = request.post.get('image')
+
+
 
     #     img_data = base64.b64decode(img_b64)
 
+
+
     #     file_name = "my_image.png"
+
+
 
     #     pl_id = request.post.get('place_id')
 
+
+
     #     placeimage = PlaceImage.objects.create(place_id=pl_id)
+
+
 
     #     placeimage.image.save(filename , ContentFile(img_data))
 
+
+
     #     placeimage.save()
+
+
+
+
 
 
 
@@ -72,28 +180,52 @@ class PlaceImageViewSet(ModelViewSet):#mrs
 
 class RateViewSet(ModelViewSet):
 
+
+
     # permission_classes=[IsAuthenticated]#mrs
+
     def get_permissions(self):#mrs #61
+
         if self.request.method in ['POST','PUT','DELETE' , 'PATCH']:
+
             return [permissions.IsAuthenticated()]
+
         else:
+
             return[permissions.AllowAny()]
+
+
+
 
 
     # queryset = Rate.objects.all()
 
+
+
     def get_queryset(self):#mrs
         rate = Rate.objects.select_related('place').filter(place = self.kwargs.get('Place_pk'))
         return rate
+
     def create(self, request, *args, **kwargs):        
 
+
+
         user = self.request.user
+
         user_object = Rate.objects.filter(user = user , place = self.kwargs['Place_pk'])
+
         if user_object.count() >= 1:
+
             return Response("you can't have duplicate rate" , status=status.HTTP_403_FORBIDDEN)
+
         else :
+
             return super().create(request, *args, **kwargs)
+
         
+
+
+
 
 
     def get_serializer_context(self ):
@@ -104,20 +236,37 @@ class RateViewSet(ModelViewSet):
 
 
 
+
+
+
+
     ordering_fields = ['-rate']
 
+
+
 @api_view(['GET'])#mrs     #by default argument => GET  15
+
 def get_specific_placeimage(request , place_idd):
+
+
+
 
 
     # def retrieve(self, request, *args, **kwargs):
     # instance = self.get_object()
+
     # place_image = PlaceImage.objects.filter(place_id = place_idd).values("place_id" , "image")
+
     # serializer = PlaceImageSerializer(place_image)
+
     # return Response(serializer.data)
+
     place_image = PlaceImage.objects.filter(place_id = place_idd).values("place_id" , "image")
 
+
+
     # print(place_image)
+
     return Response(place_image)
 
 
@@ -125,7 +274,15 @@ from django.db.models import F
 
 
 
+
+
+
+
 @api_view(['GET'])#mrs     #by default argument => GET  15
+
+
+
+
 
 
 
@@ -133,7 +290,15 @@ def get_specific_place(request ,place_id = None, country_name = None , city_name
 
 
 
+
+
+
+
     place = Place.objects.select_related('city_id' , 'country_id' ).annotate(
+
+
+
+
 
 
 
@@ -141,11 +306,23 @@ def get_specific_place(request ,place_id = None, country_name = None , city_name
 
 
 
+
+
+
+
         city = F('city_id__city_name') ,
 
 
 
+
+
+
+
         # image = F('placeimage__image')
+
+
+
+
 
 
 
@@ -157,7 +334,19 @@ def get_specific_place(request ,place_id = None, country_name = None , city_name
 
 
 
+
+
+
+
+
+
+
+
     if place_id == None:
+
+
+
+
 
 
 
@@ -165,7 +354,15 @@ def get_specific_place(request ,place_id = None, country_name = None , city_name
 
 
 
+
+
+
+
             place =place.filter(city_id__country_id__country_name=country_name)
+
+
+
+
 
 
 
@@ -173,7 +370,15 @@ def get_specific_place(request ,place_id = None, country_name = None , city_name
 
 
 
+
+
+
+
                 place =place.filter(city_id__country_id__country_name = country_name )
+
+
+
+
 
 
 
@@ -181,7 +386,15 @@ def get_specific_place(request ,place_id = None, country_name = None , city_name
 
 
 
+
+
+
+
                 place =place.filter(city_id__country_id__country_name = country_name , city_id__city_name=city_name )
+
+
+
+
 
 
 
@@ -189,7 +402,15 @@ def get_specific_place(request ,place_id = None, country_name = None , city_name
 
 
 
+
+
+
+
         place=place.filter(id = place_id )
+
+
+
+
 
 
 
@@ -197,7 +418,15 @@ def get_specific_place(request ,place_id = None, country_name = None , city_name
 
 
 
+
+
+
+
     # return Response(serializers.data)
+
+
+
+
 
 
 
@@ -205,7 +434,15 @@ def get_specific_place(request ,place_id = None, country_name = None , city_name
 
 
 
+
+
+
+
     # place = Place.objects.select_related('city_id' , 'country_id' ).prefetch_related('placeimage_set').annotate(
+
+
+
+
 
 
 
@@ -213,11 +450,23 @@ def get_specific_place(request ,place_id = None, country_name = None , city_name
 
 
 
+
+
+
+
     #     city = F('city_id__city_name') ,
 
 
 
+
+
+
+
     #     image = F('placeimage__image')
+
+
+
+
 
 
 

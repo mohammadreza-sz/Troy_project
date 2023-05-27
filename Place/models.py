@@ -128,5 +128,6 @@ class Comment(models.Model):
     def __str__(self):
         return f"{self.place.name} {self.user.username}"
 
+        return self.user == user
     def is_owner(self, user):
         return self.user == user

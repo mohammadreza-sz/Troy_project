@@ -960,6 +960,7 @@ DJOSER = {
 
 
         # 'user_create' : 'account.serializers.UserCreateSerializer',
+        # 'user_create_password_retype': 'djoser.serializers.UserCreatePasswordRetypeSerializer',
 
 
 
@@ -967,7 +968,8 @@ DJOSER = {
 
 
 
-        # 'user' : 'account.serializers.UserCreateSerializer',
+
+        # 'user' : 'account.serializers.UserSerializer',
 
 
 
