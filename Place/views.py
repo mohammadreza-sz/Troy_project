@@ -110,7 +110,7 @@ class RateViewSet(ModelViewSet):
 def get_specific_placeimage(request , place_idd):
 
 
-# def retrieve(self, request, *args, **kwargs):
+    # def retrieve(self, request, *args, **kwargs):
     # instance = self.get_object()
     # place_image = PlaceImage.objects.filter(place_id = place_idd).values("place_id" , "image")
     # serializer = PlaceImageSerializer(place_image)
@@ -119,17 +119,6 @@ def get_specific_placeimage(request , place_idd):
 
     # print(place_image)
     return Response(place_image)
-
-
-
-
-
-
-
-
-
-
-
 
 
 from django.db.models import F
@@ -234,50 +223,51 @@ def get_specific_place(request ,place_id = None, country_name = None , city_name
 
     # ).values("id" ,"name","country", "city","address" , "description","lan", "lon" , "image")
 
-# class CommentViewSet(ModelViewSet):	
-# 	queryset = Comment.objects.select_related('place').all()	
-# 	serializer_class = CommentSerializer	
-# 	permission_classes = [IsAuthenticatedOrReadOnly]	
-# 	def get_queryset(self):	
-# 		return Comment.objects.filter(	
-# 			place_id=self.kwargs.get('place_pk'), parent=None).order_by('-created_date')	
+class CommentViewSet(ModelViewSet):	
+	queryset = Comment.objects.select_related('place').all()	
+	serializer_class = CommentSerializer	
+	permission_classes = [IsAuthenticatedOrReadOnly]	
+	def get_queryset(self):	
+		return Comment.objects.filter(	
+			place_id=self.kwargs.get('place_pk'), parent=None).order_by('-created_date')	
 		
-# 	def get_serializer_context(self):	
-# 		context = super().get_serializer_context()	
-# 		context['place'] = self.kwargs.get('place_pk')	
-# 		return context	
-# 	def create(self, request, *args, **kwargs):	
-# 		get_object_or_404(Place.objects, pk=self.kwargs.get('place_pk'))	
-# 		return super().create(request, *args, **kwargs)	
-# 	def update(self, request, *args, **kwargs):	
-# 		return self.perform_change(request, 'update', *args, **kwargs)	
-# 	def destroy(self, request, *args, **kwargs):	
-# 		return self.perform_change(request, 'destroy', *args, **kwargs)	
-# 	def perform_change(self, request, action, *args, **kwargs):	
-# 		user = request.user	
-# 		comment = self.get_object()	
-# 		place = comment.place	
-# 		if not comment.is_owner(user):	
-# 			return Response('you do not have permission to change this comment.',	
-# 							 status=status.HTTP_403_FORBIDDEN)	
-# 		if action == 'update':	
-# 			return super().update(request, *args, **kwargs)	
-# 		response = super().destroy(request, *args, **kwargs)	
-# 		place.update_comment_no()	
-# 		return response	
-# class ReplytViewSet(CommentViewSet):	
-# 	queryset = Comment.objects.select_related('parent').all()	
-# 	serializer_class = ReplySerializer	
-# 	http_method_names = ['post', 'put', 'delete']	
-# 	def get_queryset(self):	
-# 		return Comment.objects.filter(	
-# 			Q(place_id=self.kwargs.get('place_pk'))&~Q(parent=None)).order_by('-created_date')	
+	def get_serializer_context(self):	
+		context = super().get_serializer_context()	
+		context['place'] = self.kwargs.get('place_pk')	
+		return context	
+	def create(self, request, *args, **kwargs):	
+		get_object_or_404(Place.objects, pk=self.kwargs.get('place_pk'))	
+		return super().create(request, *args, **kwargs)	
+	def update(self, request, *args, **kwargs):	
+		return self.perform_change(request, 'update', *args, **kwargs)	
+	def destroy(self, request, *args, **kwargs):	
+		return self.perform_change(request, 'destroy', *args, **kwargs)	
+	def perform_change(self, request, action, *args, **kwargs):	
+		user = request.user	
+		comment = self.get_object()	
+		place = comment.place	
+		if not comment.is_owner(user):	
+			return Response('you do not have permission to change this comment.',	
+							 status=status.HTTP_403_FORBIDDEN)	
+		if action == 'update':	
+			return super().update(request, *args, **kwargs)	
+		response = super().destroy(request, *args, **kwargs)	
+		place.update_comment_no()	
+		return response	
+
+class ReplytViewSet(CommentViewSet):	
+	queryset = Comment.objects.select_related('parent').all()	
+	serializer_class = ReplySerializer	
+	http_method_names = ['post', 'put', 'delete']	
+	def get_queryset(self):	
+		return Comment.objects.filter(	
+			Q(place_id=self.kwargs.get('place_pk'))&~Q(parent=None)).order_by('-created_date')	
 		
-# 	def get_serializer_context(self):	
-# 		context = super().get_serializer_context()	
-# 		context['parent'] = self.kwargs.get('parent_pk')	
-# 		return context	
-# 	def create(self, request, *args, **kwargs):	
-# 		get_object_or_404(Place.objects, pk=self.kwargs.get('place_pk'))	
-# 		get_object_or_404(Comment.objects, pk=self.kwargs.get('parent_pk'))	
-# 		return super().create(request, *args, **kwargs)
+	def get_serializer_context(self):	
+		context = super().get_serializer_context()	
+		context['parent'] = self.kwargs.get('parent_pk')	
+		return context	
+	def create(self, request, *args, **kwargs):	
+		get_object_or_404(Place.objects, pk=self.kwargs.get('place_pk'))	
+		get_object_or_404(Comment.objects, pk=self.kwargs.get('parent_pk'))	
+		return super().create(request, *args, **kwargs)

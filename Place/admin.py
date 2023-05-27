@@ -4,3 +4,4 @@ from Place.models import *
 # Register your models here.
 admin.site.register(Rate)
 admin.site.register(Place)
+admin.site.register(Comment)

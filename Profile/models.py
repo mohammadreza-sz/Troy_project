@@ -35,7 +35,6 @@ class City(models.Model):#mrs
 
         return self.city_name
 
-
 class Organization(models.Model):	
     # user_id = models.OneToOneField(settings.AUTH_USER_MODEL ,	
             # on_delete=models.CASCADE , null = True, related_name= 'orguser')    	
