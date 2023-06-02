@@ -55,7 +55,7 @@ router.register("Person" , PersonViewSet)
 urlpatterns=[
 
 path("history" , history.as_view()),
-
+path("purchase" , Purchase.as_view()),
 
 
     # (r'^ProfileInfoAPI/$', ListOrgAPIView.as_view(), name='ProfileInfoAPI'),		

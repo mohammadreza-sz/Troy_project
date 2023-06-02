@@ -197,12 +197,42 @@ class history(APIView):#mrs
     #     serializer = TripSerializer(queryset, many=True)
 
     #     return Response(serializer.data)
+from django.shortcuts import get_object_or_404#mrs
+from . import permissions as permi#mrs
+class Purchase(APIView):
+    permission_classes = [permi.IsPeople]
+    def post(self , request):
+        try:
+            trip_id = request.data.get('trip_id')
+        except:
+            return Response("i want trip id" , status=status.HTTP_400_BAD_REQUEST)
+            
+        try:
+            trip = Trip.objects.get(id = trip_id)
+        except:
+            return Response("this trip id is not exist" ,status = status.HTTP_404_NOT_FOUND)
+        passenger_count = trip.common_people_id.count()
+        if passenger_count == trip.capacity :
+            return Response("capacity is full!!" , status = status.HTTP_403_FORBIDDEN)
+        else:
+            # try:
+            people = CommenPeople.objects.get(Id__user_id__id =self.request.user.id )
+            # except:
 
+            if people in trip.common_people_id.all():
+                return Response("how many time you want register??!!" , status = status.HTTP_403_FORBIDDEN)
+            else:
+                #must decrease money from wallet*************************************
+                trip.common_people_id.add(people)
+                # serializer = TripSerializer(trep)            
+                return Response("add to trip" , status = status.HTTP_200_OK)
+        
+        
 
 
 from datetime import datetime#mrs
 
-from . import permissions as permi#mrs
+
 
 class TripViewSet(ModelViewSet):
 
