@@ -332,7 +332,7 @@ SIMPLE_JWT = {#mrs
 
 
 
-        'ACCESS_TOKEN_LIFETIME':timedelta(days = 1),#mrs #56
+        'ACCESS_TOKEN_LIFETIME':timedelta(days = 7),#mrs #56
 
 
 
