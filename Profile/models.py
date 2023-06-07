@@ -141,27 +141,45 @@ class Organization(models.Model):
     logo = models.TextField(blank = True, null = True)	
     Address =models.CharField(max_length=255 , null = True)	
     Phone = models.CharField(max_length=20 , null = True)	
-    rates = models.IntegerField(default=0, blank=True)	
+    # rates = models.IntegerField(default=0, blank=True)	
+    rates = models.IntegerField(default=0, blank=True , null = True)	
 
 class Rate_Org(models.Model):	
     orgg = models.ForeignKey(	
         Organization, on_delete=models.CASCADE, related_name='rate_org')	
     user = models.ForeignKey(	
         User, on_delete=models.CASCADE, related_name='rates_org')	
-    rate = models.IntegerField(default=0, 	
+    rate = models.IntegerField(default=5, 	
         validators=[MinValueValidator(0), MaxValueValidator(5)])	
 
     def __str__(self):
         return f"{self.user.username} rated {self.rate} to {self.orgg.name_org}"
         # return f"rated {self.rate} to {self.place.name}"
 
+class PremiumRequest(models.Model):#mrs
+    organization = models.ForeignKey(Organization , on_delete=models.CASCADE)
+    common_people = models.ForeignKey(CommenPeople , on_delete=models.CASCADE)
+
+    accept = 'A'
+    reject = 'R'
+    wait = 'W'
+    STATUS_CHOICES = [
+        (accept , 'accept'),
+        (reject , 'reject'),
+        (wait , 'wait')
+    ]
+    status_choice= models.CharField(max_length=1 , choices=STATUS_CHOICES , default='W')
+
 class TourLeader(models.Model):	
     person_id = models.OneToOneField(Person, on_delete = models.CASCADE, primary_key = True)	
     orga_id = models.ForeignKey(Organization, on_delete = models.CASCADE,	
      null= True, related_name = "tourleader")	
-    rates = models.IntegerField(default=0, blank=True)	
-    rate_no = models.IntegerField(default=0, blank=True)	
-    joindDate = models.DateTimeField(auto_now=True)	
+    rates = models.IntegerField(default=0, blank=True , null = True)	
+    rate_no = models.IntegerField(default=0, blank=True , null = True)	
+    joindDate = models.DateTimeField(auto_now=True , null = True)
+    # rates = models.IntegerField(default=0, blank=True)	
+    # rate_no = models.IntegerField(default=0, blank=True)	
+    # joindDate = models.DateTimeField(auto_now=True)		
     phonetl = models.CharField(max_length=20 , null = True)
 
 class Rate_Tour(models.Model):	

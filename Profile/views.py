@@ -1,3 +1,4 @@
+from http.client import ResponseNotReady
 from django.views import generic
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 from django.urls import reverse_lazy
@@ -149,7 +150,7 @@ class Purchase(APIView):
             return Response("capacity is full!!" , status = status.HTTP_403_FORBIDDEN)
         else:
             # try:
-            people = CommenPeople.objects.get(Id__user_id__id =self.request.user.id )
+            people = CommenPeople.objects.get(Id__user_id__id =self.request.user.id )#perhaps wnat to optimize
             # except:
 
             if people in trip.common_people_id.all():
@@ -159,10 +160,21 @@ class Purchase(APIView):
                 trip.common_people_id.add(people)
                 # serializer = TripSerializer(trep)            
                 return Response("add to trip" , status = status.HTTP_200_OK)
-        
-        
 
-
+class RequestToOrg(APIView):
+    permission_classes = [permi.IsPeople]
+    def get(self , request , id):#or get
+        org = Organization.objects.get(id  =id)
+        people = CommenPeople.objects.get(Id__user_id =self.request.user )#perhaps wnat to optimize
+        pr = PremiumRequest(common_people = people , organization = org)#organization = org
+        pr.save()
+        return Response("your request sent")
+class GetRequest(APIView):
+    permission_classes = [permi.IsOrganization]
+    def get(self , request):
+        queryset = PremiumRequest.objects.filter(organization__person_id = request.user).all()
+        serializer = PremiumRequestSerializer(queryset , many = True)
+        return Response(serializer.data)
 from datetime import datetime#mrs
 
 

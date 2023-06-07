@@ -441,3 +441,9 @@ class FavoriteSerializer(serializers.ModelSerializer):
     #     favorite.common_people_id = 1
     #     favorite.save() 
     #     return favorite
+
+class PremiumRequestSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = PremiumRequest
+        fields = ['organization' , 'common_people' , 'status_choice']
+        
