@@ -595,19 +595,29 @@ class DestinationSerializer(serializers.Serializer):
 #     data['return_transport'] = return_transport
 
 #     return data
+class CommenPeopleSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CommenPeople
+        fields = ['Id' , 'gender']
+
+    def get_gender(self , obj):
+        return obj.Id.gender
 class TripSerializer(serializers.ModelSerializer):#mrs
     destination= CityTripSerializer(many = True , source  = 'destination_city')#mrs if want to obtain destination from place_ids ************ this approach can't handle city name which exist in multiple country
     # transport = TransportSerializer(source = '' )#return (departure_transport , return_transport)within object
     # transport = serializers.CharField(default = "C") #we can use this instead use nested serializer
     
-
+    name = serializers.SerializerMethodField()
 
     class Meta:
         model = Trip
         # fields = ['id'  , 'origin_city_id' ,'destination_city','destination_country','departure_transport','return_transport','departure_date','return_date' ,'Description', 'capacity' , 'Price', 'place_ids','organization_id','TourLeader_ids']
         # fields = ['id'  , 'origin' ,'destination','departure_date','transport','return_date' ,'Description', 'capacity' , 'Price', 'place_ids','organization_id','TourLeader_ids' , 'image' , 'hotel_name']
-        fields = ['id' ,'origin','destination','departure_transport','return_transport','departure_date','return_date','Description','capacity', 'Price' ,'place_ids','organization_id','TourLeader_ids' ,'image' , 'hotel_name']
+        fields = ['id' ,'origin','destination','departure_transport','return_transport','departure_date','return_date','Description','capacity', 'Price' ,'place_ids','organization_id','TourLeader_ids' ,'image' , 'hotel_name' , 'name']
 
+    def get_name(self , obj):
+        return [people.Id.user_id.first_name for people in obj.common_people_id.all()]
+    # common_people_id = CommenPeopleSerializer(many = True)
     origin = CityTripSerializer(source = 'origin_city_id')
     # origin = serializers.SerializerMethodField(source = 'origin_city_id')
     # def get_origin(self , obj):
@@ -626,6 +636,10 @@ class TripSerializer(serializers.ModelSerializer):#mrs
             'return_transport': return_transport
 
         }
+        # people = data.pop('common_people_id')
+        # data['common_people_id']=[]
+        # data.common_people_id.set([Person.objects.get(id = p.Id_id ).gender for p in people])
+        # data['common_people_id'] = [id['Id__gender'] for id in data.pop('common_people_id')]
         return data
     def to_internal_value(self, data):
         if 'transport' in data:#when use patch method , maybe transport doesn't exist in data
