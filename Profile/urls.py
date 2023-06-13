@@ -38,7 +38,7 @@ path("purchase" , Purchase.as_view()),
 
 path("RequestToOrg/<int:id>" , RequestToOrg.as_view()),
 
-path("GetRequest/" , GetRequest.as_view()),
+path("GetRequest/" , ShowRequest.as_view()),
 
     # (r'^ProfileInfoAPI/$', ListOrgAPIView.as_view(), name='ProfileInfoAPI'),		
 

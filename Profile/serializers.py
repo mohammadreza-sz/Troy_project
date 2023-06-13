@@ -137,12 +137,15 @@ class TripSerializer(serializers.ModelSerializer):#mrs
     # transport = serializers.CharField(default = "C") #we can use this instead use nested serializer
     
 
+    premium = serializers.SerializerMethodField()
+    def get_premium(self , obj):
+        return [{'is_premium': people.premium, 'name': people.Id.user_id.username} for people in obj.common_people_id.all()]
 
     class Meta:
         model = Trip
         # fields = ['id'  , 'origin_city_id' ,'destination_city','destination_country','departure_transport','return_transport','departure_date','return_date' ,'Description', 'capacity' , 'Price', 'place_ids','organization_id','TourLeader_ids']
         # fields = ['id'  , 'origin' ,'destination','departure_date','transport','return_date' ,'Description', 'capacity' , 'Price', 'place_ids','organization_id','TourLeader_ids' , 'image' , 'hotel_name']
-        fields = ['id' ,'origin','destination','departure_transport','return_transport','departure_date','return_date','Description','capacity', 'Price' ,'place_ids','organization_id','TourLeader_ids' ,'image' , 'hotel_name']
+        fields = ['id' ,'origin','destination','departure_transport','return_transport','departure_date','return_date','Description','capacity', 'Price' ,'place_ids','organization_id','TourLeader_ids' ,'image' , 'hotel_name' , 'premium']
 
     origin = CityTripSerializer(source = 'origin_city_id')
     # origin = serializers.SerializerMethodField(source = 'origin_city_id')

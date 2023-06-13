@@ -24,6 +24,7 @@ class Person(models.Model):
 class CommenPeople(models.Model):
     Id = models.OneToOneField(Person, on_delete = models.CASCADE, primary_key = True)
     friend_id = models.ManyToManyField("CommenPeople")
+    premium = models.BooleanField(default=False)
     def __str__(self) -> str:
         return str(self.Id)
 
@@ -169,6 +170,10 @@ class PremiumRequest(models.Model):#mrs
         (wait , 'wait')
     ]
     status_choice= models.CharField(max_length=1 , choices=STATUS_CHOICES , default='W')
+    class Meta:#making fields unique can have implications for database performance and data integrity, so use this feature judiciously.
+        unique_together = ('organization', 'common_people')
+
+
 
 class TourLeader(models.Model):	
     person_id = models.OneToOneField(Person, on_delete = models.CASCADE, primary_key = True)	
