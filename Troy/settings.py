@@ -833,7 +833,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 DJOSER = {
 
-
+    'CREATE_PERSON_FUNC': 'account.signals.create_person',
 
 
 
