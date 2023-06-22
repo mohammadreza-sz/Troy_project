@@ -159,9 +159,9 @@ class TourLeader(models.Model):
     person_id = models.OneToOneField(Person, on_delete = models.CASCADE, primary_key = True)	
     orga_id = models.ForeignKey(Organization, on_delete = models.CASCADE,	
      null= True, related_name = "tourleader")	
-    rates = models.IntegerField(default=0, blank=True)	
-    rate_no = models.IntegerField(default=0, blank=True)	
-    joindDate = models.DateTimeField(auto_now=True)	
+    rates = models.IntegerField(default=0, blank=True , null = True)	
+    rate_no = models.IntegerField(default=0, blank=True , null = True)	
+    joindDate = models.DateTimeField(auto_now=True , null = True)	
     phonetl = models.CharField(max_length=20 , null = True)
 
 class Rate_Tour(models.Model):	
