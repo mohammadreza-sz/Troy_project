@@ -133,7 +133,7 @@ class Organization(models.Model):
     # user_id = models.OneToOneField(settings.AUTH_USER_MODEL ,	
             # on_delete=models.CASCADE , null = True, related_name= 'orguser')    	
     person_id = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete = models.CASCADE,	
-        null = True)	
+        null = True)#must change to user *********************
     	
     name_org = models.CharField(max_length=200,unique=True , null = True)	
     description = models.TextField(null = True)	
@@ -159,9 +159,9 @@ class TourLeader(models.Model):
     person_id = models.OneToOneField(Person, on_delete = models.CASCADE, primary_key = True)	
     orga_id = models.ForeignKey(Organization, on_delete = models.CASCADE,	
      null= True, related_name = "tourleader")	
-    rates = models.IntegerField(default=0, blank=True)	
-    rate_no = models.IntegerField(default=0, blank=True)	
-    joindDate = models.DateTimeField(auto_now=True)	
+    rates = models.IntegerField(default=0, blank=True , null = True)	# mrs make this change to make migrations 
+    rate_no = models.IntegerField(default=0, blank=True , null = True)	# mrs make this change to make migrations 
+    joindDate = models.DateTimeField(auto_now=True , null = True)	# mrs make this change to make migrations 
     phonetl = models.CharField(max_length=20 , null = True)
 
 class Rate_Tour(models.Model):	
