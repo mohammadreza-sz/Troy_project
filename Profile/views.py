@@ -163,13 +163,20 @@ class Purchase(APIView):
                 # serializer = TripSerializer(trep)            
                 return Response("add to trip" , status = status.HTTP_200_OK)
 
+from django.db import IntegrityError
+
 class RequestToOrg(APIView):#mrs
     permission_classes = [permi.IsPeople]
     def get(self , request , id):#or get
         org = Organization.objects.get(id  =id)
         people = CommenPeople.objects.get(Id__user_id =self.request.user )#perhaps wnat to optimize
         pr = PremiumRequest(common_people = people , organization = org)#organization = org
-        pr.save()
+        try:
+            pr.save()
+        except IntegrityError:
+            return Response("common people id and organization id must be unique!!" ,status=status.HTTP_409_CONFLICT )#409 Conflict:Indicates that the request could not be processed because of conflict in the current state of the resource, such as an edit conflict between multiple simultaneous updates.
+
+
         return Response("your request sent")
 
 from django.shortcuts import get_object_or_404

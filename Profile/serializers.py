@@ -139,7 +139,22 @@ class TripSerializer(serializers.ModelSerializer):#mrs
 
     premium = serializers.SerializerMethodField()
     def get_premium(self , obj):
-        return [{'is_premium': people.premium, 'name': people.Id.user_id.username} for people in obj.common_people_id.all()]
+        result = []
+        for people in obj.common_people_id.all():
+            try:
+                p = PremiumRequest.objects.get(common_people = people , organization = obj.organization_id)
+                res = p.status_choice
+                if res =='A' :
+                    result.append({'is_premium':True, 'name': people.Id.user_id.username})
+                else:
+                    result.append({'is_premium':False, 'name': people.Id.user_id.username})
+            except:
+                result.append({'is_premium':False, 'name': people.Id.user_id.username})
+
+            
+
+        # return [{'is_premium': people.premium, 'name': people.Id.user_id.username} for people in obj.common_people_id.all()]
+        return result
 
     class Meta:
         model = Trip
