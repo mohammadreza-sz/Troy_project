@@ -1,3 +1,6 @@
+from email import message
+from http.client import ResponseNotReady
+from urllib.request import Request
 from django.views import generic
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 from django.urls import reverse_lazy
@@ -136,7 +139,7 @@ class Purchase(APIView):
     permission_classes = [permi.IsPeople]
     def post(self , request):
         try:
-            trip_id = request.data.get('trip_id')
+            trip_id = request.data['trip_id']
         except:
             return Response("i want trip id" , status=status.HTTP_400_BAD_REQUEST)
             
@@ -149,7 +152,7 @@ class Purchase(APIView):
             return Response("capacity is full!!" , status = status.HTTP_403_FORBIDDEN)
         else:
             # try:
-            people = CommenPeople.objects.get(Id__user_id__id =self.request.user.id )
+            people = CommenPeople.objects.get(Id__user_id__id =self.request.user.id )#perhaps wnat to optimize
             # except:
 
             if people in trip.common_people_id.all():
@@ -159,10 +162,48 @@ class Purchase(APIView):
                 trip.common_people_id.add(people)
                 # serializer = TripSerializer(trep)            
                 return Response("add to trip" , status = status.HTTP_200_OK)
-        
-        
+
+from django.db import IntegrityError
+
+class RequestToOrg(APIView):#mrs
+    permission_classes = [permi.IsPeople]
+    def get(self , request , id):#or get
+        org = Organization.objects.get(id  =id)
+        people = CommenPeople.objects.get(Id__user_id =self.request.user )#perhaps wnat to optimize
+        pr = PremiumRequest(common_people = people , organization = org)#organization = org
+        try:
+            pr.save()
+        except IntegrityError:
+            return Response("common people id and organization id must be unique!!" ,status=status.HTTP_409_CONFLICT )#409 Conflict:Indicates that the request could not be processed because of conflict in the current state of the resource, such as an edit conflict between multiple simultaneous updates.
 
 
+        return Response("your request sent")
+
+from django.shortcuts import get_object_or_404
+
+class ShowRequest(APIView):#mrs
+    permission_classes = [permi.IsOrganization]
+    def get(self , request):
+        queryset = PremiumRequest.objects.filter(organization__person_id = request.user).all()
+        serializer = PremiumRequestSerializer(queryset , many = True)
+        return Response(serializer.data , status=status.HTTP_200_OK)
+
+    def post(self , request):
+        try:
+            obj =PremiumRequest.objects.get(pk = request.data['request_id'] )
+        except:
+            return Response("can't find request!!" , status=status.HTTP_404_NOT_FOUND)
+
+        if request.data['status'] == 'accept':
+
+            obj.status_choice = 'A'
+            obj.save()            
+        else:                
+            obj.status_choice = 'R'
+            obj.save()
+
+        return Response("your change is save!" , status=status.HTTP_200_OK)
+            
 from datetime import datetime#mrs
 
 
@@ -183,7 +224,7 @@ class TripViewSet(ModelViewSet):
 
         # queryset = Trip.objects.select_related('origin_city_id' , 'origin_city_id__country_id').prefetch_related("place_ids").all()
 
-        queryset = Trip.objects.select_related('origin_city_id' , 'origin_city_id__country_id').prefetch_related("place_ids" , "TourLeader_ids" , 'destination_city' , 'destination_country' , "TourLeader_ids__orga_id" , "common_people_id").all()
+        queryset = Trip.objects.select_related('origin_city_id' , 'origin_city_id__country_id').prefetch_related("place_ids" , "TourLeader_ids" , 'destination_city' , 'destination_country' , "TourLeader_ids__orga_id" , "common_people_id" ).all()
 
         #queryset = Trip.objects.select_related('origin_city_id' , 'origin_city_id__country_id').prefetch_related("place_ids" , "TourLeader_ids" , 'destination_city' , 'destination_country' , "TourLeader_ids__orga_id").all()
 

@@ -137,12 +137,30 @@ class TripSerializer(serializers.ModelSerializer):#mrs
     # transport = serializers.CharField(default = "C") #we can use this instead use nested serializer
     
 
+    premium = serializers.SerializerMethodField()
+    def get_premium(self , obj):
+        result = []
+        for people in obj.common_people_id.all():
+            try:
+                p = PremiumRequest.objects.get(common_people = people , organization = obj.organization_id)
+                res = p.status_choice
+                if res =='A' :
+                    result.append({'is_premium':True, 'name': people.Id.user_id.username})
+                else:
+                    result.append({'is_premium':False, 'name': people.Id.user_id.username})
+            except:
+                result.append({'is_premium':False, 'name': people.Id.user_id.username})
+
+            
+
+        # return [{'is_premium': people.premium, 'name': people.Id.user_id.username} for people in obj.common_people_id.all()]
+        return result
 
     class Meta:
         model = Trip
         # fields = ['id'  , 'origin_city_id' ,'destination_city','destination_country','departure_transport','return_transport','departure_date','return_date' ,'Description', 'capacity' , 'Price', 'place_ids','organization_id','TourLeader_ids']
         # fields = ['id'  , 'origin' ,'destination','departure_date','transport','return_date' ,'Description', 'capacity' , 'Price', 'place_ids','organization_id','TourLeader_ids' , 'image' , 'hotel_name']
-        fields = ['id' ,'origin','destination','departure_transport','return_transport','departure_date','return_date','Description','capacity', 'Price' ,'place_ids','organization_id','TourLeader_ids' ,'image' , 'hotel_name']
+        fields = ['id' ,'origin','destination','departure_transport','return_transport','departure_date','return_date','Description','capacity', 'Price' ,'place_ids','organization_id','TourLeader_ids' ,'image' , 'hotel_name' , 'premium']
 
     origin = CityTripSerializer(source = 'origin_city_id')
     # origin = serializers.SerializerMethodField(source = 'origin_city_id')
@@ -441,3 +459,9 @@ class FavoriteSerializer(serializers.ModelSerializer):
     #     favorite.common_people_id = 1
     #     favorite.save() 
     #     return favorite
+
+class PremiumRequestSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = PremiumRequest
+        fields = ['organization' , 'common_people' , 'status_choice']
+        
