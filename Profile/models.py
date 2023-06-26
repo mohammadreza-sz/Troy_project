@@ -23,8 +23,7 @@ class Person(models.Model):
 
 class CommenPeople(models.Model):
     Id = models.OneToOneField(Person, on_delete = models.CASCADE, primary_key = True)
-    friend_id = models.ManyToManyField("CommenPeople")
-    premium = models.BooleanField(default=False)
+    friend_id = models.ManyToManyField("CommenPeople")    
     def __str__(self) -> str:
         return str(self.Id)
 

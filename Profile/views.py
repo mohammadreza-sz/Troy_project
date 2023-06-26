@@ -189,37 +189,17 @@ class ShowRequest(APIView):#mrs
         return Response(serializer.data , status=status.HTTP_200_OK)
 
     def post(self , request):
+        try:
+            obj =PremiumRequest.objects.get(pk = request.data['request_id'] )
+        except:
+            return Response("can't find request!!" , status=status.HTTP_404_NOT_FOUND)
+
         if request.data['status'] == 'accept':
-            try:
-                obj =PremiumRequest.objects.get(pk = request.data['request_id'] )
-            except:
-                return Response("can't find request!!" , status=status.HTTP_404_NOT_FOUND)
 
             obj.status_choice = 'A'
             obj.save()            
-
-            try:
-                obj = CommenPeople.objects.get( pk = request.data['people_id'] )
-            except:
-                return Response("can't find people!!" , status=status.HTTP_404_NOT_FOUND)
-                
-            obj.premium=True
-            obj.save()
-        else:
-            try:
-                obj =PremiumRequest.objects.get(pk = request.data['request_id'] )
-            except:
-                return Response("can't find request!!" , status=status.HTTP_404_NOT_FOUND)
-                
+        else:                
             obj.status_choice = 'R'
-            obj.save()
-            
-            try:
-                obj = CommenPeople.objects.get( pk = request.data['people_id'] )
-            except:
-                return Response("can't find people!!" , status=status.HTTP_404_NOT_FOUND)
-                
-            obj.premium=False
             obj.save()
 
         return Response("your change is save!" , status=status.HTTP_200_OK)
