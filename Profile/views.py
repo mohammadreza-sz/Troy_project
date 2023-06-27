@@ -135,6 +135,7 @@ class history(APIView):#mrs
     #     return Response(serializer.data)
 from django.shortcuts import get_object_or_404#mrs
 from . import permissions as permi#mrs
+from django.db.models import F
 class Purchase(APIView):
     permission_classes = [permi.IsPeople]
     def post(self , request):
@@ -144,22 +145,45 @@ class Purchase(APIView):
             return Response("i want trip id" , status=status.HTTP_400_BAD_REQUEST)
             
         try:
-            trip = Trip.objects.get(id = trip_id)
+            trip : Trip = Trip.objects.get(id = trip_id)
         except:
             return Response("this trip id is not exist" ,status = status.HTTP_404_NOT_FOUND)
+            
+        people : CommenPeople = CommenPeople.objects.get(Id__user_id__id =self.request.user.id )#perhaps wnat to optimize
+        trip_price = trip.Price
+        if people.Id.wallet < trip_price :
+            return Response("you don't have enough money!" , status = status.HTTP_403_FORBIDDEN)
+
         passenger_count = trip.common_people_id.count()
         if passenger_count == trip.capacity :
             return Response("capacity is full!!" , status = status.HTTP_403_FORBIDDEN)
         else:
             # try:
-            people = CommenPeople.objects.get(Id__user_id__id =self.request.user.id )#perhaps wnat to optimize
+            # people = CommenPeople.objects.get(Id__user_id__id =self.request.user.id )#perhaps wnat to optimize
             # except:
 
             if people in trip.common_people_id.all():
                 return Response("how many time you want register??!!" , status = status.HTTP_403_FORBIDDEN)
             else:
                 #must decrease money from wallet*************************************
+                person = Person.objects.get(commenpeople = people)
+                person.wallet -= trip_price 
+                tourleaders = trip.TourLeader_ids.all()
+                # tourleaders_object = TourLeader.objects.filter(pk__in =  tourleaders).update(person_id__wallet=F('person_id__wallet') + trip_price)#Note that the __in filter works with any iterable, not just a list. 
+                Person.objects.filter(tourleader__in = tourleaders).update(wallet = F('wallet') + Decimal(trip_price * 0.2))
+
+                # for tourleader in tourleaders:
+                #     t = TourLeader.objects.get(pk = tourleader)
+                #     t.wallet += trip_price * (0.2)
+                #     t.save()
+                # org = Organization.objects.get(organization = trip.organization_id)
+                org = trip.organization_id
+                org.wallet += Decimal( trip_price * (0.8))
                 trip.common_people_id.add(people)
+
+                # person.save()
+                org.save()
+
                 # serializer = TripSerializer(trep)            
                 return Response("add to trip" , status = status.HTTP_200_OK)
 
