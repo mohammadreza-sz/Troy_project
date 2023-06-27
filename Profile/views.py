@@ -1,5 +1,7 @@
+from dataclasses import replace
 from email import message
 from http.client import ResponseNotReady
+from unicodedata import decimal
 from urllib.request import Request
 from django.views import generic
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
@@ -23,6 +25,9 @@ from account.models import User
 from .filters import ProductFilter  ,CityFilter ,TripFilter#, CountryFilter#mrs
 from rest_framework.filters import SearchFilter, OrderingFilter#mrs
 from django_filters.rest_framework import DjangoFilterBackend#mrs
+
+from . import permissions as permi#mrs
+
 
 class PersonViewSet(CreateModelMixin , RetrieveModelMixin , UpdateModelMixin , GenericViewSet ,ListModelMixin):
     filterset_class = ProductFilter#mrs
@@ -103,12 +108,67 @@ class PersonViewSet(CreateModelMixin , RetrieveModelMixin , UpdateModelMixin , G
         # return Response(serializer.data)
 
 from rest_framework.views import APIView
+from django.utils import timezone
 
 
+class history_org(APIView):#mrs
+    permission_classes =[permi.IsOrganization]
+    # filterset_class = history_org_Filter#mrs
+    # # filterset_fields = ['destination_country']
+    # filter_backends = [DjangoFilterBackend,SearchFilter, OrderingFilter]#mrs
+    # search_fields = ['hotel_name' , 'Description']#mrs
+    # ordering_fields = ['Price' , 'capacity']
+# git commit -m "add history for organization and add filter for it which return total income "
+    def get(self , request , begindate = None , enddate=None):
+        organization = Organization.objects.get(person_id = request.user)
+        if begindate ==None:
+            # today = datetime.date.today()
+            today = timezone.now()
+            first_of_this_month = today.replace(day=1).replace(hour=0 , minute=0, second=0)
+            # if first_of_this_month.month != 1:
+            last_of_last_month = first_of_this_month - timezone.timedelta(days=1)
+            last_of_last_month = last_of_last_month.replace(hour = 23 , minute=59 , second = 59)
+            first_of_last_month = last_of_last_month.replace(day=1).replace(hour=0 , minute=0, second=0)
+            # else:
+            #     last_month = 
 
-class history(APIView):#mrs
+            # start_date = timezone.now().replace(day=1) #- timezone.timedelta(days=30)
+            # if start_date.month != 1:
+            #     start_date = start_date.replace(month = start_date.month - 1)
+            #     middle_date = timezone.now()
+            # else:
+            #     start_date = start_date.replace(year= start_date.year - 1)
+            #     start_date.month = 12
+            # trip = Trip.objects.filter(organization_id =organization,departure_date__range = (start_date ,timezone.now()))
+            trip = Trip.objects.filter(organization_id =organization,departure_date__range = (first_of_last_month,last_of_last_month))
+            last_res = 0
+            for t in trip:
+                if t.Price != None:
+                    last_res += t.Price
 
-    permission_classes = [IsAuthenticated]#must add login user must be common people
+            trip = Trip.objects.filter(organization_id =organization,departure_date__range = (first_of_this_month,today))
+            now_res = 0
+            for t in trip:
+                if t.Price != None:
+                    now_res += t.Price            
+
+            trip = Trip.objects.filter(organization_id = organization)
+            total = 0
+            for t in trip:
+                if t.Price != None:
+                    total += t.Price
+            return Response({"this month":now_res , "last month":last_res , "total":total})
+
+        else:
+            trip = Trip.objects.filter(organization_id =organization,departure_date__range = (begindate , enddate))            
+            res =0
+            for t in trip:
+                if t.Price != None:
+                    res += t.Price
+            return Response({"res":res})
+class history_user(APIView):#mrs
+    # permission_classes = [IsAuthenticated]#must add login user must be common people
+    permission_classes = [permi.IsPeople]
 
     def get(self , request):
 
@@ -123,7 +183,7 @@ class history(APIView):#mrs
         serializer = TripSerializer(queryset , many = True)
 
         return Response(serializer.data)
-
+    
     # def get(self, request): GPT recommende
 
     #     c_p_id = CommenPeople.objects.filter(Id__user_id=request.user).values_list('Id', flat=True).first()
@@ -134,7 +194,6 @@ class history(APIView):#mrs
 
     #     return Response(serializer.data)
 from django.shortcuts import get_object_or_404#mrs
-from . import permissions as permi#mrs
 from django.db.models import F
 class Purchase(APIView):
     permission_classes = [permi.IsPeople]

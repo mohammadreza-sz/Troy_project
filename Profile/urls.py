@@ -31,8 +31,9 @@ router.register("Rate_TL",Rate_TourLViewSet, basename='Rate_TL')#helen
 urlpatterns=[
 
 
-
-path("history" , history.as_view()),
+path("history_user" , history_user.as_view()),
+path("history_org" , history_org.as_view()),
+path("history_org/<str:begindate>/<str:enddate>" , history_org.as_view()),
 
 path("purchase" , Purchase.as_view()),
 
