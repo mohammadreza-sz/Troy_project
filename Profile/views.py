@@ -1,3 +1,4 @@
+
 from dataclasses import replace
 from email import message
 from http.client import ResponseNotReady
@@ -28,6 +29,10 @@ from django_filters.rest_framework import DjangoFilterBackend#mrs
 
 from . import permissions as permi#mrs
 
+
+from rest_framework.pagination import PageNumberPagination
+from .pagination import DefaultPagination
+from Profile import pagination
 
 class PersonViewSet(CreateModelMixin , RetrieveModelMixin , UpdateModelMixin , GenericViewSet ,ListModelMixin):
     filterset_class = ProductFilter#mrs
@@ -110,9 +115,23 @@ class PersonViewSet(CreateModelMixin , RetrieveModelMixin , UpdateModelMixin , G
 from rest_framework.views import APIView
 from django.utils import timezone
 
+class MyCustomPagination(PageNumberPagination):
+    page_size = 3
+    page_size_query_param = 'page_size'
+    max_page_size = 100
+class user(ListAPIView):
+    pagination_class = MyCustomPagination
+    serializer_class = CityTripSerializer
+    queryset = City.objects.all()
+    page_size =3  # Number of items per page
 
+    # def get(self, request):
+    #     city = City.objects.all()
+    #     serializer = CityTripSerializer(city , many = True )
+    #     return Response(serializer.data)
 class history_org(APIView):#mrs
     permission_classes =[permi.IsOrganization]
+
     # filterset_class = history_org_Filter#mrs
     # # filterset_fields = ['destination_country']
     # filter_backends = [DjangoFilterBackend,SearchFilter, OrderingFilter]#mrs
@@ -169,7 +188,7 @@ class history_org(APIView):#mrs
 class history_user(APIView):#mrs
     # permission_classes = [IsAuthenticated]#must add login user must be common people
     permission_classes = [permi.IsPeople]
-
+    
     def get(self , request):
 
         c_p_id = CommenPeople.objects.select_related("Id" , "Id__user_id").filter(Id__user_id__id = request.user.id).values('Id').first()["Id"]#what is difference between this  line and next line?
@@ -289,8 +308,21 @@ class ShowRequest(APIView):#mrs
             
 from datetime import datetime#mrs
 
-
-
+class histroy_org2(ListAPIView):
+    permission_classes = [permi.IsOrganization]
+    pagination_class = DefaultPagination
+    # pagination_class = [PageNumberPagination]        
+    serializer_class =OrgHistoryserializer 
+    def get_queryset(self):  
+        org = Organization.objects.get(person_id = self.request.user)
+        return  Trip.objects.filter(organization_id = org ).order_by('departure_date').select_related(#this queryset need more optimization
+            'origin_city_id','origin_city_id__country_id').prefetch_related(
+            'common_people_id', 'destination_city','TourLeader_ids',
+            'TourLeader_ids__person_id','TourLeader_ids__person_id__user_id')#,departure_date__gt = '2000-01-01')
+        # serializer =OrgHistoryserializer(queryset , many =True)
+        # return Response(serializer.data)
+        
+        
 class TripViewSet(ModelViewSet):
 
     # permission_classes=[permi.CrudOrganizationReadOther]
@@ -329,8 +361,10 @@ class TripViewSet(ModelViewSet):
     filterset_class = TripFilter#mrs
     # filterset_fields = ['destination_country']
     filter_backends = [DjangoFilterBackend,SearchFilter, OrderingFilter]#mrs
+    
     search_fields = ['hotel_name' , 'Description']#mrs
     ordering_fields = ['Price' , 'capacity']
+
 
 from rest_framework import permissions
 class CountryViewSet(ModelViewSet):#mrs
@@ -345,7 +379,8 @@ class CountryViewSet(ModelViewSet):#mrs
 
     queryset = Country.objects.prefetch_related('city_set').all()
 
-    serializer_class = CountrySerializer
+    serializer_class = CountrySerializer    
+
 
 class CityViewSet(ModelViewSet):#mrs
     # permission_classes = [permi.CrudAdminReadOther]

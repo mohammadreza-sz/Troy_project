@@ -162,250 +162,71 @@ from django.core.exceptions import ValidationError#mrs
 
 class Trip(models.Model):
 
-
-
-
-
     common_people_id = models.ManyToManyField(CommenPeople , blank = True)
-
-
-
-
 
     place_ids = models.ManyToManyField(place_model.Place , blank = True)#mrs can't use null here , must use blank
 
-
-
-
-
     TourLeader_ids = models.ManyToManyField('TourLeader',   blank = True)#must be in same organization
-
-
-
-
 
     organization_id = models.ForeignKey('Organization' , on_delete=models.DO_NOTHING,null = True)
 
-
-
-
-
     destination_country = models.ManyToManyField(Country , related_name= 'countries')
-
-
-
-
 
     destination_city =  models.ManyToManyField(City , related_name='cities')
 
-
-
-
-
     # origin_country_id = models.ForeignKey(Country , on_delete=models.PROTECT , null = True)
-
-
-
-
 
     origin_city_id =  models.ForeignKey(City , on_delete=models.PROTECT , null = True)
 
-
-
-
-
     # image = get from placeimage
-
-
-
-
-
     airplane = 'A'
-
-
-
-
-
     ship = 'S'
-
-
-
-
-
     bus = 'B'
-
-
-
-
-
     train = 'T'
-
-
-
-
-
     TRANSPORT_CHOICES = [
-
-
-
-
 
         (airplane , 'airplane'),
 
-
-
-
-
         (ship , 'ship'),
-
-
-
-
 
         (bus , 'bus'),
 
-
-
-
-
         (train , 'train')
-
-
-
-
 
     ]
 
-
-
-
-
     departure_transport= models.CharField(max_length=1 , choices=TRANSPORT_CHOICES , null = True )
 
-
-
-
-
     return_transport = models.CharField(max_length=1 , choices=TRANSPORT_CHOICES , null = True )
-
-
-
-
-
     departure_date = models.DateTimeField(null = True)
-
-
-
-
 
     return_date =  models.DateTimeField(null = True)
 
-
-
-
-
 # destinations_city
-
-
-
-
-
     # Transport = 
-
-
-
-
 
     # Departure = 
 
-
-
-
-
     # return = --> i dont remember it..
-
-
-
-
 
     # Organization_id = --> you must get it from tour leader.. 
 
-
-
-
-
     Description = models.TextField(null = True)
-
-
-
-
 
     # begin_time = models.DateTimeField(null = True)#must delete it 
 
-
-
-
-
     # end_time = models.DateTimeField(null = True)#must delete it 
-
-
-
-
 
     capacity = models.IntegerField(null = True , validators=[MinValueValidator(1) , MaxValueValidator(50)])
 
-
-
-
-
-    
-
-
-
-
-
-
-
-
-
-
-
     Price = models.IntegerField(null = True , validators=[MinValueValidator(5) , MaxValueValidator(5000)])
 
-
-
-
-
     image = models.TextField(null =True)
-
-
-
-
-
     hotel_name = models.CharField(max_length=30, null = True)
 
-
-
-
-
     def clean(self):#mrs
-
-
-
-
-
         if self.return_date and self.departure_date :
-
-
-
-
-
             if self.return_date < self.departure_date:
-
-
-
-
-
                 raise ValidationError('Return date cannot be earlier than departure date.')
 
 

@@ -70,7 +70,8 @@ path("GetRequest/" , ShowRequest.as_view()),
     # path("RTL/", rate_TOURL, name = "RTL"),		
 
     # path("rate_Orgg/", rate_Orgg, name = "rate_Orgg"),	
-
+    path('test' , user.as_view()),
+    path('historyorg2' , histroy_org2.as_view())
 ]	
 
 # path("trip/" , s_trip.as_view())

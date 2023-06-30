@@ -295,7 +295,44 @@ class TripSerializer(serializers.ModelSerializer):#mrs
 
     #     return [tour_leader.orga_id.name_org for tour_leader in obj.TourLeader_ids.all()]
 
+class CustomeTourLeaderSerializer(serializers.ModelSerializer):#mrs
+    image = serializers.SerializerMethodField()
+    tourleader_name = serializers.SerializerMethodField()
+    tourleader_id = serializers.PrimaryKeyRelatedField(source = 'person_id' , read_only = True)
+    
+    class Meta:
+        model = TourLeader
+        fields = ['image','tourleader_name','tourleader_id' ]
 
+    def get_image(self , obj:TourLeader):
+        return obj.person_id.profile_image
+    def get_tourleader_name (self , obj:TourLeader):
+        return obj.person_id.user_id.first_name
+class OrgHistoryserializer(serializers.ModelSerializer):#mrs
+    registered = serializers.SerializerMethodField()
+    # number_of_page = serializers.SerializerMethodField()
+    multiple_dest = serializers.SerializerMethodField()    
+    class Meta:
+        model = Trip
+        fields = ['id','multiple_dest','TourLeader_ids' ,'origin' , 'destination',"Price" ,"capacity","registered" , "departure_date" , "image" ]
+
+    TourLeader_ids = CustomeTourLeaderSerializer(many = True)
+    origin = CityTripSerializer(source = 'origin_city_id')
+    destination= CityTripSerializer(many = True , source  = 'destination_city')#mrs if want to obtain destination from place_ids ************ this approach can't handle city name which exist in multiple country
+    def get_registered(self , obj):
+        count:int = 0
+        passengers = obj.common_people_id.all()
+        for j in passengers:
+            count+=1
+        return count
+
+    def get_multiple_dest(self ,obj):
+        if obj.destination_city.count()>1:
+            return True
+        else:
+            return False
+    # def get_number_of_page(obj):
+    #     return 
 
 class tripserializer(serializers.Serializer):
 
@@ -465,3 +502,7 @@ class PremiumRequestSerializer(serializers.ModelSerializer):
         model = PremiumRequest
         fields = ['organization' , 'common_people' , 'status_choice']
         
+
+
+        
+
