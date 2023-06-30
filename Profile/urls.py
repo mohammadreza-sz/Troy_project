@@ -71,7 +71,8 @@ path("GetRequest/" , ShowRequest.as_view()),
 
     # path("rate_Orgg/", rate_Orgg, name = "rate_Orgg"),	
     path('test' , user.as_view()),
-    path('historyorg2' , histroy_org2.as_view())
+    path('historyorg2' , histroy_org2.as_view()),
+    path('passengers/<int:trip_id>' , passenger_list.as_view()),
 ]	
 
 # path("trip/" , s_trip.as_view())

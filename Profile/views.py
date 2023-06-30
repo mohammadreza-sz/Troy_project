@@ -308,7 +308,7 @@ class ShowRequest(APIView):#mrs
             
 from datetime import datetime#mrs
 
-class histroy_org2(ListAPIView):
+class histroy_org2(ListAPIView):#mrs
     permission_classes = [permi.IsOrganization]
     pagination_class = DefaultPagination
     # pagination_class = [PageNumberPagination]        
@@ -322,7 +322,13 @@ class histroy_org2(ListAPIView):
         # serializer =OrgHistoryserializer(queryset , many =True)
         # return Response(serializer.data)
         
-        
+class passenger_list(APIView):#mrs
+    permission_classes = [permi.IsOrganization]
+    def get(self , request , trip_id:int):
+        tourleaders = Trip.objects.get(pk = trip_id).TourLeader_ids.select_related('person_id' , 'person_id__user_id').all()
+        serializer = Custome2TourLeaderSerializer(tourleaders, many = True)
+        return Response(serializer.data , status = status.HTTP_200_OK)
+
 class TripViewSet(ModelViewSet):
 
     # permission_classes=[permi.CrudOrganizationReadOther]
