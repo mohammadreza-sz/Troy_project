@@ -167,11 +167,17 @@ from django.core.exceptions import ValidationError#mrs
 
 
 
+class trip_common_people(models.Model):
+    trip = models.ForeignKey("Trip" , on_delete=models.CASCADE)
+    common_people = models.ForeignKey(CommenPeople , on_delete=models.CASCADE)
+    count = models.IntegerField(MinValueValidator(1))
+    class Meta:#making fields unique can have implications for database performance and data integrity, so use this feature judiciously.
 
+        unique_together = ('trip', 'common_people')
 
 class Trip(models.Model):
 
-    common_people_id = models.ManyToManyField(CommenPeople , blank = True)
+    common_people_id = models.ManyToManyField(CommenPeople , blank = True, through="trip_common_people")
 
     place_ids = models.ManyToManyField(place_model.Place , blank = True)#mrs can't use null here , must use blank
 

@@ -2,6 +2,7 @@
 from dataclasses import replace
 from email import message
 from http.client import ResponseNotReady
+from mimetypes import common_types
 from unicodedata import decimal
 from urllib.request import Request
 from django.views import generic
@@ -260,6 +261,8 @@ class Purchase(APIView):
                 #must decrease money from wallet*************************************
                 person = Person.objects.get(commenpeople = people)
                 person.wallet -= trip_price 
+                person.save()
+                
                 tourleaders = trip.TourLeader_ids.all()
                 # tourleaders_object = TourLeader.objects.filter(pk__in =  tourleaders).update(person_id__wallet=F('person_id__wallet') + trip_price)#Note that the __in filter works with any iterable, not just a list. 
                 Person.objects.filter(tourleader__in = tourleaders).update(wallet = F('wallet') + Decimal(trip_price * 0.2))
@@ -271,13 +274,67 @@ class Purchase(APIView):
                 # org = Organization.objects.get(organization = trip.organization_id)
                 org = trip.organization_id
                 org.wallet += Decimal( trip_price * (0.8))
-                trip.common_people_id.add(people)
-
+                # trip.common_people_id.add(people)
+                obj:trip_common_people = trip_common_people.objects.create(trip = trip , common_people = people , count = 1)
+                obj.save()
                 # person.save()
                 org.save()
 
                 # serializer = TripSerializer(trep)            
                 return Response("add to trip" , status = status.HTTP_200_OK)
+
+class reserve(APIView):
+    permission_classes = [permi.IsPeople]
+    def post(self , request):
+        try:
+            trip_id = request.data['trip_id']
+            count = request.data['count']
+        except:
+            return Response("give me both trip_id and count!" , status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            trip : Trip = Trip.objects.get(id = trip_id)
+        except:
+            return Response("trip id:"+trip_id+" is not exist" ,status = status.HTTP_404_NOT_FOUND)
+            
+        people : CommenPeople = CommenPeople.objects.get(Id__user_id__id =self.request.user.id )#perhaps wnat to optimize
+        trip_price = trip.Price * count
+        if people.Id.wallet < trip_price:
+            return Response("you must have"+trip_price+" money" , status = status.HTTP_403_FORBIDDEN)
+
+        passenger_count = trip.common_people_id.count() + count
+        if passenger_count > trip.capacity :
+            return Response("capacity is"+trip.capacity+"and you can't register!!" , status = status.HTTP_403_FORBIDDEN)
+        else:
+            # try:
+            # people = CommenPeople.objects.get(Id__user_id__id =self.request.user.id )#perhaps wnat to optimize
+            # except:
+
+            if people in trip.common_people_id.all():
+                return Response("how many time you want register??!!" , status = status.HTTP_403_FORBIDDEN)
+            else:
+                #must decrease money from wallet*************************************
+                person = Person.objects.get(commenpeople = people)
+                person.wallet -= trip_price
+                person.save()
+
+                tourleaders = trip.TourLeader_ids.all()
+                # tourleaders_object = TourLeader.objects.filter(pk__in =  tourleaders).update(person_id__wallet=F('person_id__wallet') + trip_price)#Note that the __in filter works with any iterable, not just a list. 
+                Person.objects.filter(tourleader__in = tourleaders).update(wallet = F('wallet') + Decimal(trip_price * 0.2))
+
+
+                org = trip.organization_id
+                org.wallet += Decimal( trip_price * (0.8))
+                # trip.common_people_id.add(people)
+                obj:trip_common_people = trip_common_people.objects.create(trip = trip , common_people = people , count = count)
+                obj.save()
+                # person.save()
+                org.save()
+
+                # serializer = TripSerializer(trep)            
+                return Response("add to trip" , status = status.HTTP_200_OK)
+        
+
 
 from django.db import IntegrityError
 
@@ -657,3 +714,5 @@ class Rate_TourLViewSet(ModelViewSet):
         return {'user_username':self.request.user}
     serializer_class = Rate_TourLSerializer
     ordering_fields = ['-rate']
+
+    
