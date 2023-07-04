@@ -131,6 +131,7 @@ class DestinationSerializer(serializers.Serializer):
 #     data['return_transport'] = return_transport
 
 #     return data
+from rest_framework.response import Response
 class TripSerializer(serializers.ModelSerializer):#mrs
     destination= CityTripSerializer(many = True , source  = 'destination_city')#mrs if want to obtain destination from place_ids ************ this approach can't handle city name which exist in multiple country
     # transport = TransportSerializer(source = '' )#return (departure_transport , return_transport)within object
@@ -138,18 +139,28 @@ class TripSerializer(serializers.ModelSerializer):#mrs
     
 
     premium = serializers.SerializerMethodField()
-    def get_premium(self , obj):
+    def get_premium(self , obj:Trip):#mrs
         result = []
+        
         for people in obj.common_people_id.all():
+            # count :int = 1
+            try:
+                count = trip_common_people.objects.get(trip = obj ,common_people = people).count
+            except:
+                return Response({"what the hell?!?!@#*&"})
+                # count =1
+                
+            
             try:
                 p = PremiumRequest.objects.get(common_people = people , organization = obj.organization_id)
+                
                 res = p.status_choice
                 if res =='A' :
-                    result.append({'is_premium':True, 'name': people.Id.user_id.username})
+                    result.append({'is_premium':True, 'name': people.Id.user_id.username , 'count':count})
                 else:
-                    result.append({'is_premium':False, 'name': people.Id.user_id.username})
+                    result.append({'is_premium':False, 'name': people.Id.user_id.username , 'count':count})
             except:
-                result.append({'is_premium':False, 'name': people.Id.user_id.username})
+                result.append({'is_premium':False, 'name': people.Id.user_id.username , 'count':count})
 
             
 
@@ -319,11 +330,11 @@ class OrgHistoryserializer(serializers.ModelSerializer):#mrs
     TourLeader_ids = CustomeTourLeaderSerializer(many = True)
     origin = CityTripSerializer(source = 'origin_city_id')
     destination= CityTripSerializer(many = True , source  = 'destination_city')#mrs if want to obtain destination from place_ids ************ this approach can't handle city name which exist in multiple country
-    def get_registered(self , obj):
-        count:int = 0
-        passengers = obj.common_people_id.all()
+    def get_registered(self , obj:Trip):
+        count:int = 0        
+        passengers = obj.trip_common_people_set.filter(trip = obj).all()
         for j in passengers:
-            count+=1
+            count+=j.count
         return count
 
     def get_multiple_dest(self ,obj):

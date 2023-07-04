@@ -262,7 +262,7 @@ class Purchase(APIView):
                 person = Person.objects.get(commenpeople = people)
                 person.wallet -= trip_price 
                 person.save()
-                
+
                 tourleaders = trip.TourLeader_ids.all()
                 # tourleaders_object = TourLeader.objects.filter(pk__in =  tourleaders).update(person_id__wallet=F('person_id__wallet') + trip_price)#Note that the __in filter works with any iterable, not just a list. 
                 Person.objects.filter(tourleader__in = tourleaders).update(wallet = F('wallet') + Decimal(trip_price * 0.2))
@@ -389,7 +389,7 @@ class histroy_org2(ListAPIView):#mrs
         return  Trip.objects.filter(organization_id = org ).order_by('departure_date').select_related(#this queryset need more optimization
             'origin_city_id','origin_city_id__country_id').prefetch_related(
             'common_people_id', 'destination_city','TourLeader_ids',
-            'TourLeader_ids__person_id','TourLeader_ids__person_id__user_id')#,departure_date__gt = '2000-01-01')
+            'TourLeader_ids__person_id','TourLeader_ids__person_id__user_id', )#,departure_date__gt = '2000-01-01') #******* it want more optimize for trip_common_people
         # serializer =OrgHistoryserializer(queryset , many =True)
         # return Response(serializer.data)
         
