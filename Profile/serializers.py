@@ -502,38 +502,24 @@ class PremiumRequestSerializer(serializers.ModelSerializer):
         model = PremiumRequest
         fields = ['organization' , 'common_people' , 'status_choice']
         
-import random
-def generate_random_national_code():
-    national_code = ""
-    
-    # Generate the first digit (could be a specific range based on your country)
-    first_digit = str(random.randint(1, 9))
-    national_code += first_digit
-    
-    # Generate the remaining digits
-    for _ in range(9):
-        digit = str(random.randint(0, 9))
-        national_code += digit
-    
-    return national_code
-    
+            
 class Custome2TourLeaderSerializer(serializers.ModelSerializer):
     firstname = serializers.SerializerMethodField()
     lastname = serializers.SerializerMethodField()
-    # phone_number = serializers.SerializerMethodField()
+    phone = serializers.SerializerMethodField()
     national_code = serializers.SerializerMethodField()
 
     class Meta:
         model = TourLeader
-        fields = ['firstname' , 'lastname' , 'phonetl' , 'national_code']
+        fields = ['firstname' , 'lastname' , 'phone' , 'national_code']
     def get_firstname(self ,obj):
         return obj.person_id.user_id.first_name
     def get_lastname(self ,obj):
         return obj.person_id.user_id.last_name
-    # def get_firstname(self ,obj):
-    #     return obj.person_id.phonenumber
+    def get_phone(self , obj):
+        return obj.person_id.user_id.phone
     def get_national_code(self , obj):
-        return generate_random_national_code()
+        return obj.person_id.user_id.national_code
 
     
     

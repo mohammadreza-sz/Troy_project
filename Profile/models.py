@@ -38,7 +38,7 @@ from decimal import Decimal#mrs
 
 
 
-
+from django.core.validators import RegexValidator
 class Person(models.Model):    
 
 
@@ -74,6 +74,15 @@ class Person(models.Model):
     profile_image = models.TextField(blank=True, null=True)#helen
 
     wallet = models.DecimalField(max_digits=10, decimal_places=2, default=Decimal('1000.00'))#mrs
+
+    national_code = models.CharField(unique=True , null = True,max_length=10 , validators=[RegexValidator(r'^\d{10}$', 'Enter a valid national code.')])
+
+    phone = models.CharField(null = True,max_length=20, validators=[
+            RegexValidator(
+                r'^\+?\d{1,3}[- ]?\d{3,4}[- ]?\d{4}$',
+                'Enter a valid phone number.'
+            )
+        ])
 
 
 
