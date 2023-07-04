@@ -129,7 +129,7 @@ class user(ListAPIView):
     #     city = City.objects.all()
     #     serializer = CityTripSerializer(city , many = True )
     #     return Response(serializer.data)
-class history_org(APIView):#mrs
+class history_org(APIView):#mrs income of organization for specific range
     permission_classes =[permi.IsOrganization]
 
     # filterset_class = history_org_Filter#mrs
@@ -185,10 +185,24 @@ class history_org(APIView):#mrs
                 if t.Price != None:
                     res += t.Price
             return Response({"res":res})
+            
+# from drf_yasg.openapi import Schema, Type
+# from drf_yasg import openapi
+# from drf_yasg.utils import swagger_auto_schema
 class history_user(APIView):#mrs
     # permission_classes = [IsAuthenticated]#must add login user must be common people
     permission_classes = [permi.IsPeople]
-    
+    # @swagger_auto_schema(
+    #     manual_parameters=[
+    #         openapi.Parameter(
+    #             name='user_id',
+    #             in_=openapi.IN_QUERY,
+    #             type=Type.INTEGER,
+    #             description='ID of the user whose history to retrieve',
+    #             required=True,
+    #         ),
+    #     ],
+    # )
     def get(self , request):
 
         c_p_id = CommenPeople.objects.select_related("Id" , "Id__user_id").filter(Id__user_id__id = request.user.id).values('Id').first()["Id"]#what is difference between this  line and next line?

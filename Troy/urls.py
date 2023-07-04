@@ -119,7 +119,7 @@ urlpatterns = [
     path('account/', include('account.urls')),
     path('place/', include('Place.urls')),
 
-
+    #path(r'^$', schema_view),
 
 
 

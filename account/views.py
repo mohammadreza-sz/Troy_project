@@ -131,7 +131,7 @@ from rest_framework.views import APIView
 import requests
 
 from account import serializers
-class ActivateUser(GenericAPIView):#mrs
+class ActivateUser(APIView):#mrs
     def get(self, request, uid, token, format = None):
         payload = {'uid': uid, 'token': token}
         url = "http://mrsz.pythonanywhere.com/auth/users/activation/"

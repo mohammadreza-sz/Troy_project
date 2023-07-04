@@ -25,6 +25,9 @@ from rest_framework import permissions #mrs  #61
 from rest_framework import status
 from django.db.models import Avg
 # from Profile import permissions as permi
+
+from django.db.models import Q
+
 class PlaceViewSet(ModelViewSet):#mrs 
     # permission_classes=[permi.CrudOrganizationReadOther]
     # queryset = Place.objects.prefetch_related("placeimage_set").select_related("city_id").all()   *********************
