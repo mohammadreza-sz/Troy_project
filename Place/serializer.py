@@ -98,7 +98,7 @@ class PlaceSerializer(serializers.ModelSerializer):#mrs 59
 class RateSerializer(serializers.ModelSerializer):#mrs 59
 
     usernm = serializers.CharField(source='user.username', read_only=True)
-    user_name = serializers.SerializerMethodField()
+    # user_name = serializers.SerializerMethodField()
     # user = serializers.CharField(read_only = True)
     class Meta:
         model = Rate
@@ -106,7 +106,7 @@ class RateSerializer(serializers.ModelSerializer):#mrs 59
             'id',
             'place',
             'usernm',
-            'user_name',
+            # 'user_name',
             'rate',
         ]
 
@@ -115,9 +115,9 @@ class RateSerializer(serializers.ModelSerializer):#mrs 59
     def create(self , validated_data):
 
         # user_id = self.context['user_id']#mrsz
-        user_name = self.context['user_username']#mrsz
+        usernm = self.context['user_username']#mrsz
 
-        return Rate.objects.create(user = user_name  ,**validated_data)
+        return Rate.objects.create(user = usernm  ,**validated_data)
 
 class UserCommentSerializer(serializers.ModelSerializer):	
     class Meta:	

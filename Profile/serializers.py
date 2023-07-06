@@ -337,7 +337,7 @@ class OrganizationSerializer(serializers.ModelSerializer):
 
 class  Rate_OrgSerializer(serializers.ModelSerializer):	
     usernm = serializers.CharField(source='user.username', read_only=True)
-    user_name = serializers.SerializerMethodField()
+    # user_name = serializers.SerializerMethodField()
     class Meta:	
 
         model = Rate_Org	
@@ -346,7 +346,7 @@ class  Rate_OrgSerializer(serializers.ModelSerializer):
             'id',
             'orgg',
             'usernm',
-            'user_name',
+            # 'user_name',
             'rate',
         ]
 
@@ -354,8 +354,8 @@ class  Rate_OrgSerializer(serializers.ModelSerializer):
         return obj.user.username
     def create(self , validated_data):
         # user_id = self.context['user_id']#mrsz
-        user_name = self.context['user_username']
-        return Rate.objects.create(user = user_name  ,**validated_data)
+        usernm = self.context['user_username']
+        return Rate.objects.create(user = usernm  ,**validated_data)
 
 class TourLeaderSerializer(serializers.ModelSerializer):	
 
@@ -369,14 +369,14 @@ class TourLeaderSerializer(serializers.ModelSerializer):
 
 class  Rate_TourLSerializer(serializers.ModelSerializer):	
     usernm = serializers.CharField(source='user.username', read_only=True)
-    user_name = serializers.SerializerMethodField()
+    # user_name = serializers.SerializerMethodField()
     class Meta:
         model = Rate_Tour #this is for tourleader not for tours..
         fields = [
             'id',
             'tour_leader',
             'usernm',
-            'user_name',
+            # 'user_name',
             'rate',
         ]
 
@@ -384,8 +384,8 @@ class  Rate_TourLSerializer(serializers.ModelSerializer):
         return obj.user.username
     def create(self , validated_data):
         # user_id = self.context['user_id']#mrsz
-        user_name = self.context['user_username']#mrsz
-        return Rate.objects.create(user = user_name  ,**validated_data)
+        usernm = self.context['user_username']#mrsz
+        return Rate.objects.create(user = usernm  ,**validated_data)
 
 class CountrySerializer(serializers.ModelSerializer):#mrs
     class Meta:
