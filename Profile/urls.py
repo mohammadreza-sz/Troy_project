@@ -23,6 +23,7 @@ router.register("City" , CityViewSet)
 router.register("favorite" , FavoriteView)
 
 router.register("Person" , PersonViewSet)
+router.register("CrudOrg" , OrganizationViewSet) #helen
 
 router.register("Rate_org", Rate_orgViewSet, basename='Rate_org')#helen
 
