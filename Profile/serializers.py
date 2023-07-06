@@ -10,34 +10,7 @@ from Place.models import Place
 # from .models import Organization, Person, TourLeader , Trip , Country , City , Favorite
 from .models import *
 from django.conf import settings
-# from base64.fields import Base64ImageField #helen
-#helen{
-#class Base64ImageField(serializers.ImageField):
-#    def to_internal_value(self, data):
-#        if isinstance(data, six.string_types):
-#            if 'data:' in data and ';base64,' in data:
-#               header, data = data.split(';base64,')
-#            try:
-#                decoded_file = base64.b64decode(data)
-#            except TypeError:
-#                self.fail('invalid_image')
-#            file_name = str(uuid.uuid4())[:16]
-#            file_extension = self.get_file_extension(file_name, decoded_file)
-#           complete_file_name = "%s.%s" % (file_name, file_extension, )
- #           data = ContentFile(decoded_file, name=complete_file_name)
-#            return super(Base64ImageField, self).to_internal_value(data)
-#    def get_file_extension(self, file_name, decoded_file):
- #       import imghdr
-#        extension = imghdr.what(file_name, decoded_file)
-#        extension = "jpg" if extension == "jpeg" else extension
-#
-#        return extension
-#    def to_representation(self, instance):
-#        if instance.name:
-#            return(settings.BASE_URL+reverse('download', args=[instance.name]))
-#        else:
-#            return None
-#}helen
+
 class PersonSerializer(serializers.ModelSerializer):#lesson 59
     # gender = serializers.BooleanField(initial=True)
     #profile_image = Base64ImageField(required=False) #helen
@@ -97,24 +70,6 @@ class TransportSerializer(serializers.Serializer):#mrs
     departure_transport = serializers.ChoiceField(choices=TRANSPORT_CHOICES)
 
     return_transport = serializers.ChoiceField(choices=TRANSPORT_CHOICES)
-
-
-
-# class TripTourLeaderSerializer(serializers.ModelSerializer):#mrs
-
-#     name = serializers.SerializerMethodField()
-
-#     class Meta:
-
-#         model = TourLeader
-
-#         fields = 'Id' , 'name'
-
-#     def get_name(self,obj):
-
-#         return obj.Id.user_id.id
-
-
 
 class DestinationSerializer(serializers.Serializer):
 
@@ -349,14 +304,6 @@ class tripserializer(serializers.Serializer):
 
     id = serializers.IntegerField()
 
-
-
-
-
-
-
-
-
 class CitySerializer(serializers.ModelSerializer):
     # country_name = serializers.StringRelatedField(source = 'country_id' , read_only = False)
     country_name = serializers.SerializerMethodField()
@@ -376,30 +323,17 @@ class CitySerializer(serializers.ModelSerializer):
 
 class OrganizationSerializer(serializers.ModelSerializer):	
     country_nameOrg = serializers.SerializerMethodField()	
-
-    user_id = PersonSerializer()	
-
     class Meta:	
 
         model = Organization	
 
         fields = "__all__"	
 
-        read_only_fields = ["user_id"]	
+        # read_only_fields = ["user_id"]	
 
     def get_country_nameOrg(self, obj):	
-
-        return obj.city_id.country_id.country_name	
-
-    # def get_tours(self, obj):	
-
-        # objj = obj.tourleader.set_tour.all()
-
-# class  Rate_OrgSerializer(serializers.ModelSerializer):	
-#     class Meta:	
-#         model = Rate_Org	
-#         fields = "__all__"	
-
+        pass
+    #     return obj.city_id.country_id.country_name	
 
 class  Rate_OrgSerializer(serializers.ModelSerializer):	
     usernm = serializers.CharField(source='user.username', read_only=True)
@@ -425,14 +359,6 @@ class  Rate_OrgSerializer(serializers.ModelSerializer):
 
 class TourLeaderSerializer(serializers.ModelSerializer):	
 
-    # organ_name = serializers.SerializerMethodField()	
-
-    # rateTL_num = serializers.SerializerMethodField()	
-
-    # trips = serializers.SerializerMethodField()	
-
-    # ratees = serializers.SerializerMethodField()	
-
     class Meta:	
 
         model = TourLeader	
@@ -440,36 +366,6 @@ class TourLeaderSerializer(serializers.ModelSerializer):
         fields = "__all__"	
 
         read_only_fields = ["rates", "rate_no"]	
-
-    # def get_organ_name(self, obj):	
-
-    #     return obj.orga_id.name	
-
-    # def get_rateTL_num(self, obj):	
-
-    #     # self.rate_no = 	
-
-    #     if obj.rates_Tour is not None:	
-
-    #         self.rate_no = len(obj.rate_tour)	
-
-    #     else:	
-
-    #         self.rate_no = 0	
-
-    # def get_ratees(self , obj):	
-
-        # return obj.rates	
-
-    # def get_rate_no(self, obj):	
-
-        # return len()	
-
-    # def get_trips(self , obj):	
-
-        # objj = obj.tourleader.all()	
-
-        # return TripSerializer(objj).data
 
 class  Rate_TourLSerializer(serializers.ModelSerializer):	
     usernm = serializers.CharField(source='user.username', read_only=True)

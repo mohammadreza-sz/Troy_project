@@ -767,11 +767,12 @@ class TourLeaderDeleteFromOrganization(generics.DestroyAPIView):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 #helen
+
 class OrganizationViewSet(CreateModelMixin , RetrieveModelMixin , UpdateModelMixin , GenericViewSet ,ListModelMixin):
-    # filterset_class = ProductFilter#mrs
-    # filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]#mrs
+#     # filterset_class = ProductFilter#mrs
+#     # filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]#mrs
     queryset = Organization.objects.all()
-    serializer_class = OrganizationSerializer()
+    serializer_class = OrganizationSerializer
     @action(detail=False , methods=['GET' , 'PUT'])
     def me(self:Organization, request):
         (org , created) = Organization.objects.get_or_create(id = request.user.id)
