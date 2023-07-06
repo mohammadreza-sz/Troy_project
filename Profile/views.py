@@ -75,24 +75,16 @@ class PersonViewSet(CreateModelMixin , RetrieveModelMixin , UpdateModelMixin , G
 
             return Response({'opreation':'succesfully update'} | serializer.data ,status =status.HTTP_200_OK)
 
-# from django.forms.models import model_to_dict
+    # @api_view(['GET'])#mrs     #by default argument => GET  15
 
-# from rest_framework.views import APIView
+    # def s_trip(request):
 
-# from django.db import connection
+    # class s_trip(APIView):
 
-# from rest_framework.decorators import api_view
+    #     def get(self, request):
+    #         trip = Trip.objects.raw("SELECT * FROM profile_trip pt inner join profile_trip_place_ids ptp where pt.id = ptp.trip_id ")
 
-# @api_view(['GET'])#mrs     #by default argument => GET  15
-
-# def s_trip(request):
-
-# class s_trip(APIView):
-
-#     def get(self, request):
-#         trip = Trip.objects.raw("SELECT * FROM profile_trip pt inner join profile_trip_place_ids ptp where pt.id = ptp.trip_id ")
-
-#         serializer = TripSerializer(trip , many = True)
+    #         serializer = TripSerializer(trip , many = True)
 
     # trip = Trip.objects.all().values("id","capacity","capacity","return_transport","departure_date",
 
@@ -137,7 +129,7 @@ class history_org(APIView):#mrs income of organization for specific range
     # filter_backends = [DjangoFilterBackend,SearchFilter, OrderingFilter]#mrs
     # search_fields = ['hotel_name' , 'Description']#mrs
     # ordering_fields = ['Price' , 'capacity']
-# git commit -m "add history for organization and add filter for it which return total income "
+    # git commit -m "add history for organization and add filter for it which return total income "
     def get(self , request , begindate = None , enddate=None):
         organization = Organization.objects.get(person_id = request.user)
         if begindate ==None:
@@ -185,10 +177,7 @@ class history_org(APIView):#mrs income of organization for specific range
                 if t.Price != None:
                     res += t.Price
             return Response({"res":res})
-            
-# from drf_yasg.openapi import Schema, Type
-# from drf_yasg import openapi
-# from drf_yasg.utils import swagger_auto_schema
+
 class history_user(APIView):#mrs
     # permission_classes = [IsAuthenticated]#must add login user must be common people
     permission_classes = [permi.IsPeople]
@@ -753,14 +742,9 @@ class RequestCreate(generics.CreateAPIView):
         serializer = RequestSerializer(request_obj)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
-from rest_framework import generics
-from rest_framework.response import Response
-from rest_framework import status
-from .models import TourLeader, Organization
-from .serializers import OrganizationSerializer
-
 # delete a tourleader
 class TourLeaderDeleteFromOrganization(generics.DestroyAPIView):
+
     def delete(self, request, orga_id, tl_id):
         # Get the organization instance
         organization = Organization.objects.filter(id=orga_id).first()
@@ -775,3 +759,30 @@ class TourLeaderDeleteFromOrganization(generics.DestroyAPIView):
         # Serialize and return the updated organization
         serializer = OrganizationSerializer(organization)
         return Response(serializer.data, status=status.HTTP_200_OK)
+
+#helen
+
+class OrganizationViewSet(CreateModelMixin , RetrieveModelMixin , UpdateModelMixin , GenericViewSet ,ListModelMixin):
+#     # filterset_class = ProductFilter#mrs
+#     # filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]#mrs
+    queryset = Organization.objects.all()
+    serializer_class = OrganizationSerializer
+    @action(detail=False , methods=['GET' , 'PUT'])
+    def me(self:Organization, request):
+        (org , created) = Organization.objects.get_or_create(id = request.user.id)
+        
+        if request.method == 'GET':
+            data = OrganizationSerializer(org)
+            return Response(data.data , status = status.HTTP_200_OK)
+
+        elif request.method == 'PUT':
+            serializer = OrganizationSerializer(org , data = request.data)
+            serializer.is_valid(raise_exception=True)
+            serializer.save()
+            return Response({'opreation':'succesfully update'} | serializer.data ,status =status.HTTP_200_OK)
+
+        elif request.method == 'PATCH   ':
+            serializer = OrganizationSerializer(org , data = request.data)
+            serializer.is_valid(raise_exception=True)
+            serializer.save()
+            return Response({'opreation':'succesfully update'} | serializer.data ,status =status.HTTP_200_OK)

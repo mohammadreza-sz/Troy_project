@@ -23,6 +23,7 @@ router.register("City" , CityViewSet)
 router.register("favorite" , FavoriteView)
 
 router.register("Person" , PersonViewSet)
+router.register("CrudOrg" , OrganizationViewSet) #helen
 
 router.register("Rate_org", Rate_orgViewSet, basename='Rate_org')#helen
 
@@ -87,20 +88,4 @@ path("GetRequest/" , ShowRequest.as_view()),
 
 # path("trip/" , s_trip.as_view())
 
-urlpatterns += router.urls#lesson 28
-
-# print(urlpatterns)
-
-# urlpatterns = router.urls + Person_router.urls #lesson 28
-
-    # path('users/<int:id>/', UserUpdateView.as_view()),
-
-# print(urlpatterns)
-
-# urlpatterns = [
-
-#     # path('register/', UserRegisterView.as_view() , name = 'register'),
-
-#     path('edit_profile/', PersonViewSet.as_view() , name = 'edit_profile'),
-
-# ]
+urlpatterns += router.urls 
