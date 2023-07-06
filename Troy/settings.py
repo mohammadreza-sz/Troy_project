@@ -189,7 +189,7 @@ INSTALLED_APPS = [#mrs
 
 
 
-    'drf_base64',
+#    'drf_base64',
 
 
 
@@ -352,67 +352,25 @@ SIMPLE_JWT = {#mrs
 ROOT_URLCONF = 'Troy.urls'
 
 
-
+import os#4
 
 
 
 
 TEMPLATES = [
-
-
-
     {
-
-
-
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-
-
-
-        'DIRS': [BASE_DIR/'templates'],
-
-
-
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
         'APP_DIRS': True,
-
-
-
         'OPTIONS': {
-
-
-
             'context_processors': [
-
-
-
                 'django.template.context_processors.debug',
-
-
-
                 'django.template.context_processors.request',
-
-
-
                 'django.contrib.auth.context_processors.auth',
-
-
-
                 'django.contrib.messages.context_processors.messages',
-
-
-
             ],
-
-
-
         },
-
-
-
     },
-
-
-
 ]
 
 
@@ -428,11 +386,12 @@ ASGI_APPLICATION = "Troy.asgi.application"
 
 CHANNEL_LAYERS = {
     "default": {
-        # "BACKEND": "channels_redis.core.RedisChannelLayer",
-        "BACKEND":"channels.layers.InMemoryChannelLayer"
-        # "CONFIG": {
+        #  "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "BACKEND":"channels.layers.InMemoryChannelLayer",
+        #  "CONFIG": {
         #     "hosts": [("127.0.0.1", 6379)],
-        # },
+		#  "hosts": [("redis-server-name", 6379)],
+        #  },
     },
 }
 
@@ -459,87 +418,11 @@ CHANNEL_LAYERS = {
 
 
 DATABASES = {
-
-
-
-
-
-
-
     'default': {
-
-
-
-
-
-
-
-        'ENGINE': 'django.db.backends.mysql',
-
-
-
-
-
-
-
-        'NAME': 'chat',
-
-
-
-
-
-
-
-
-
-        'HOST': 'localhost',
-
-
-
-
-
-
-
-
-
-        'USER': 'root',
-
-
-
-
-
-
-
-
-
-        'PASSWORD': 'newpassword',
-
-
-
-
-
-
-
-
-
-        'PORT':'3306'
-
-
-
-
-
-
-
+        'ENGINE' : 'django.db.backends.sqlite3',
+        'NAME' : BASE_DIR / 'troy.sqlite3',
     }
-
-
-
-
-
-
-
 }
-
 
 
 # Password validation
@@ -815,6 +698,7 @@ USE_TZ = True
 
 
 STATIC_URL = 'static/'
+STATIC_ROOT = os.path.join(BASE_DIR, "static/")
 
 
 
@@ -830,7 +714,8 @@ STATIC_URL = 'static/'
 
 
 
-import os#4
+
+
 
 
 
@@ -1206,7 +1091,7 @@ EMAIL_HOST_PASSWORD ='yvcpvkazuuqnvguy'
 
 
 
-ALLOWED_HOSTS = ['mrsz.pythonanywhere.com' , '127.0.0.1']#mrs
+ALLOWED_HOSTS = ['*', '5.34.192.111', 'www.5.34.192.111']#mrs
 
 
 
