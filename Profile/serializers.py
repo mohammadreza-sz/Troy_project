@@ -533,5 +533,9 @@ class Custome2TourLeaderSerializer(serializers.ModelSerializer):
         return obj.person_id.user_id.national_code
 
     
-    
+class RequestSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Request
+        fields = "__all__"
+        # fields = ('id', 'orga_id', 'tl_id', 'status', 'created_at', 'updated_at')
         

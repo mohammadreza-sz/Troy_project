@@ -74,6 +74,15 @@ path("GetRequest/" , ShowRequest.as_view()),
     path('historyorg2' , histroy_org2.as_view()),
     path('passengers/<int:trip_id>' , passenger_list.as_view()),
     path('reserve' , reserve.as_view()),
+    # for see the list of tourleaders that are not in a especial org
+    path('organizations/<int:orga_id>/tourleaders/not-in-organization/',
+         TourLeaderListNotInOrganization.as_view(), name='tourleader_not_in_organization'),
+
+    path('requests/', RequestCreate.as_view(), name='request_create'),
+    # delete a tourleader..
+    path('organizations/<int:orga_id>/tourleaders/<int:tl_id>/delete/',
+     TourLeaderDeleteFromOrganization.as_view(), name='tourleader_delete_from_organization'),
+
 ]	
 
 # path("trip/" , s_trip.as_view())

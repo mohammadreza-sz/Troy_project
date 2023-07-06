@@ -27,13 +27,12 @@ from account.models import User
 from .filters import ProductFilter  ,CityFilter ,TripFilter#, CountryFilter#mrs
 from rest_framework.filters import SearchFilter, OrderingFilter#mrs
 from django_filters.rest_framework import DjangoFilterBackend#mrs
-
 from . import permissions as permi#mrs
-
-
 from rest_framework.pagination import PageNumberPagination
 from .pagination import DefaultPagination
 from Profile import pagination
+from rest_framework import generics
+
 
 class PersonViewSet(CreateModelMixin , RetrieveModelMixin , UpdateModelMixin , GenericViewSet ,ListModelMixin):
     filterset_class = ProductFilter#mrs
@@ -442,7 +441,6 @@ class TripViewSet(ModelViewSet):
     search_fields = ['hotel_name' , 'Description']#mrs
     ordering_fields = ['Price' , 'capacity']
 
-
 from rest_framework import permissions
 class CountryViewSet(ModelViewSet):#mrs
 
@@ -457,7 +455,6 @@ class CountryViewSet(ModelViewSet):#mrs
     queryset = Country.objects.prefetch_related('city_set').all()
 
     serializer_class = CountrySerializer    
-
 
 class CityViewSet(ModelViewSet):#mrs
     # permission_classes = [permi.CrudAdminReadOther]
@@ -715,4 +712,66 @@ class Rate_TourLViewSet(ModelViewSet):
     serializer_class = Rate_TourLSerializer
     ordering_fields = ['-rate']
 
-    
+#helen
+class TourLeaderListNotInOrganization(generics.ListAPIView):
+    serializer_class = TourLeaderSerializer
+    def get_queryset(self):
+        # Get the organization id from the URL parameter
+        orga_id = self.kwargs.get('orga_id')
+        # Get the organization instance
+        organization = Organization.objects.filter(id=orga_id).first()
+        if organization:
+            # Get all tour leaders that are not in the organization
+            queryset = TourLeader.objects.exclude(orga_id=organization)
+        else:
+            # Return an empty queryset if the organization does not exist
+            queryset = TourLeader.objects.none()
+        return queryset 
+
+
+
+
+# to send requests for tourleaders that are not in the list..
+class RequestCreate(generics.CreateAPIView):
+    serializer_class = RequestSerializer
+
+    def create(self, request, *args, **kwargs):
+        # Get the organization and tour leader ids from the request data
+        orga_id = request.data.get('orga_id')
+        tl_id = request.data.get('tl_id')
+        # Check if the tour leader exists and is not already part of the organization
+        tourleader = TourLeader.objects.filter(id=tl_id).exclude(orga_id=orga_id).first()
+        if not tourleader:
+            return Response({'error': 'Tour leader does not exist or is already part of the organization.'}, status=status.HTTP_400_BAD_REQUEST)
+        # Check if the organization exists
+        organization = Organization.objects.filter(id=orga_id).first()
+        if not organization:
+            return Response({'error': 'Organization does not exist.'}, status=status.HTTP_400_BAD_REQUEST)
+        # Create a new Request object
+        request_obj = Request.objects.create(orga_id=organization, tl_id=tourleader)
+        # Serialize and return the new Request object
+        serializer = RequestSerializer(request_obj)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+from rest_framework import generics
+from rest_framework.response import Response
+from rest_framework import status
+from .models import TourLeader, Organization
+from .serializers import OrganizationSerializer
+
+# delete a tourleader
+class TourLeaderDeleteFromOrganization(generics.DestroyAPIView):
+    def delete(self, request, orga_id, tl_id):
+        # Get the organization instance
+        organization = Organization.objects.filter(id=orga_id).first()
+        if not organization:
+            return Response({'error': 'Organization does not exist.'}, status=status.HTTP_400_BAD_REQUEST)
+        # Check if the tour leader is part of the organization
+        tourleader = TourLeader.objects.filter(id=tl_id, orga_id=organization).first()
+        if not tourleader:
+            return Response({'error': 'Tour leader is not part of the organization.'}, status=status.HTTP_400_BAD_REQUEST)
+        # Remove the tour leader from the organization
+        organization.tourleader.remove(tourleader)
+        # Serialize and return the updated organization
+        serializer = OrganizationSerializer(organization)
+        return Response(serializer.data, status=status.HTTP_200_OK)

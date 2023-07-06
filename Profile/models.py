@@ -12,31 +12,15 @@ from account.models import User
 
 from django.db import models
 
-
-
 from django.conf import settings
-
-
 
 from django.db import models#mrs
 
-
-
 from Place import models as place_model
-
-
 
 from django.core.validators import MaxValueValidator, MinValueValidator
 
 from decimal import Decimal#mrs
-
-
-
-
-# CRUD baraye safar tavassote organization va assign kardane ye tour leader baraye oon
-
-
-
 
 from django.core.validators import RegexValidator
 class Person(models.Model):    
@@ -93,10 +77,6 @@ class Person(models.Model):
 
         # return str(self.user_id)
 
-
-
-
-
 class CommenPeople(models.Model):
 
 
@@ -113,10 +93,6 @@ class CommenPeople(models.Model):
 
         return str(self.Id)
 
-
-
-
-
 class Country(models.Model):#mrs
 
 
@@ -130,10 +106,6 @@ class Country(models.Model):#mrs
 
 
         return self.country_name
-
-
-
-
 
 class City(models.Model):#mrs
 
@@ -158,9 +130,6 @@ class City(models.Model):#mrs
 
 
         return self.city_name
-
-
-
 
 
 from django.core.exceptions import ValidationError#mrs
@@ -217,7 +186,7 @@ class Trip(models.Model):
 
     return_date =  models.DateTimeField(null = True)
 
-# destinations_city
+    # destinations_city
     # Transport = 
 
     # Departure = 
@@ -244,70 +213,17 @@ class Trip(models.Model):
             if self.return_date < self.departure_date:
                 raise ValidationError('Return date cannot be earlier than departure date.')
 
-
-
-
-
-        
-
-
-
-
-
 class Organization(models.Model):	
 
-
-
-    # user_id = models.OneToOneField(settings.AUTH_USER_MODEL ,	
-
-
-
-            # on_delete=models.CASCADE , null = True, related_name= 'orguser')    	
-
-
-
-    person_id = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete = models.CASCADE,	
-
-
-
-        null = True)#must change to user *********************
-
-    	
-
-
-
+    person_id = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete = models.CASCADE, null = True)
     name_org = models.CharField(max_length=200,unique=True , null = True)	
-
-
-
     description = models.TextField(null = True)	
-
-
-
     city_id = models.ForeignKey(City , on_delete= models.CASCADE , null = True)# city, country	
-
-
-
     logo = models.TextField(blank = True, null = True)	
-
-
-
     Address =models.CharField(max_length=255 , null = True)	
-
-
-
     Phone = models.CharField(max_length=20 , null = True)	
-
-    # rates = models.IntegerField(default=0, blank=True)	
-
     rates = models.IntegerField(default=0, blank=True , null = True)	
-
     wallet = models.DecimalField(max_digits=10, decimal_places=2, default=Decimal('1000.00'))#mrs
-
-
-
-
-
 
 class Rate_Org(models.Model):	
 
@@ -379,39 +295,13 @@ class PremiumRequest(models.Model):#mrs
 
         unique_together = ('organization', 'common_people')
 
-
-
-
-
-
-
 class TourLeader(models.Model):	
-
-
-
     person_id = models.OneToOneField(Person, on_delete = models.CASCADE, primary_key = True)	
-
-
-
-    orga_id = models.ForeignKey(Organization, on_delete = models.CASCADE,	
-
-
-
-     null= True, related_name = "tourleader")	
-
-
-
+    orga_id = models.ForeignKey(Organization, on_delete = models.CASCADE, null= True, related_name = "tourleader")	
     rates = models.IntegerField(default=0, blank=True , null = True)	# mrs make this change to make migrations 
-
     rate_no = models.IntegerField(default=0, blank=True , null = True)	# mrs make this change to make migrations 
-
     joindDate = models.DateTimeField(auto_now=True , null = True)	# mrs make this change to make migrations 
-
     phonetl = models.CharField(max_length=20 , null = True)
-
-
-
-
 
 class Rate_Tour(models.Model):	
 
@@ -507,10 +397,6 @@ class Rate_Tour(models.Model):
 
     # image = models.ImageField(upload_to = "profile/imaged" , null = True)#mrs
 
-
-
-
-
 class Post(models.Model):
 
 
@@ -520,10 +406,6 @@ class Post(models.Model):
 
 
     caption = models.TextField()
-
-
-
-
 
 class Post_image(models.Model):
 
@@ -535,12 +417,7 @@ class Post_image(models.Model):
 
     post_image = models.TextField(blank=True, null=True)
 
-
-
-
-
 class Favorite(models.Model):
-
 
 
     favorite = models.TextField(null =True)
@@ -548,3 +425,18 @@ class Favorite(models.Model):
 
 
     common_people_id = models.ForeignKey(CommenPeople , on_delete=models.CASCADE)
+# to send request for tourleaders that are not in an organization...
+class Request(models.Model):
+    STATUS_CHOICES = (
+        ('P', 'Pending'),
+        ('A', 'Accepted'),
+        ('R', 'Rejected'),
+    )
+    orga_id = models.ForeignKey(Organization, on_delete=models.CASCADE, related_name='requests')
+    tl_id = models.ForeignKey(TourLeader, on_delete=models.CASCADE, related_name='requests')
+    status = models.CharField(max_length=1, choices=STATUS_CHOICES, default='P')
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        unique_together = ('orga_id', 'tl_id')
