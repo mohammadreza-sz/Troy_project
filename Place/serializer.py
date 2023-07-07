@@ -38,9 +38,30 @@ class PlaceImageSerializer(serializers.ModelSerializer):#mrs
         fields =['id' , 'image' , 'place_id']
 
 class PlaceSerializer(serializers.ModelSerializer):#mrs 59
+    #region mrs
+    # placeimage_set = PlaceImageSerializer(many = True , read_only = True)
 
+    # placeimage_set = serializers.SlugRelatedField(
+
+    #     many=True,
+
+    #     read_only=True,
+
+    #     slug_field='image'
+
+    # )
+    # username = serializers.SerializerMethodField()	
+    
+    # city = CitySerializer()
+
+    # city_id = serializers.CharField(max_length = 50)
+
+    # country_id= serializers.CharField(max_length = 50)
+    #endregion
 	# rate_no = serializers.ReadOnlyField()	
     # comment_number = serializers.ReadOnlyField()
+
+
     avg_rate = serializers.ReadOnlyField()
 
     city_name = serializers.SerializerMethodField()

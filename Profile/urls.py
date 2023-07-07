@@ -83,7 +83,7 @@ path("GetRequest/" , ShowRequest.as_view()),
     # delete a tourleader..
     path('organizations/<int:orga_id>/tourleaders/<int:tl_id>/delete/',
      TourLeaderDeleteFromOrganization.as_view(), name='tourleader_delete_from_organization'),
-
+     path('inc_money/' , Increase_people_wallet.as_view())
 ]	
 
 # path("trip/" , s_trip.as_view())

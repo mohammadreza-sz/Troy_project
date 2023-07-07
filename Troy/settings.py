@@ -443,24 +443,24 @@ WSGI_APPLICATION = 'Troy.wsgi.application'
 
 
 
-DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "troy.sqlite3",
-    }
-}
-
-
 # DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.mysql',
-#         'NAME': 'troy',
-#         'HOST': 'localhost',
-#         'USER': 'root',
-#         'PASSWORD': 'newpassword',
-#         'PORT':'3306'
+#     "default": {
+#         "ENGINE": "django.db.backends.sqlite3",
+#         "NAME": BASE_DIR / "troy.sqlite3",
 #     }
 # }
+
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'troy',
+        'HOST': 'localhost',
+        'USER': 'root',
+        'PASSWORD': 'newpassword',
+        'PORT':'3306'
+    }
+}
 
 
 # DATABASES = {

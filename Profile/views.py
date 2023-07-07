@@ -322,7 +322,23 @@ class reserve(APIView):
                 # serializer = TripSerializer(trep)            
                 return Response("add to trip" , status = status.HTTP_200_OK)
         
+class Increase_people_wallet(APIView):#mrs
+    def post(self , request):
+        try:
+            people_id = request.data['people_id']
+            money = request.data['money']
+        except:
+            return Response("i want both people id and money " , status=status.HTTP_400_BAD_REQUEST)
 
+        try:
+            person:Person = Person.objects.get(commenpeople__Id = people_id)
+        except:
+            return Response("i can't find people with this id: "+str(people_id) , status=status.HTTP_404_NOT_FOUND)
+        
+        person.wallet += Decimal(money)
+        person.save()
+        return Response("his/her wallet is:"+str(person.wallet) , status = status.HTTP_200_OK)
+        
 
 from django.db import IntegrityError
 
@@ -813,3 +829,4 @@ class TourLeaderViewSet(CreateModelMixin , RetrieveModelMixin , UpdateModelMixin
             serializer.is_valid(raise_exception=True)
             serializer.save()
             return Response({'opreation':'succesfully update'} | serializer.data ,status =status.HTTP_200_OK)
+
