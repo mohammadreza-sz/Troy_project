@@ -39,36 +39,17 @@ class PlaceImageSerializer(serializers.ModelSerializer):#mrs
 
 class PlaceSerializer(serializers.ModelSerializer):#mrs 59
 
-    # placeimage_set = PlaceImageSerializer(many = True , read_only = True)
-
-    # placeimage_set = serializers.SlugRelatedField(
-
-    #     many=True,
-
-    #     read_only=True,
-
-    #     slug_field='image'
-
-    # )
-
 	# rate_no = serializers.ReadOnlyField()	
     # comment_number = serializers.ReadOnlyField()
-    # username = serializers.SerializerMethodField()	
-    
-    # city = CitySerializer()
-
-    # city_id = serializers.CharField(max_length = 50)
-
-    # country_id= serializers.CharField(max_length = 50)
-
     avg_rate = serializers.ReadOnlyField()
 
     city_name = serializers.SerializerMethodField()
 
     country_name = serializers.SerializerMethodField()
+    comment_no = serializers.SerializerMethodField()
+    rate_no = serializers.SerializerMethodField()
 
     class Meta:
-
         model = Place
         fields = [
                 'country_name',
@@ -77,6 +58,7 @@ class PlaceSerializer(serializers.ModelSerializer):#mrs 59
                 'id',
                 'name',
                 'address',
+                
                 'description',
                 'lan',
                 'lon',
@@ -84,7 +66,13 @@ class PlaceSerializer(serializers.ModelSerializer):#mrs 59
                 'rate_no',
                 'avg_rate',
             ]
-
+        # fields = "__all__"
+    def get_comment_no(self):
+        self.comment_number = self.comments.count()
+        self.save()
+    def get_rate_no(self):
+        # self.rate_no = len(rates)
+        self.rate_no = self.rate.count()
     def get_city_name(self, obj):
 
         return obj.city_id.city_name

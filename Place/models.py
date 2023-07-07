@@ -20,22 +20,38 @@ class Place(models.Model):#mrs
         max_digits=2, default=0, decimal_places=1, blank=True , null = True)
     rate_no = models.IntegerField(default=0, blank=True , null = True)
     comment_number = models.IntegerField(default=0 , null = True)
-    # def update_rate(self):
-    #     rates = Rate.objects.all()
-    #     self.rate_no = len(rates)
-    #     self.rate = round(sum(
-    #         [rates.rate for rates in rates]) / self.rate_no, 1)
-            # [for rate in rates.rate])/self.rate_no , 1)
-        # self.rate = sum( [for i in rates.rate] ) / self.rate_no
-        # self.save()
+
+    # meanrate = models.DecimalField(max_digits=3, decimal_places=2, default=5, null=True, blank=True)
+
     def __str__(self) -> str:
         return self.name
-    def update_rate_no(self):
+    def update_comment_no(self):
         self.comment_number = self.comments.count()
         self.save()
-    def update_comment_no(self):
-        # self.rate_no = self.rates.count()
+    def update_rate_no(self):
         self.rate_no = len(rates)
+
+    # @staticmethod
+    # def calculate_meanrate():
+    #     plc = Place.objects.all()
+    #     count = plc.count()
+    #     if count > 0:
+    #         mean_rate = sum(plc.rate for p in plc if p.rate is not None) / count
+    #         # if p.rate is None and count > 1:
+    #         #     count = count - 1
+    #     else:
+    #         mean_rate = 5
+    #     TourLeader.objects.update(meanrate=mean_rate)
+
+    # def save(self, *args, **kwargs):
+    #     self.calculate_rate()
+    #     super().save(*args, **kwargs)
+    #     self.calculate_meanrate()
+
+    # def delete(self, *args, **kwargs):
+    #     super().delete(*args, **kwargs)
+    #     self.calculate_meanrate()
+
 import base64
 class PlaceImage(models.Model):#mrs
     place_id = models.ForeignKey(Place , on_delete=models.CASCADE , null = True)

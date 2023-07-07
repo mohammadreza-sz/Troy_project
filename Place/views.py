@@ -35,6 +35,7 @@ class PlaceViewSet(ModelViewSet):#mrs
     queryset = Place.objects.annotate(avg_rate=Avg('rates__rate')).all()
     serializer_class = PlaceSerializer
     ordering_fields = ['-rate']
+    
 class PlaceImageViewSet(ModelViewSet):#mrs
     queryset = PlaceImage.objects.all()
     serializer_class = PlaceImageSerializer
