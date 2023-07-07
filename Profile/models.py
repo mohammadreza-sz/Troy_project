@@ -149,7 +149,7 @@ class TourLeader(models.Model):
     joindDate = models.DateTimeField(auto_now=True , null = True)	# mrs make this change to make migrations 
     phonetl = models.CharField(max_length=20 , null = True)
 
-    meanrate = models.DecimalField(max_digits=3, decimal_places=2, null=True, blank=True)
+    # meanrate = models.DecimalField(max_digits=3, decimal_places=2, null=True, blank=True)
 class Rate_Tour(models.Model):	
     tour_leader = models.ForeignKey(	
         TourLeader, on_delete=models.CASCADE, related_name='rate_tour')	
