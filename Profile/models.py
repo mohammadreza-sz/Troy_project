@@ -111,7 +111,7 @@ class Organization(models.Model):
     rates = models.IntegerField(default=0, blank=True , null = True)	
     wallet = models.DecimalField(max_digits=10, decimal_places=2, default=Decimal('1000.00'))#mrs
 
-    meanrate = models.DecimalField(max_digits=3, decimal_places=2, null=True, blank=True)
+    # meanrate = models.DecimalField(max_digits=3, decimal_places=2, null=True, blank=True)
 class Rate_Org(models.Model):	
     orgg = models.ForeignKey(	
         Organization, on_delete=models.CASCADE, related_name='rate_org')	
