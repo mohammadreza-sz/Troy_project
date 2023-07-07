@@ -271,28 +271,34 @@ class Purchase(APIView):
                 # serializer = TripSerializer(trep)            
                 return Response("add to trip" , status = status.HTTP_200_OK)
 
-class reserve(APIView):
+class reserve(CreateAPIView):
+    queryset=Passenger.objects.all()
+    serializer_class = ReserveSerializer
     permission_classes = [permi.IsPeople]
-    def post(self , request):
-        try:
-            trip_id = request.data['trip_id']
-            count = request.data['count']
-        except:
-            return Response("give me both trip_id and count!" , status=status.HTTP_400_BAD_REQUEST)
-
+    # def get_serializer_context(self ,trip_id):
+    #     return {'trip_id':trip_id}
+    def perform_create(self, serializer):
+        return serializer.save()
+    def create(self , request, trip_id, *args, **kwargs ):
+        # try:
+        #     trip_id = request.data['trip_id']
+        #     count = request.data['count']
+        # except:
+        #     return Response("give me both trip_id and count!" , status=status.HTTP_400_BAD_REQUEST)
+        count =len(request.data)
         try:
             trip : Trip = Trip.objects.get(id = trip_id)
         except:
-            return Response("trip id:"+trip_id+" is not exist" ,status = status.HTTP_404_NOT_FOUND)
+            return Response("trip id:"+str(trip_id)+" is not exist" ,status = status.HTTP_404_NOT_FOUND)
             
         people : CommenPeople = CommenPeople.objects.get(Id__user_id__id =self.request.user.id )#perhaps wnat to optimize
         trip_price = trip.Price * count
         if people.Id.wallet < trip_price:
-            return Response("you must have"+trip_price+" money" , status = status.HTTP_403_FORBIDDEN)
+            return Response("you must have"+str(trip_price)+" money" , status = status.HTTP_403_FORBIDDEN)
 
         passenger_count = trip.common_people_id.count() + count
         if passenger_count > trip.capacity :
-            return Response("capacity is"+trip.capacity+"and you can't register!!" , status = status.HTTP_403_FORBIDDEN)
+            return Response("capacity is"+str(trip.capacity)+"and you can't register!!" , status = status.HTTP_403_FORBIDDEN)
         else:
             # try:
             # people = CommenPeople.objects.get(Id__user_id__id =self.request.user.id )#perhaps wnat to optimize
@@ -301,6 +307,11 @@ class reserve(APIView):
             if people in trip.common_people_id.all():
                 return Response("how many time you want register??!!" , status = status.HTTP_403_FORBIDDEN)
             else:
+                serializer = ReserveSerializer(data=request.data , many = True)
+                serializer.is_valid(raise_exception=True)
+                passengers = self.perform_create(serializer)
+                trip.passenger.add(*passengers)
+
                 #must decrease money from wallet*************************************
                 person = Person.objects.get(commenpeople = people)
                 person.wallet -= trip_price
@@ -316,11 +327,12 @@ class reserve(APIView):
                 # trip.common_people_id.add(people)
                 obj:trip_common_people = trip_common_people.objects.create(trip = trip , common_people = people , count = count)
                 obj.save()
-                # person.save()
+
                 org.save()
+                return Response(serializer.data , status = status.HTTP_200_OK)
 
                 # serializer = TripSerializer(trep)            
-                return Response("add to trip" , status = status.HTTP_200_OK)
+                # return Response("add to trip" , status = status.HTTP_200_OK)
         
 class Increase_people_wallet(APIView):#mrs
     def post(self , request):
@@ -400,8 +412,10 @@ class histroy_org2(ListAPIView):#mrs
 class passenger_list(APIView):#mrs
     permission_classes = [permi.IsOrganization]
     def get(self , request , trip_id:int):
-        tourleaders = Trip.objects.get(pk = trip_id).TourLeader_ids.select_related('person_id' , 'person_id__user_id').all()
-        serializer = Custome2TourLeaderSerializer(tourleaders, many = True)
+        # tourleaders = Trip.objects.get(pk = trip_id).TourLeader_ids.select_related('person_id' , 'person_id__user_id').all()
+        # serializer = Custome2TourLeaderSerializer(tourleaders, many = True)
+        passengers = Passenger.objects.filter(trip__pk = trip_id)
+        serializer = PassengerListSerializer(passengers, many = True)
         return Response(serializer.data , status = status.HTTP_200_OK)
 
 class TripViewSet(ModelViewSet):
@@ -449,7 +463,7 @@ class TripViewSet(ModelViewSet):
 from rest_framework import permissions
 class CountryViewSet(ModelViewSet):#mrs
 
-    permission_classes = [permi.CrudAdminReadOther]
+    # permission_classes = [permi.CrudAdminReadOther]
 
     # filterset_class = CountryFilter#mrs
 
@@ -460,7 +474,11 @@ class CountryViewSet(ModelViewSet):#mrs
     queryset = Country.objects.prefetch_related('city_set').all()
 
     serializer_class = CountrySerializer    
-
+    # def create(self, request, *args, **kwargs):
+    #     serializer = self.get_serializer(data=request.data, many=True)
+    #     serializer.is_valid(raise_exception=True)
+    #     self.perform_create(serializer)
+    #     return Response(serializer.data)
 class CityViewSet(ModelViewSet):#mrs
     # permission_classes = [permi.CrudAdminReadOther]
     filterset_class = CityFilter#mrs

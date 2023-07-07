@@ -405,23 +405,25 @@ class PremiumRequestSerializer(serializers.ModelSerializer):
         fields = ['organization' , 'common_people' , 'status_choice']
         
             
-class Custome2TourLeaderSerializer(serializers.ModelSerializer):
-    firstname = serializers.SerializerMethodField()
-    lastname = serializers.SerializerMethodField()
-    phone = serializers.SerializerMethodField()
-    national_code = serializers.SerializerMethodField()
+# class Custome2TourLeaderSerializer(serializers.ModelSerializer):
+class PassengerListSerializer(serializers.ModelSerializer):
+    # firstname = serializers.SerializerMethodField()
+    # lastname = serializers.SerializerMethodField()
+    # phone = serializers.SerializerMethodField()
+    # national_code = serializers.SerializerMethodField()
 
     class Meta:
-        model = TourLeader
+        # model = TourLeader
+        model = Passenger
         fields = ['firstname' , 'lastname' , 'phone' , 'national_code']
-    def get_firstname(self ,obj):
-        return obj.person_id.user_id.first_name
-    def get_lastname(self ,obj):
-        return obj.person_id.user_id.last_name
-    def get_phone(self , obj):
-        return obj.person_id.user_id.phone
-    def get_national_code(self , obj):
-        return obj.person_id.user_id.national_code
+    # def get_firstname(self ,obj):
+    #     return obj.person_id.user_id.first_name
+    # def get_lastname(self ,obj):
+    #     return obj.person_id.user_id.last_name
+    # def get_phone(self , obj):
+    #     return obj.person_id.user_id.phone
+    # def get_national_code(self , obj):
+    #     return obj.person_id.user_id.national_code
 
     
 class RequestSerializer(serializers.ModelSerializer):
@@ -430,3 +432,16 @@ class RequestSerializer(serializers.ModelSerializer):
         fields = "__all__"
         # fields = ('id', 'orga_id', 'tl_id', 'status', 'created_at', 'updated_at')
         
+class ReserveSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Passenger
+        fields = ['firstname' , 'lastname' , 'national_code' , 'phone']
+    # def create(self , validated_data):
+    #     trip_id = self.kwargs.pop('trip_id', None)
+
+    # def __init__(self, *args, **kwargs):
+    #     # trip_id = kwargs.pop('trip_id', None)
+    #     trip_id =self.context['view'].kwargs.get('trip_id')
+    #     super().__init__(*args, **kwargs)
+    #     if trip_id is not None:
+    #         self.fields['trip'] = serializers.IntegerField(initial=trip_id, write_only=True)
