@@ -763,8 +763,8 @@ class TourLeaderDeleteFromOrganization(generics.DestroyAPIView):
 #helen
 
 class OrganizationViewSet(CreateModelMixin , RetrieveModelMixin , UpdateModelMixin , GenericViewSet ,ListModelMixin):
-#     # filterset_class = ProductFilter#mrs
-#     # filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]#mrs
+    # filterset_class = ProductFilter#mrs
+    # filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]#mrs
     queryset = Organization.objects.all()
     serializer_class = OrganizationSerializer
     @action(detail=False , methods=['GET' , 'PUT'])
@@ -783,6 +783,33 @@ class OrganizationViewSet(CreateModelMixin , RetrieveModelMixin , UpdateModelMix
 
         elif request.method == 'PATCH   ':
             serializer = OrganizationSerializer(org , data = request.data)
+            serializer.is_valid(raise_exception=True)
+            serializer.save()
+            return Response({'opreation':'succesfully update'} | serializer.data ,status =status.HTTP_200_OK)
+
+
+
+class TourLeaderViewSet(CreateModelMixin , RetrieveModelMixin , UpdateModelMixin , GenericViewSet ,ListModelMixin):
+    # filterset_class = ProductFilter#mrs
+    # filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]#mrs
+    queryset = TourLeader.objects.all()
+    serializer_class = TourLeaderSerializer
+    @action(detail=False , methods=['GET' , 'PUT'])
+    def me(self:TourLeader, request):
+        (tl , created) = TourLeader.objects.get_or_create(id = request.user.id)
+        
+        if request.method == 'GET':
+            data = TourLeaderSerializer(tl)
+            return Response(data.data , status = status.HTTP_200_OK)
+
+        elif request.method == 'PUT':
+            serializer = TourLeaderSerializer(tl , data = request.data)
+            serializer.is_valid(raise_exception=True)
+            serializer.save()
+            return Response({'opreation':'succesfully update'} | serializer.data ,status =status.HTTP_200_OK)
+
+        elif request.method == 'PATCH   ':
+            serializer = TourLeaderSerializer(tl , data = request.data)
             serializer.is_valid(raise_exception=True)
             serializer.save()
             return Response({'opreation':'succesfully update'} | serializer.data ,status =status.HTTP_200_OK)

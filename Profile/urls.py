@@ -24,7 +24,7 @@ router.register("favorite" , FavoriteView)
 
 router.register("Person" , PersonViewSet)
 router.register("CrudOrg" , OrganizationViewSet) #helen
-
+router.register("CrudTourLeader", TourLeaderViewSet)#helen
 router.register("Rate_org", Rate_orgViewSet, basename='Rate_org')#helen
 
 router.register("Rate_TL",Rate_TourLViewSet, basename='Rate_TL')#helen
