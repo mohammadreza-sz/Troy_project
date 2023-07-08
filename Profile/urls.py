@@ -84,7 +84,8 @@ path("GetRequest/" , ShowRequest.as_view()),
     path('organizations/<int:orga_id>/tourleaders/<int:tl_id>/delete/',
      TourLeaderDeleteFromOrganization.as_view(), name='tourleader_delete_from_organization'),
      path('inc_money/' , Increase_people_wallet.as_view()),
-     path('custome_trip/' , CustomeTrip.as_view())
+     path('custome_trip/' , CustomTrip.as_view()),
+     path('custom_countrycity/',CustomCountryCity.as_view())
 ]	
 
 # path("trip/" , s_trip.as_view())

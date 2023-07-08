@@ -489,3 +489,14 @@ class ReserveSerializer(serializers.ModelSerializer):#mrs
     #     super().__init__(*args, **kwargs)
     #     if trip_id is not None:
     #         self.fields['trip'] = serializers.IntegerField(initial=trip_id, write_only=True)
+
+class CustomCitySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = City
+        fields = ['city_name']
+class  CustomCountryCitySerializer(serializers.ModelSerializer):
+    cities = CustomCitySerializer(many = True , source = 'city_set')# , source = 'city_name')
+    class Meta:
+        model = Country
+        fields = ['country_name' , 'cities']
+        
