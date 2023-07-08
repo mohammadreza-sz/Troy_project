@@ -217,7 +217,7 @@ class history_user(APIView):#mrs
     #     return Response(serializer.data)
 from django.shortcuts import get_object_or_404#mrs
 from django.db.models import F
-class Purchase(APIView):
+class Purchase(APIView):#mrs
     permission_classes = [permi.IsPeople]
     def post(self , request):
         try:
@@ -271,7 +271,7 @@ class Purchase(APIView):
                 # serializer = TripSerializer(trep)            
                 return Response("add to trip" , status = status.HTTP_200_OK)
 
-class reserve(CreateAPIView):
+class reserve(CreateAPIView):#mrs
     queryset=Passenger.objects.all()
     serializer_class = ReserveSerializer
     permission_classes = [permi.IsPeople]

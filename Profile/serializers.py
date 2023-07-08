@@ -399,14 +399,14 @@ class FavoriteSerializer(serializers.ModelSerializer):
         model = Favorite
         fields = ['favorite' , 'common_people_id']
 
-class PremiumRequestSerializer(serializers.ModelSerializer):
+class PremiumRequestSerializer(serializers.ModelSerializer):#mrs
     class Meta:
         model = PremiumRequest
         fields = ['organization' , 'common_people' , 'status_choice']
         
             
 # class Custome2TourLeaderSerializer(serializers.ModelSerializer):
-class PassengerListSerializer(serializers.ModelSerializer):
+class PassengerListSerializer(serializers.ModelSerializer):#mrs
     # firstname = serializers.SerializerMethodField()
     # lastname = serializers.SerializerMethodField()
     # phone = serializers.SerializerMethodField()
@@ -432,7 +432,7 @@ class RequestSerializer(serializers.ModelSerializer):
         fields = "__all__"
         # fields = ('id', 'orga_id', 'tl_id', 'status', 'created_at', 'updated_at')
         
-class ReserveSerializer(serializers.ModelSerializer):
+class ReserveSerializer(serializers.ModelSerializer):#mrs
     class Meta:
         model = Passenger
         fields = ['firstname' , 'lastname' , 'national_code' , 'phone']
