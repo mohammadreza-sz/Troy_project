@@ -77,7 +77,7 @@ class DestinationSerializer(serializers.Serializer):
     country_name = serializers.CharField(max_length = 30)
 
     city_name = serializers.CharField(max_length = 30)
-
+#region mrs
 # def to_internal_value(self, data):
 #     trans_dict = data.pop('transport')
 #     departure_transport = trans_dict.pop('departure_transport')
@@ -87,6 +87,7 @@ class DestinationSerializer(serializers.Serializer):
 #     data['return_transport'] = return_transport
 
 #     return data
+#endregion
 from rest_framework.response import Response
 class TripSerializer(serializers.ModelSerializer):#mrs
     destination= CityTripSerializer(many = True , source  = 'destination_city')#mrs if want to obtain destination from place_ids ************ this approach can't handle city name which exist in multiple country
@@ -220,7 +221,7 @@ class TripSerializer(serializers.ModelSerializer):#mrs
                 raise ValidationError({"error":"this city name doesn't exist for destination field"})
 
             instance.save()
-            
+        #region mrs
         # instance.content = validated_data.get('content', instance.content)
         # instance.created = validated_data.get('created', instance.created)
         instance = super().update(instance, validated_data)
@@ -261,7 +262,34 @@ class TripSerializer(serializers.ModelSerializer):#mrs
     #     return obj.TourLeader_ids.all().first().orga_id.name_org
 
     #     return [tour_leader.orga_id.name_org for tour_leader in obj.TourLeader_ids.all()]
+    #endregion
 
+class PlaceCustomeTripSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Place
+        fields = ['id' , 'name']
+class CustomeTripSerializer(serializers.ModelSerializer):
+    destination= CityTripSerializer(many = True , source  = 'destination_city')#mrs if want to obtain destination from place_ids ************ this approach can't handle city name which exist in multiple country
+    origin = CityTripSerializer(source = 'origin_city_id')
+    place = PlaceCustomeTripSerializer(many = True , source='place_ids')
+    reserved =  serializers.SerializerMethodField()
+    class Meta:
+        model = Trip
+        fields =['id' ,'origin','destination','departure_transport','return_transport','departure_date','return_date','capacity','reserved', 'Price' ,'place','image' ]
+    def to_representation(self, instance):#return (departure_transport , return_transport)within object
+        data = super().to_representation(instance)
+        departure_transport = data.pop('departure_transport')
+        return_transport = data.pop('return_transport')
+        data['transport'] = {
+            # 'departure_transport':instance.get_departure_transport_display(),#get_departure_transport_display for return human readable of choice field
+            # 'return_transport': instance.get_return_transport_display()
+            'departure_transport':departure_transport,
+            'return_transport': return_transport
+
+        }
+        return data
+    def get_reserved(self , obj:Trip):
+        return obj.passenger.count()
 class CustomeTourLeaderSerializer(serializers.ModelSerializer):#mrs
     image = serializers.SerializerMethodField()
     tourleader_name = serializers.SerializerMethodField()
