@@ -296,7 +296,7 @@ class reserve(CreateAPIView):#mrs
         if people.Id.wallet < trip_price:
             return Response("you must have"+str(trip_price)+" money" , status = status.HTTP_403_FORBIDDEN)
 
-        passenger_count = trip.common_people_id.count() + count
+        passenger_count = trip.passenger.count() + count
         if passenger_count > trip.capacity :
             return Response("capacity is"+str(trip.capacity)+"and you can't register!!" , status = status.HTTP_403_FORBIDDEN)
         else:
@@ -459,6 +459,12 @@ class TripViewSet(ModelViewSet):
     
     search_fields = ['hotel_name' , 'Description']#mrs
     ordering_fields = ['Price' , 'capacity']
+
+class CustomeTrip(ListAPIView):
+    serializer_class = CustomeTripSerializer
+    queryset = Trip.objects.select_related('origin_city_id' , 'origin_city_id__country_id').prefetch_related("place_ids", 'destination_city' , 'destination_country' ,'passenger').all()
+    # def list(self , request):
+
 
 from rest_framework import permissions
 class CountryViewSet(ModelViewSet):#mrs
