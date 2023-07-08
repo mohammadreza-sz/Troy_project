@@ -139,16 +139,21 @@ class PremiumRequest(models.Model):#mrs
     status_choice= models.CharField(max_length=1 , choices=STATUS_CHOICES , default='W')
     class Meta:#making fields unique can have implications for database performance and data integrity, so use this feature judiciously.
         unique_together = ('organization', 'common_people')
+ 
+class TourLeader(models.Model):
+    person_id = models.OneToOneField(Person, on_delete=models.CASCADE, primary_key=True)
+    orga_id = models.ForeignKey(Organization, on_delete=models.SET_NULL, null=True, related_name="tourleader")
+    rates = models.IntegerField(default=0, blank=True, null=True)
+    rate_no = models.IntegerField(default=0, blank=True, null=True)
+    joindDate = models.DateTimeField(auto_now=True, null=True)
+    phonetl = models.CharField(max_length=20, null=True)
 
-class TourLeader(models.Model):	
-    person_id = models.OneToOneField(Person, on_delete = models.CASCADE, primary_key = True)	
-    orga_id = models.ForeignKey(Organization, on_delete = models.CASCADE, null= True, related_name = "tourleader")	
-    rates = models.IntegerField(default=0, blank=True , null = True)	# mrs make this change to make migrations 
-    rate_no = models.IntegerField(default=0, blank=True , null = True)	# mrs make this change to make migrations 
-    joindDate = models.DateTimeField(auto_now=True , null = True)	# mrs make this change to make migrations 
-    phonetl = models.CharField(max_length=20 , null = True)
+    def delete(self, using=None, keep_parents=False):
+        if self.orga_id:
+            self.orga_id = None
+            self.save()
+        super().delete(using=using, keep_parents=keep_parents)
 
-    # meanrate = models.DecimalField(max_digits=3, decimal_places=2, null=True, blank=True)
 class Rate_Tour(models.Model):	
     tour_leader = models.ForeignKey(	
         TourLeader, on_delete=models.CASCADE, related_name='rate_tour')	
