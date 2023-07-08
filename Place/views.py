@@ -25,8 +25,10 @@ from rest_framework import permissions #mrs  #61
 from rest_framework import status
 from django.db.models import Avg
 from django.shortcuts import get_object_or_404
-
+from rest_framework.views import APIView
 # from Profile import permissions as permi
+
+from rest_framework.decorators import action #lesson 60
 
 from django.db.models import Q
 
@@ -41,6 +43,21 @@ class PlaceViewSet(ModelViewSet):#mrs
 class PlaceImageViewSet(ModelViewSet):#mrs
     queryset = PlaceImage.objects.all()
     serializer_class = PlaceImageSerializer
+    @action(detail=False , methods=['POST'])#, permission_classes=[IsAuthenticated])#lesson 60 , permi... -> 61
+    def imagewithplaceid(self , request):
+        try:
+            placeid = request.data['place_id']
+        except:
+            return Response("i want place_id" , status = status.HTTP_400_BAD_REQUEST)
+        try:
+            placeimage = PlaceImage.objects.filter(place_id = placeid)
+        except:
+            return Response("i can't find place image with this place id: "+str(placeid) , status = status.HTTP_400_BAD_REQUEST)
+        serializer = PlaceImageSerializer(placeimage , many = True)
+        # for i in placeimage:
+        #     print(i)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+        
     # def post(self, request , *args , **kwargs):
     #     img_b64 = request.post.get('image')
     #     img_data = base64.b64decode(img_b64)
@@ -175,3 +192,8 @@ class ReplytViewSet(CommentViewSet):
 		get_object_or_404(Place.objects, pk=self.kwargs.get('place_pk'))	
 		get_object_or_404(Comment.objects, pk=self.kwargs.get('parent_pk'))	
 		return super().create(request, *args, **kwargs)
+
+
+# class CustomPlaceImage(APIView):
+#     def get(self , request , ):
+

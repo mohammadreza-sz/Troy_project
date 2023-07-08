@@ -5,7 +5,7 @@ from .models import *
 from rest_framework import serializers
 # import base64
 class PlaceImageSerializer(serializers.ModelSerializer):#mrs
-
+    #region mrs
     # image = serializers.SerializerMethodField()
     # def create(self, validated_data):
     #     image_string = validated_data.pop('image')
@@ -30,7 +30,7 @@ class PlaceImageSerializer(serializers.ModelSerializer):#mrs
     #     if image_data:
     #         instance.save_image_to_field(image_data)
     #     return instance
-            
+    #endregion
     class Meta:
 
         model = PlaceImage
