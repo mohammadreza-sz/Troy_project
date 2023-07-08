@@ -58,16 +58,10 @@ class PlaceSerializer(serializers.ModelSerializer):#mrs 59
 
     # country_id= serializers.CharField(max_length = 50)
     #endregion
-	# rate_no = serializers.ReadOnlyField()	
-    # comment_number = serializers.ReadOnlyField()
-
-
-    avg_rate = serializers.ReadOnlyField()
-
+    mean_rate = serializers.SerializerMethodField(default = 0)
     city_name = serializers.SerializerMethodField()
-
     country_name = serializers.SerializerMethodField()
-    comment_no = serializers.SerializerMethodField()
+    # comment_no = serializers.SerializerMethodField()
     rate_no = serializers.SerializerMethodField()
 
     class Meta:
@@ -75,19 +69,22 @@ class PlaceSerializer(serializers.ModelSerializer):#mrs 59
         fields = [
                 'country_name',
                 'city_name',
-                # 'city_id',           
+                'city_id',           
                 'id',
                 'name',
                 'address',
-                
                 'description',
                 'lan',
                 'lon',
                 # 'placeimage',
                 'rate_no',
-                'avg_rate',
+                'mean_rate',
             ]
         # fields = "__all__"
+    def get_mean_rate(self, obj):
+        rates = obj.rates.all()
+        mean_rate = rates.aggregate(Avg('rate'))['rate__avg']
+        return mean_rate or 0
     def get_comment_no(self):
         self.comment_number = self.comments.count()
         self.save()

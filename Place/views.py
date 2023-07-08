@@ -31,10 +31,10 @@ from django.db.models import Q
 class PlaceViewSet(ModelViewSet):#mrs 
     # permission_classes=[permi.CrudOrganizationReadOther]
     # queryset = Place.objects.prefetch_related("placeimage_set").select_related("city_id").all()   *********************
-    # queryset = Place.objects.all()
-    queryset = Place.objects.annotate(avg_rate=Avg('rates__rate')).all()
+    queryset = Place.objects.all()
+    # queryset = Place.objects.annotate(avg_rate=Avg('rates__rate')).all()
     serializer_class = PlaceSerializer
-    ordering_fields = ['-rate']
+    # ordering_fields = ['-rate']
     
 class PlaceImageViewSet(ModelViewSet):#mrs
     queryset = PlaceImage.objects.all()

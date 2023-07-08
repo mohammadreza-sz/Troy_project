@@ -322,17 +322,31 @@ class CitySerializer(serializers.ModelSerializer):
     #     return city
 
 class OrganizationSerializer(serializers.ModelSerializer):	
-    country_nameOrg = serializers.SerializerMethodField()	
+    # country_nameOrg = serializers.SerializerMethodField()	
+    mean_rate = serializers.SerializerMethodField(default=0)
+
     class Meta:	
 
         model = Organization	
 
-        fields = "__all__"	
+        fields = ["person_id",
+                    "name_org" ,
+                    "description" ,
+                    "city_id", 
+                    "logo", 
+                    "Address", 
+                    "Phone", 
+                    "rates", 
+                    "wallet",
+                    "mean_rate"]
 
         # read_only_fields = ["user_id"]	
-
-    def get_country_nameOrg(self, obj):	
-        pass
+    def get_mean_rate(self, obj):
+        rates = obj.rate_org.all()
+        mean_rate = rates.aggregate(Avg('rate'))['rate__avg']
+        return mean_rate or 0
+    # def get_country_nameOrg(self, obj):	
+    #     pass
     #     return obj.city_id.country_id.country_name	
 
 class  Rate_OrgSerializer(serializers.ModelSerializer):	
@@ -358,14 +372,15 @@ class  Rate_OrgSerializer(serializers.ModelSerializer):
         return Rate.objects.create(user = usernm  ,**validated_data)
 
 class TourLeaderSerializer(serializers.ModelSerializer):	
+    mean_rate = serializers.SerializerMethodField(default = 0)
+    class Meta:
+        model = TourLeader
+        fields = ['person_id', 'orga_id', 'rates', 'rate_no', 'joindDate', 'phonetl', 'mean_rate']
 
-    class Meta:	
-
-        model = TourLeader	
-
-        fields = "__all__"	
-
-        read_only_fields = ["rates", "rate_no"]	
+    def get_mean_rate(self, obj):
+        rates = obj.rate_tour.all()
+        mean_rate = rates.aggregate(Avg('rate'))['rate__avg']
+        return mean_rate or 0
 
 class  Rate_TourLSerializer(serializers.ModelSerializer):	
     usernm = serializers.CharField(source='user.username', read_only=True)
