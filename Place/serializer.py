@@ -146,20 +146,41 @@ class ReplySerializer(serializers.ModelSerializer):
         validated_data['created_date'] = datetime.now()	
         return super().update(instance, validated_data)
 
-class CommentSerializer(serializers.ModelSerializer):	
-    replies = ReplySerializer(read_only=True, many=True)	
-    user = UserCommentSerializer(read_only=True)	
-    class Meta:	
-        model = Comment	
-        fields = ['id', 'created_date', 'text', 'user', 'replies']	
-        read_only_fields = ['id', 'created_date']	
-    def create(self, validated_data):	
-        request = self.context.get("request")	
-        validated_data['place_id'] = self.context.get("place")	
-        validated_data['user'] = request.user	
-        instance = super().create(validated_data)	
-        instance.place.update_comment_no()	
-        return instance	
-    def update(self, instance, validated_data):	
-        validated_data['created_date'] = datetime.now()	
+
+# class CommentSerializer(serializers.ModelSerializer):	
+#     replies = ReplySerializer(read_only=True, many=True)	
+#     user = UserCommentSerializer(read_only=True)	
+#     class Meta:	
+#         model = Comment	
+#         fields = ['id', 'created_date', 'text', 'user', 'replies']	
+#         read_only_fields = ['id', 'created_date']	
+#     def create(self, validated_data):	
+#         request = self.context.get("request")	
+#         validated_data['place_id'] = self.context.get("place")	
+#         validated_data['user'] = request.user	
+#         instance = super().create(validated_data)	
+#         instance.place.update_comment_no()	
+#         return instance	
+#     def update(self, instance, validated_data):	
+#         validated_data['created_date'] = datetime.now()	
+#         return super().update(instance, validated_data)
+
+
+class CommentSerializer(serializers.ModelSerializer):
+    user = UserCommentSerializer(read_only=True)
+    replies = ReplySerializer(many=True, read_only=True)
+
+    class Meta:
+        model = Comment
+        fields = ['id', 'created_date', 'text', 'user', 'place', 'replies']
+        read_only_fields = ['id', 'created_date', 'user']
+
+    def create(self, validated_data):
+        request = self.context.get("request")
+        validated_data['place_id'] = self.context.get("place")
+        validated_data['user'] = request.user
+        return super().create(validated_data)
+
+    def update(self, instance, validated_data):
+        validated_data['created_date'] = datetime.now()
         return super().update(instance, validated_data)

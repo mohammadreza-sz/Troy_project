@@ -24,6 +24,8 @@ from rest_framework.viewsets import ModelViewSet #mrs
 from rest_framework import permissions #mrs  #61
 from rest_framework import status
 from django.db.models import Avg
+from django.shortcuts import get_object_or_404
+
 # from Profile import permissions as permi
 
 from django.db.models import Q
@@ -106,10 +108,27 @@ def get_specific_place(request ,place_id = None, country_name = None , city_name
     #     city = F('city_id__city_name') ,
     #     image = F('placeimage__image')
     # ).values("id" ,"name","country", "city","address" , "description","lan", "lon" , "image")
+
+
+# from rest_framework import generics
+# class CommentViewSet(generics.ListCreateAPIView):
+#     queryset = Comment.objects.all()
+#     serializer_class = CommentSerializer
+
+# class ReplytViewSet(generics.CreateAPIView):
+#     queryset = Comment.objects.all()
+#     serializer_class = ReplySerializer
+
+#     def get_serializer_context(self):
+#         context = super().get_serializer_context()
+#         context['comment_id'] = self.kwargs['comment_id']
+#         return context
+
 class CommentViewSet(ModelViewSet):	
+    # queryset = Comment.objects.all()
 	queryset = Comment.objects.select_related('place').all()	
 	serializer_class = CommentSerializer	
-	permission_classes = [IsAuthenticatedOrReadOnly]	
+	# permission_classes = [IsAuthenticatedOrReadOnly]	
 	def get_queryset(self):	
 		return Comment.objects.filter(	
 			place_id=self.kwargs.get('Place_pk'), parent=None).order_by('-created_date')	
