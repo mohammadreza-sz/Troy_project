@@ -52,7 +52,9 @@ class trip_common_people(models.Model):
     class Meta:#making fields unique can have implications for database performance and data integrity, so use this feature judiciously.
         unique_together = ('trip', 'common_people')
 
+
 class Trip(models.Model):
+    passenger = models.ManyToManyField("Passenger",blank = True)
     common_people_id = models.ManyToManyField(CommenPeople , blank = True, through="trip_common_people")
     place_ids = models.ManyToManyField(place_model.Place , blank = True)#mrs can't use null here , must use blank
     TourLeader_ids = models.ManyToManyField('TourLeader',   blank = True)#must be in same organization
@@ -99,6 +101,20 @@ class Trip(models.Model):
         if self.return_date and self.departure_date :
             if self.return_date < self.departure_date:
                 raise ValidationError('Return date cannot be earlier than departure date.')
+
+class Passenger(models.Model):
+    # trip = models.ManyToManyField(Trip , blank = True)
+    firstname =models.CharField(max_length = 50 , null =True) 
+    lastname = models.CharField(max_length = 50 , null =True)
+    national_code = models.CharField( null = True,max_length=10 , validators=[RegexValidator(r'^\d{10}$', 'Enter a valid national code.')])
+    phone = models.CharField(null = True,max_length=20, validators=[
+            RegexValidator(
+                r'^\+?\d{1,3}[- ]?\d{3,4}[- ]?\d{4}$',
+                'Enter a valid phone number.'
+            )
+        ])
+    # class Meta:#making fields unique can have implications for database performance and data integrity, so use this feature judiciously.
+    #     unique_together = ('trip', 'national_code') we can't use for manytomany field(trip) :(
 
 class Organization(models.Model):	
     person_id = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete = models.CASCADE, null = True)
