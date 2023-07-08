@@ -1,6 +1,6 @@
 from dataclasses import fields
 # from account.models import User 
-
+from django.db.models import Avg
 from .models import *
 from rest_framework import serializers
 # import base64
@@ -62,7 +62,7 @@ class PlaceSerializer(serializers.ModelSerializer):#mrs 59
     city_name = serializers.SerializerMethodField()
     country_name = serializers.SerializerMethodField()
     # comment_no = serializers.SerializerMethodField()
-    rate_no = serializers.SerializerMethodField()
+    # rate_no = serializers.SerializerMethodField()
 
     class Meta:
         model = Place
@@ -77,7 +77,6 @@ class PlaceSerializer(serializers.ModelSerializer):#mrs 59
                 'lan',
                 'lon',
                 # 'placeimage',
-                'rate_no',
                 'mean_rate',
             ]
         # fields = "__all__"
@@ -85,12 +84,12 @@ class PlaceSerializer(serializers.ModelSerializer):#mrs 59
         rates = obj.rates.all()
         mean_rate = rates.aggregate(Avg('rate'))['rate__avg']
         return mean_rate or 0
-    def get_comment_no(self):
-        self.comment_number = self.comments.count()
-        self.save()
-    def get_rate_no(self):
-        # self.rate_no = len(rates)
-        self.rate_no = self.rate.count()
+    # def get_comment_no(self):
+    #     self.comment_number = self.comments.count()
+    #     self.save()
+    # def get_rate_no(self):
+    #     # self.rate_no = len(rates)
+    #     self.rate_no = self.rate.count()
     def get_city_name(self, obj):
 
         return obj.city_id.city_name

@@ -10,6 +10,7 @@ from Place.models import Place
 # from .models import Organization, Person, TourLeader , Trip , Country , City , Favorite
 from .models import *
 from django.conf import settings
+from django.db.models import Avg
 
 class PersonSerializer(serializers.ModelSerializer):#lesson 59
     # gender = serializers.BooleanField(initial=True)
