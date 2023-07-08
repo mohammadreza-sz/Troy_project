@@ -11,6 +11,16 @@ class ProductFilter(FilterSet):#mrs
       # 'Id_id': ['gt', 'lt']
     }
 
+class CustomeTripFilter(FilterSet):
+  class Meta:
+    model = Trip
+    fields = {
+      'origin_city_id__city_name':['exact'],
+      'origin_city_id__country_id__country_name':['exact'],
+      'destination_city__city_name':['exact'],
+      'destination_country':['exact'],
+      'departure_date':['gt' , 'lt' , 'exact'],
+    }
 class TripFilter(FilterSet):
   class Meta:
     model = Trip

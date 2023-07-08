@@ -24,7 +24,7 @@ from rest_framework.generics import DestroyAPIView
 from rest_framework.generics import UpdateAPIView	
 from rest_framework.decorators import api_view	
 from account.models import User
-from .filters import ProductFilter  ,CityFilter ,TripFilter#, CountryFilter#mrs
+from .filters import CustomeTripFilter, ProductFilter  ,CityFilter ,TripFilter#, CountryFilter#mrs
 from rest_framework.filters import SearchFilter, OrderingFilter#mrs
 from django_filters.rest_framework import DjangoFilterBackend#mrs
 from . import permissions as permi#mrs
@@ -462,6 +462,8 @@ class TripViewSet(ModelViewSet):
 
 class CustomeTrip(ListAPIView):
     serializer_class = CustomeTripSerializer
+    filterset_class = CustomeTripFilter
+    filter_backends=[DjangoFilterBackend]
     queryset = Trip.objects.select_related('origin_city_id' , 'origin_city_id__country_id').prefetch_related("place_ids", 'destination_city' , 'destination_country' ,'passenger').all()
     # def list(self , request):
 
