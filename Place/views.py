@@ -128,7 +128,7 @@ class CommentViewSet(ModelViewSet):
     # queryset = Comment.objects.all()
 	queryset = Comment.objects.select_related('place').all()	
 	serializer_class = CommentSerializer	
-	# permission_classes = [IsAuthenticatedOrReadOnly]	
+	permission_classes = [IsAuthenticatedOrReadOnly]	
 	def get_queryset(self):	
 		return Comment.objects.filter(	
 			place_id=self.kwargs.get('Place_pk'), parent=None).order_by('-created_date')	
