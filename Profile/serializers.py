@@ -440,12 +440,14 @@ class  Rate_OrgSerializer(serializers.ModelSerializer):
         return Rate.objects.create(user = usernm  ,**validated_data)
 class TourLeaderSerializer(serializers.ModelSerializer):	
     mean_rate = serializers.SerializerMethodField(default = 0)
-    person_id = ShowFullPersonSerializer()
+    # person_id = ShowFullPersonSerializer()
     class Meta:
         model = TourLeader
         # fields = ['person_id', 'orga_id', 'rates', 'rate_no', 'joindDate', 'phonetl', 'mean_rate']
         fields = "__all__"
-        read_only_fields = ["person_id", "city_id", "wallet"]
+        # read_only_fields = ["person_id", "city_id", "wallet"]
+        read_only_fields = [ "city_id", "wallet"]
+
     def get_mean_rate(self, obj):
         rates = obj.rate_tour.all()
         mean_rate = rates.aggregate(Avg('rate'))['rate__avg']
