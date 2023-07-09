@@ -18,7 +18,7 @@ class CustomeTripFilter(FilterSet):
       'origin_city_id__city_name':['exact'],
       'origin_city_id__country_id__country_name':['exact'],
       'destination_city__city_name':['exact'],
-      'destination_country':['exact'],
+      'destination_country__country_name':['exact'],
       'departure_date':['gt' , 'lt' , 'exact'],
     }
 class TripFilter(FilterSet):
