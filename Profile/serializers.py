@@ -18,7 +18,7 @@ class PersonSerializer(serializers.ModelSerializer):#lesson 59
     class Meta:
         model = Person
         fields =['birth_date' , 'country' , 'city' , 'gender',
-         'bio' , 'registration_date', 'profile_image' ]
+         'bio' , 'registration_date', 'profile_image' ,'wallet']
 
 class CityTripSerializer(serializers.ModelSerializer):
 
