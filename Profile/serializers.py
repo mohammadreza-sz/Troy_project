@@ -424,8 +424,9 @@ class TourLeaderSerializer(serializers.ModelSerializer):
     mean_rate = serializers.SerializerMethodField(default = 0)
     class Meta:
         model = TourLeader
-        fields = ['person_id', 'orga_id', 'rates', 'rate_no', 'joindDate', 'phonetl', 'mean_rate']
-
+        # fields = ['person_id', 'orga_id', 'rates', 'rate_no', 'joindDate', 'phonetl', 'mean_rate']
+        fields = "__all__"
+        read_only_fields = ["person_id", "city_id", "wallet"]
     def get_mean_rate(self, obj):
         rates = obj.rate_tour.all()
         mean_rate = rates.aggregate(Avg('rate'))['rate__avg']
