@@ -80,7 +80,7 @@ path("GetRequest/" , ShowRequest.as_view()),
           TourLeaderListNotInOrganization.as_view(), name='tourleader_not_in_organization'),
      path('organizations/in-organization/',
           TourLeaderListInOrganization.as_view(), name='tourleaders_in_organization'),
-
+     path('TLUpdateorgaId/<int:pk>', TLUpdate.as_view()),
      path('requests/', RequestCreate.as_view(), name='request_create'),
      # delete a tourleader..
      path('organizations/<int:orga_id>/tourleaders/<int:tl_id>/delete/',

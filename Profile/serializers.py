@@ -3,6 +3,7 @@ from dataclasses import fields
 from email.policy import default
 from itertools import count
 from re import search
+from account.serializers import UserSerializer
 from unittest.util import _MAX_LENGTH
 from wsgiref import validate
 from rest_framework import serializers
@@ -15,10 +16,23 @@ from django.db.models import Avg
 class PersonSerializer(serializers.ModelSerializer):#lesson 59
     # gender = serializers.BooleanField(initial=True)
     #profile_image = Base64ImageField(required=False) #helen
+    # user_id = UserSerializer()
     class Meta:
         model = Person
         fields =['birth_date' , 'country' , 'city' , 'gender',
+<<<<<<< HEAD
+         'bio' , 'registration_date', 'profile_image' ]
+class ShowFullPersonSerializer(serializers.ModelSerializer):#lesson 59
+    # gender = serializers.BooleanField(initial=True)
+    #profile_image = Base64ImageField(required=False) #helen
+    user_id = UserSerializer()
+    class Meta:
+        model = Person
+        fields =['user_id', 'birth_date' , 'country' , 'city' , 'gender',
+         'bio' , 'registration_date', 'profile_image' ]
+=======
          'bio' , 'registration_date', 'profile_image' ,'wallet']
+>>>>>>> 730cbff9222c5c77151d69adaf96f9c41a608ff3
 
 class CityTripSerializer(serializers.ModelSerializer):
 
@@ -359,6 +373,11 @@ class CitySerializer(serializers.ModelSerializer):
     #     city = City.objects.create(country_id = country , **validated_data)
     #     return city
 
+class OrgAsignToTourLSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = TourLeader
+        fields = ['orga_id']
+
 class OrganizationSerializer(serializers.ModelSerializer):	
     # country_nameOrg = serializers.SerializerMethodField()	
     mean_rate = serializers.SerializerMethodField(default=0)
@@ -422,9 +441,9 @@ class  Rate_OrgSerializer(serializers.ModelSerializer):
         # user_id = self.context['user_id']#mrsz
         usernm = self.context['user_username']
         return Rate.objects.create(user = usernm  ,**validated_data)
-
 class TourLeaderSerializer(serializers.ModelSerializer):	
     mean_rate = serializers.SerializerMethodField(default = 0)
+    person_id = ShowFullPersonSerializer()
     class Meta:
         model = TourLeader
         # fields = ['person_id', 'orga_id', 'rates', 'rate_no', 'joindDate', 'phonetl', 'mean_rate']
