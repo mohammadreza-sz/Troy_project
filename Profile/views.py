@@ -24,7 +24,7 @@ from rest_framework.generics import DestroyAPIView
 from rest_framework.generics import UpdateAPIView	
 from rest_framework.decorators import api_view	
 from account.models import User
-from .filters import CustomeTripFilter, ProductFilter  ,CityFilter ,TripFilter#, CountryFilter#mrs
+from .filters import *#, CountryFilter#mrs
 from rest_framework.filters import SearchFilter, OrderingFilter#mrs
 from django_filters.rest_framework import DjangoFilterBackend#mrs
 from . import permissions as permi#mrs
@@ -787,9 +787,13 @@ class TourLeaderViewSet(CreateModelMixin , RetrieveModelMixin , UpdateModelMixin
             return Response({'opreation':'succesfully update'} | serializer.data ,status =status.HTTP_200_OK)
 
 
-class CustomCountryCity(APIView):
-    def get(self , request):
-        country = Country.objects.all()
-        serializer = CustomCountryCitySerializer(country , many = True)
-        return Response(serializer.data , status=status.HTTP_200_OK)
+class CustomCountryCity(ListAPIView):
+    filterset_class = CustomCountryCityFilter#mrs
+    filter_backends = [DjangoFilterBackend]#mrs
+    serializer_class =CustomCountryCitySerializer 
+    queryset = Country.objects.all()
+    # def list(self , request):
+        # country = Country.objects.all()
+        # serializer = CustomCountryCitySerializer(country , many = True)
+        # return Response(serializer.data , status=status.HTTP_200_OK)
         
