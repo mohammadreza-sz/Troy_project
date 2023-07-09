@@ -1,5 +1,6 @@
 from django.contrib import admin
 
+from chat import views
 
 
 from django.urls import path ,include
@@ -118,7 +119,7 @@ urlpatterns = [
 
     path('account/', include('account.urls')),
     path('chat/' , include('chat.urls')),
-
+    path('chat_room_name/' , views.CustomChat.as_view()),
 
 
 

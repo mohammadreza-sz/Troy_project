@@ -24,7 +24,7 @@
             fetchMessages();
           }
         function fetchMessages() {
-            chatSocket.send(JSON.stringify({'receiver_id': 2 }));
+            chatSocket.send(JSON.stringify({'receiver_id': 2 , 'sender_id':1}));
           }
         chatSocket.onmessage = function(e) {
             const data = JSON.parse(e.data);

@@ -419,15 +419,15 @@ CHANNEL_LAYERS = {
 
 DATABASES = {
     'default': {
-        'ENGINE' : 'django.db.backends.sqlite3',
-        'NAME' : BASE_DIR / 'troy.sqlite3',
+        # 'ENGINE' : 'django.db.backends.sqlite3',
+        # 'NAME' : BASE_DIR / 'troy.sqlite3',
 
-        # 'ENGINE': 'django.db.backends.mysql',
-        # 'NAME': 'chat',
-        # 'HOST': 'localhost',
-        # 'USER': 'root',
-        # 'PASSWORD': 'newpassword',
-        # 'PORT':'3306'
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'chat',
+        'HOST': 'localhost',
+        'USER': 'root',
+        'PASSWORD': 'newpassword',
+        'PORT':'3306'
     }
 }
 

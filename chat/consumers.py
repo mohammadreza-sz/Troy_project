@@ -105,70 +105,88 @@ class ChatConsumer(AsyncWebsocketConsumer):
         # Get the JWT token from the request headers
             # token = self.scope['headers'][b'authorization'][0].decode('utf-8').split(' ')[1]
             # t = "fjksl"
-        index = self.get_index_of_jwt_token()
-        if index != -1:                     
-            token = self.scope['headers'][index][1].decode('utf-8').split(' ')[1]
-        else:#if user not login or front doesn't pass authorization header
-            # await self.websocket.close(code=1000)
-            self.room_name = self.scope["url_route"]["kwargs"]["room_name"]
-            self.room_group_name = "chat_%s" % self.room_name
-            await self.channel_layer.group_add(self.room_group_name, self.channel_name)
-            await self.accept()            
-            await self.send_json({'error': 'User is not authenticated'})
-            await self.close()
-            # await self.send({"type": "websocket.close", "code": 1009})
-            return
-            print("user is anonymose")
+        #region authentication 
+        # index = self.get_index_of_jwt_token()
+        # if index != -1:                     
+        #     token = self.scope['headers'][index][1].decode('utf-8').split(' ')[1]
+        # else:#if user not login or front doesn't pass authorization header
+        #     # await self.websocket.close(code=1000)
+        #     self.room_name = self.scope["url_route"]["kwargs"]["room_name"]
+        #     self.room_group_name = "chat_%s" % self.room_name
+        #     await self.channel_layer.group_add(self.room_group_name, self.channel_name)
+        #     await self.accept()            
+        #     await self.send_json({'error': 'User is not authenticated'})
+        #     await self.close()
+        #     # await self.send({"type": "websocket.close", "code": 1009})
+        #     return
+        #     print("user is anonymose")
             
-        try:
-            # Verify and decode the JWT token
-            validated_token = self.jwt_decode(token)
+        # try:
+        #     # Verify and decode the JWT token
+        #     validated_token = self.jwt_decode(token)
             
-            # Get the user ID from the decoded token
-            user_id = validated_token['user_id']
+        #     # Get the user ID from the decoded token
+        #     user_id = validated_token['user_id']
             
-            # Authenticate the user using Django's built-in authentication backend
-            user = await self.get_user(user_id)
-            # user = User.objects.get(id =user_id)
-                # conversation = Conversation.objects.get(id=self.room_name)
+        #     # Authenticate the user using Django's built-in authentication backend
+        #     user = await self.get_user(user_id)
+        #     # user = User.objects.get(id =user_id)
+        #         # conversation = Conversation.objects.get(id=self.room_name)
 
-            # If the user is authenticated, accept the WebSocket connection
-            if user.is_authenticated:
-                self.room_name = self.scope["url_route"]["kwargs"]["room_name"]
-                self.room_group_name = "chat_%s" % self.room_name
-                self.scope['user'] = user
-                # Join room group
-                # if channle count more than two must diconnected********************************
-                # await check_duplicat_room()
-                await self.channel_layer.group_add(self.room_group_name, self.channel_name)#group is collection of channels
-                # print("\n\n\n"+user.first_name)
-                await self.accept()
-                await self.user_on({'user':user,'status':True})
-                conversation =await self.get_conversation(self.room_name)# Conversation.objects.get(room_name=self.room_name)#################************************
-                if conversation is not None:
-                    message =await self.last_message(conversation)#perhaps doesn't return anything here but no matter
-                    for m in message:
-                        await self.receive(json.dumps({"fetch_message":m.text}))
-                    # await self.send_json(message)
-                else:
-                    await self.create_conversation(self.room_name)
+        #     # If the user is authenticated, accept the WebSocket connection
+        #     if user.is_authenticated:
+        #         self.room_name = self.scope["url_route"]["kwargs"]["room_name"]
+        #         self.room_group_name = "chat_%s" % self.room_name
+        #         self.scope['user'] = user
+        #         # Join room group
+        #         # if channle count more than two must diconnected********************************
+        #         # await check_duplicat_room()
+        #         await self.channel_layer.group_add(self.room_group_name, self.channel_name)#group is collection of channels
+        #         # print("\n\n\n"+user.first_name)
+        #         await self.accept()
+        #         await self.user_on({'user':user,'status':True})
+        #         conversation =await self.get_conversation(self.room_name)# Conversation.objects.get(room_name=self.room_name)#################************************
+        #         if conversation is not None:
+        #             message =await self.last_message(conversation)#perhaps doesn't return anything here but no matter
+        #             for m in message:
+        #                 await self.receive(json.dumps({"fetch_message":m.text}))
+        #             # await self.send_json(message)
+        #         else:
+        #             await self.create_conversation(self.room_name)
 
-            else:
-                await self.send_json({'error': 'User is not authenticated'})            
-                self.room_name = self.scope["url_route"]["kwargs"]["room_name"]
-                self.room_group_name = "chat_%s" % self.room_name
-                await self.channel_layer.group_add(self.room_group_name, self.channel_name)
-                await self.accept()
-                await self.close()
-        except (InvalidTokenError, InvalidToken):
-            await self.send_json({'error': 'User is not authenticated'})            
-            self.room_name = self.scope["url_route"]["kwargs"]["room_name"]
-            self.room_group_name = "chat_%s" % self.room_name
-            await self.channel_layer.group_add(self.room_group_name, self.channel_name)
-            await self.accept()
-            await self.close()
-                
-                
+        #     else:
+        #         await self.send_json({'error': 'User is not authenticated'})            
+        #         self.room_name = self.scope["url_route"]["kwargs"]["room_name"]
+        #         self.room_group_name = "chat_%s" % self.room_name
+        #         await self.channel_layer.group_add(self.room_group_name, self.channel_name)
+        #         await self.accept()
+        #         await self.close()
+        # except (InvalidTokenError, InvalidToken):
+        #     await self.send_json({'error': 'User is not authenticated'})            
+        #     self.room_name = self.scope["url_route"]["kwargs"]["room_name"]
+        #     self.room_group_name = "chat_%s" % self.room_name
+        #     await self.channel_layer.group_add(self.room_group_name, self.channel_name)
+        #     await self.accept()
+        #     await self.close()
+        #endregion   
+        self.room_name = self.scope["url_route"]["kwargs"]["room_name"]
+        self.room_group_name = "chat_%s" % self.room_name
+        # self.scope['user'] = user******because remove authentication
+        # Join room group
+        # if channle count more than two must diconnected********************************
+        # await check_duplicat_room()
+        await self.channel_layer.group_add(self.room_group_name, self.channel_name)#group is collection of channels
+        # print("\n\n\n"+user.first_name)
+        await self.accept()
+        # await self.user_on({'user':user,'status':True})******because remove authentication
+        conversation =await self.get_conversation(self.room_name)# Conversation.objects.get(room_name=self.room_name)#################************************
+        if conversation is not None:
+            message =await self.last_message(conversation)#perhaps doesn't return anything here but no matter
+            for m in message:
+                await self.receive(json.dumps({"fetch_message":m.text}))
+            # await self.send_json(message)
+        else:
+            await self.create_conversation(self.room_name)
     def get_index_of_jwt_token(self):
         length = len(self.scope['headers'])
         index = -1
@@ -199,7 +217,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
             # pass
             # await self.close()
         # else:
-        await self.user_off(self.scope['user'])
+        # await self.user_off(self.scope['user']) ******because remove authentication
         await self.channel_layer.group_discard(self.room_group_name, self.channel_name)
 
 
@@ -214,6 +232,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
         if "receiver_id" in text_data_json:
             print ("\n\n\n\n\n receiver_id :" , text_data_json["receiver_id"])
             async_to_sync( setattr(self.__class__, 'receiver_id', text_data_json["receiver_id"]))
+            async_to_sync( setattr(self.__class__, 'sender_id', text_data_json["sender_id"]))
             # await self.set_variable( text_data_json["receiver_id"])
             print("\nnew variable set\n")
 
@@ -240,7 +259,9 @@ class ChatConsumer(AsyncWebsocketConsumer):
             # conversation = Conversation.objects.get(room_name=self.room_name)#################************************
             conversation =await self.get_conversation(self.room_name)# Conversation.objects.get(room_name=self.room_name)#################************************
             
-            sender = self.scope['user']
+            # sender = self.scope['user']******because remove authentication
+            # sender_id = text_data_json["sender_id"]
+            sender = await self.get_sender(self.sender_id)
             # receiver = conversation.participants.exclude(id=sender.id).first()
             receiver = await self.get_user(self.receiver_id)
 
@@ -317,6 +338,12 @@ class ChatConsumer(AsyncWebsocketConsumer):
         return Conversation.participants.exclude(id=sender_id).first()
         # return 
 
+    @database_sync_to_async
+    def get_sender(self,sender_id):
+        try:
+            return UserModel.objects.get(id = sender_id)
+        except UserModel.DoesNotExist:
+            return None
     @database_sync_to_async
     def get_user(self, user_id):
         """
