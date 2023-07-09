@@ -358,18 +358,32 @@ class OrganizationSerializer(serializers.ModelSerializer):
 
         model = Organization	
 
-        fields = ["person_id",
-                    "name_org" ,
-                    "description" ,
-                    "city_id", 
-                    "logo", 
-                    "Address", 
-                    "Phone", 
-                    "rates", 
-                    "wallet",
-                    "mean_rate"]
+        # fields = ["person_id",
+        #             "name_org" ,
+        #             "description" ,
+        #             "city_id", 
+        #             "logo", 
+        #             "Address", 
+        #             "Phone", 
+        #             "rates", 
+        #             "wallet",
+        #             "mean_rate"]
+        fields = "__all__"
+        read_only_fields = ["mean_rate", "rates", "wallet", "city_id", "person_id"]
+        # read_only_fields = ["user_id"]
+    def update(self, instance, validated_data):
+        if 'city_id' in validated_data:
+            try:
+                origin = validated_data.pop('city_id')
+                city_name = origin.pop('city_name')
+                city = City.objects.get(city_name = city_name)
+            except:
+                raise ValidationError({"error": "this city name doesn't exist"})
 
-        # read_only_fields = ["user_id"]	
+            instance.city_id =city
+
+        instance = super().update(instance, validated_data)
+        return instance
     def get_mean_rate(self, obj):
         rates = obj.rate_org.all()
         mean_rate = rates.aggregate(Avg('rate'))['rate__avg']
