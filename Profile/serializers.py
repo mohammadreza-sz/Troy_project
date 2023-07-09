@@ -524,3 +524,10 @@ class  CustomCountryCitySerializer(serializers.ModelSerializer):
         model = Country
         fields = ['country_name' , 'cities']
         
+
+
+class CustomPouriaSerializer(serializers.ModelSerializer):
+    cities = CustomCitySerializer(many = True , source = 'city_set')# , source = 'city_name')
+    class Meta:
+        model = Country
+        fields = ['cities']

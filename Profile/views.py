@@ -352,7 +352,8 @@ class Increase_people_wallet(APIView):#mrs
         
         person.wallet += Decimal(money)
         person.save()
-        return Response("his/her wallet is:"+str(person.wallet) , status = status.HTTP_200_OK)
+        # return Response("his/her wallet is:"+str(person.wallet) , status = status.HTTP_200_OK)
+        return Response({"wallet":person.wallet} , status = status.HTTP_200_OK)
         
 
 from django.db import IntegrityError
@@ -797,3 +798,9 @@ class CustomCountryCity(ListAPIView):
         # serializer = CustomCountryCitySerializer(country , many = True)
         # return Response(serializer.data , status=status.HTTP_200_OK)
         
+
+class CustomPouria(ListAPIView):
+    filterset_class = CustomCountryCityFilter#mrs
+    filter_backends = [DjangoFilterBackend]#mrs
+    serializer_class =CustomPouriaSerializer 
+    queryset = Country.objects.all()
