@@ -25,7 +25,7 @@ from rest_framework import permissions #mrs  #61
 from rest_framework import status
 from django.db.models import Avg
 from django.shortcuts import get_object_or_404
-
+from rest_framework import viewsets
 # from Profile import permissions as permi
 
 from django.db.models import Q
@@ -137,13 +137,17 @@ class CommentViewSet(ModelViewSet):
 		context = super().get_serializer_context()	
 		context['place'] = self.kwargs.get('Place_pk')	
 		return context	
+
 	def create(self, request, *args, **kwargs):	
 		get_object_or_404(Place.objects, pk=self.kwargs.get('Place_pk'))	
 		return super().create(request, *args, **kwargs)	
+
 	def update(self, request, *args, **kwargs):	
-		return self.perform_change(request, 'update', *args, **kwargs)	
+		return self.perform_change(request, 'update', *args, **kwargs)
+
 	def destroy(self, request, *args, **kwargs):	
 		return self.perform_change(request, 'destroy', *args, **kwargs)	
+        
 	def perform_change(self, request, action, *args, **kwargs):	
 		user = request.user	
 		comment = self.get_object()	
@@ -156,10 +160,9 @@ class CommentViewSet(ModelViewSet):
 		response = super().destroy(request, *args, **kwargs)	
 		place.update_comment_no()	
 		return response	
-
+    
 
 class ReplytViewSet(CommentViewSet):	
-
 	queryset = Comment.objects.select_related('parent').all()	
 	serializer_class = ReplySerializer	
 	http_method_names = ['post', 'put', 'delete']	

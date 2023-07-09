@@ -55,7 +55,7 @@ class Rate(models.Model):
         max_digits=2, decimal_places=1, default=0, 
         validators=[MinValueValidator(0), MaxValueValidator(5)])
     def __str__(self):
-        return f"{user.name} rated {self.rate} to {self.place.name}"
+        return f"rated {self.rate} to {self.place.name}"
 class Comment(models.Model):
     place = models.ForeignKey(
         Place, on_delete=models.CASCADE, related_name='comments')

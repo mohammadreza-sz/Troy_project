@@ -115,8 +115,8 @@ class RateSerializer(serializers.ModelSerializer):#mrs 59
             'rate',
         ]
 
-    def get_user_name(self, obj):
-        return obj.user.username
+    # def get_user_name(self, obj):
+    #     return obj.user.username
     def create(self , validated_data):
 
         # user_id = self.context['user_id']#mrsz
@@ -135,7 +135,7 @@ class ReplySerializer(serializers.ModelSerializer):
         model = Comment	
         fields = ['id', 'created_date', 'text', 'user', 'place']	
         # fields = "__all__"
-        read_only_fields = ['id', 'created_date', 'user']	
+        read_only_fields = ['id', 'created_date', 'user', 'place']	
     def create(self, validated_data):	
         request = self.context.get("request")	
         validated_data['place_id'] = self.context.get("place")	

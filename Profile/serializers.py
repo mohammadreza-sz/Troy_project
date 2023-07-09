@@ -393,8 +393,8 @@ class  Rate_OrgSerializer(serializers.ModelSerializer):
             'rate',
         ]
 
-    def get_user_name(self, obj):
-        return obj.user.username
+    # def get_user_name(self, obj):
+    #     return obj.user.username
     def create(self , validated_data):
         # user_id = self.context['user_id']#mrsz
         usernm = self.context['user_username']
@@ -424,8 +424,8 @@ class  Rate_TourLSerializer(serializers.ModelSerializer):
             'rate',
         ]
 
-    def get_user_name(self, obj):
-        return obj.user.username
+    # def get_user_name(self, obj):
+    #     return obj.user.username
     def create(self , validated_data):
         # user_id = self.context['user_id']#mrsz
         usernm = self.context['user_username']#mrsz
