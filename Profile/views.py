@@ -134,12 +134,12 @@ class history_org(APIView):#mrs income of organization for specific range
         organization = Organization.objects.get(person_id = request.user)
         if begindate ==None:
             # today = datetime.date.today()
-            today = timezone.now()
-            first_of_this_month = today.replace(day=1).replace(hour=0 , minute=0, second=0)
+            today = datetime.now().date()#timezone.now().date()
+            first_of_this_month = today.replace(day=1)#.replace(hour=0 , minute=0, second=0)
             # if first_of_this_month.month != 1:
-            last_of_last_month = first_of_this_month - timezone.timedelta(days=1)
-            last_of_last_month = last_of_last_month.replace(hour = 23 , minute=59 , second = 59)
-            first_of_last_month = last_of_last_month.replace(day=1).replace(hour=0 , minute=0, second=0)
+            last_of_last_month = first_of_this_month - datetime.now().replace(day =1 ).date()#timezone.timedelta(days=1).date()
+            last_of_last_month = last_of_last_month#.replace(hour = 23 , minute=59 , second = 59)
+            first_of_last_month = last_of_last_month.replace(day=1)#.replace(hour=0 , minute=0, second=0)
             # else:
             #     last_month = 
 
@@ -335,17 +335,20 @@ class reserve(CreateAPIView):#mrs
                 # return Response("add to trip" , status = status.HTTP_200_OK)
         
 class Increase_people_wallet(APIView):#mrs
+    permission_classes = [permi.IsPeople]
     def post(self , request):
+        # people_id = request.user.id
+        # people_id = CommenPeople.objects.get()
         try:
-            people_id = request.data['people_id']
+            # people_id = request.data['people_id']
             money = request.data['money']
         except:
             return Response("i want both people id and money " , status=status.HTTP_400_BAD_REQUEST)
 
         try:
-            person:Person = Person.objects.get(commenpeople__Id = people_id)
+            person:Person = Person.objects.get(commenpeople__Id__user_id = request.user.id)
         except:
-            return Response("i can't find people with this id: "+str(people_id) , status=status.HTTP_404_NOT_FOUND)
+            return Response("i can't find people with this token" , status=status.HTTP_404_NOT_FOUND)
         
         person.wallet += Decimal(money)
         person.save()

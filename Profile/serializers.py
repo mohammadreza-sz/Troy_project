@@ -123,14 +123,17 @@ class TripSerializer(serializers.ModelSerializer):#mrs
 
         # return [{'is_premium': people.premium, 'name': people.Id.user_id.username} for people in obj.common_people_id.all()]
         return result
-
+    org_name = serializers.SerializerMethodField(read_only = True)
     class Meta:
         model = Trip
         # fields = ['id'  , 'origin_city_id' ,'destination_city','destination_country','departure_transport','return_transport','departure_date','return_date' ,'Description', 'capacity' , 'Price', 'place_ids','organization_id','TourLeader_ids']
         # fields = ['id'  , 'origin' ,'destination','departure_date','transport','return_date' ,'Description', 'capacity' , 'Price', 'place_ids','organization_id','TourLeader_ids' , 'image' , 'hotel_name']
-        fields = ['id' ,'origin','destination','departure_transport','return_transport','departure_date','return_date','Description','capacity', 'Price' ,'place_ids','organization_id','TourLeader_ids' ,'image' , 'hotel_name' , 'premium']
+        fields = ['id' ,'origin','destination','departure_transport','return_transport','departure_date','return_date','Description','capacity', 'Price' ,'place_ids','organization_id','TourLeader_ids' ,'image' , 'hotel_name' , 'premium', 'org_name']
 
     origin = CityTripSerializer(source = 'origin_city_id')
+    def get_org_name(self,obj:Trip):
+        return obj.organization_id.name_org
+
     # origin = serializers.SerializerMethodField(source = 'origin_city_id')
     # def get_origin(self , obj):
     #     if obj.origin_city_id != None:
