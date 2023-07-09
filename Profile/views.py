@@ -686,7 +686,6 @@ class TourLeaderListInOrganization(generics.ListAPIView):
             print("56789")
         else:
             queryset = TourLeader.objects.none()
-            print("121231212")
         return Response(queryset, status= status.HTTP_200_OK)
 
 
@@ -797,3 +796,9 @@ class CustomCountryCity(ListAPIView):
         # serializer = CustomCountryCitySerializer(country , many = True)
         # return Response(serializer.data , status=status.HTTP_200_OK)
         
+
+
+
+class TLUpdate(UpdateAPIView):
+    queryset = TourLeader.objects.all()
+    serializer_class = OrgAsignToTourLSerializer
