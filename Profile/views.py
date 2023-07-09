@@ -812,6 +812,7 @@ class OrganizationViewSet(CreateModelMixin , RetrieveModelMixin , UpdateModelMix
     # filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]#mrs
     queryset = Organization.objects.all()
     serializer_class = OrganizationSerializer
+
     @action(detail=False , methods=['GET' , 'PUT'])
     def me(self:Organization, request):
         (org , created) = Organization.objects.get_or_create(id = request.user.id)
