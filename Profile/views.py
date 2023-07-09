@@ -460,7 +460,7 @@ class TripViewSet(ModelViewSet):
     search_fields = ['hotel_name' , 'Description']#mrs
     ordering_fields = ['Price' , 'capacity']
 
-class CustomeTrip(ListAPIView):
+class CustomTrip(ListAPIView):
     serializer_class = CustomeTripSerializer
     filterset_class = CustomeTripFilter
     filter_backends=[DjangoFilterBackend]
@@ -856,3 +856,10 @@ class TourLeaderViewSet(CreateModelMixin , RetrieveModelMixin , UpdateModelMixin
             serializer.save()
             return Response({'opreation':'succesfully update'} | serializer.data ,status =status.HTTP_200_OK)
 
+
+class CustomCountryCity(APIView):
+    def get(self , request):
+        country = Country.objects.all()
+        serializer = CustomCountryCitySerializer(country , many = True)
+        return Response(serializer.data , status=status.HTTP_200_OK)
+        

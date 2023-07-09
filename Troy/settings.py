@@ -237,6 +237,7 @@ INTERNAL_IPS = [
 
 
 CORS_ALLOW_ALL_ORIGINS = True
+allow_origin = '*'
 
 
 
