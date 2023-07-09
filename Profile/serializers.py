@@ -20,8 +20,7 @@ class PersonSerializer(serializers.ModelSerializer):#lesson 59
     class Meta:
         model = Person
         fields =['birth_date' , 'country' , 'city' , 'gender',
-<<<<<<< HEAD
-         'bio' , 'registration_date', 'profile_image' ]
+         'bio' , 'registration_date', 'profile_image' ,'wallet']
 class ShowFullPersonSerializer(serializers.ModelSerializer):#lesson 59
     # gender = serializers.BooleanField(initial=True)
     #profile_image = Base64ImageField(required=False) #helen
@@ -30,9 +29,7 @@ class ShowFullPersonSerializer(serializers.ModelSerializer):#lesson 59
         model = Person
         fields =['user_id', 'birth_date' , 'country' , 'city' , 'gender',
          'bio' , 'registration_date', 'profile_image' ]
-=======
-         'bio' , 'registration_date', 'profile_image' ,'wallet']
->>>>>>> 730cbff9222c5c77151d69adaf96f9c41a608ff3
+         
 
 class CityTripSerializer(serializers.ModelSerializer):
 
