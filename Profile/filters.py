@@ -53,3 +53,10 @@ class CityFilter(FilterSet):
     fields = {
       'city_name':['exact']
     }
+
+class CustomCountryCityFilter(FilterSet):
+  class Meta:
+    model = Country
+    fields = {
+      'country_name':['exact'],
+    }
