@@ -663,34 +663,31 @@ class Rate_TourLViewSet(ModelViewSet):
 
 #helen
 class TourLeaderListNotInOrganization(generics.ListAPIView):
-    serializer_class = TourLeaderSerializer
-    def get_queryset(self):
+    queryset = TourLeader.objects.all()
+    def get(self, request):
         # orga_id = self.kwargs.get('orga_id')
         # organization = Organization.objects.filter(id=orga_id).first()
         # if organization:
-            # Get all tour leaders that are not in the organization
             # queryset = TourLeader.objects.exclude(orga_id=organization)
         # else:
-            # Return an empty queryset if the organization does not exist
             # queryset = TourLeader.objects.none()
 
-        queryset = TourLeader.objects.filter(orga_id__isnull=True)
-        return queryset 
+        q = TourLeader.objects.get(orga_id = None).all()
+        return Response(q, status = status.HTTP_200_OK)
 
 class TourLeaderListInOrganization(generics.ListAPIView):
-    serializer_class = TourLeaderSerializer
-    def get_queryset(self):
-        orga_id = self.kwargs.get('orga_id')
-        organization = Organization.objects.filter(id=orga_id).first()
+    queryset = TourLeader.objects.all()
+    def get(self, request):
+        print("1234")
+        organization = Organization.objects.filter(person_id = request.user.id).first()
+        print("balaye in")
         if organization:
-            # Get all tour leaders that are in the organization
-            queryset = TourLeader.objects.filter(orga_id=organization)
+            queryset = TourLeader.objects.filter(orga_id=organization.id).all()
+            print("56789")
         else:
-            # Return an empty queryset if the organization does not exist
             queryset = TourLeader.objects.none()
-
-        # queryset = TourLeader.objects.filter(orga_id__isnull=True)
-        return queryset 
+            print("121231212")
+        return Response(queryset, status= status.HTTP_200_OK)
 
 
 

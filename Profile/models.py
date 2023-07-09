@@ -82,16 +82,16 @@ class Trip(models.Model):
 
     departure_transport= models.CharField(max_length=1 , choices=TRANSPORT_CHOICES , null = True )
     return_transport = models.CharField(max_length=1 , choices=TRANSPORT_CHOICES , null = True )
-    departure_date = models.DateField(null = True)
-    return_date =  models.DateField(null = True)
+    departure_date = models.DateTimeField(null = True)
+    return_date =  models.DateTimeField(null = True)
     # destinations_city
     # Transport = 
     # Departure = 
     # return = --> i dont remember it..
     # Organization_id = --> you must get it from tour leader.. 
     Description = models.TextField(null = True)
-    # begin_time = models.DateField(null = True)#must delete it 
-    # end_time = models.DateField(null = True)#must delete it 
+    # begin_time = models.DateTimeField(null = True)#must delete it 
+    # end_time = models.DateTimeField(null = True)#must delete it 
     capacity = models.IntegerField(null = True , validators=[MinValueValidator(1) , MaxValueValidator(50)])
     Price = models.IntegerField(null = True , validators=[MinValueValidator(5) , MaxValueValidator(5000)])
     image = models.TextField(null =True)
@@ -158,10 +158,10 @@ class PremiumRequest(models.Model):#mrs
  
 class TourLeader(models.Model):
     person_id = models.OneToOneField(Person, on_delete=models.CASCADE, primary_key=True)
-    orga_id = models.ForeignKey(Organization, on_delete=models.SET_NULL, null=True, related_name="tourleader")
+    orga_id = models.ForeignKey(Organization, on_delete=models.SET_NULL,blank = True, null=True, related_name="tourleader")
     rates = models.IntegerField(default=0, blank=True, null=True)
     rate_no = models.IntegerField(default=0, blank=True, null=True)
-    joindDate = models.DateField(auto_now=True, null=True)
+    joindDate = models.DateTimeField(auto_now=True, null=True)
     phonetl = models.CharField(max_length=20, null=True)
 
     def delete(self, using=None, keep_parents=False):
@@ -184,8 +184,8 @@ class Rate_Tour(models.Model):
     # destination_city = models.CharField(max_length=30, null = True)
     # origin_country = models.CharField(max_length=30, null = True)
     # origin_city = models.CharField(max_length=30, null = True)
-    # begin_time = models.DateField(null = True)
-    # end_time = models.DateField(null = True)
+    # begin_time = models.DateTimeField(null = True)
+    # end_time = models.DateTimeField(null = True)
     # capacity = models.IntegerField(null = True)
     # image = models.ImageField(upload_to = "profile/imaged" , null = True)#mrs
 
@@ -210,8 +210,8 @@ class Request(models.Model):
     orga_id = models.ForeignKey(Organization, on_delete=models.CASCADE, related_name='requests')
     tl_id = models.ForeignKey(TourLeader, on_delete=models.CASCADE, related_name='requests')
     status = models.CharField(max_length=1, choices=STATUS_CHOICES, default='P')
-    created_at = models.DateField(auto_now_add=True)
-    updated_at = models.DateField(auto_now=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
         unique_together = ('orga_id', 'tl_id')

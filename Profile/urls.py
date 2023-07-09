@@ -76,9 +76,9 @@ path("GetRequest/" , ShowRequest.as_view()),
      path('passengers/<int:trip_id>' , passenger_list.as_view()),
      path('reserve/<int:trip_id>' , reserve.as_view()),
      # for see the list of tourleaders that are not in a especial org
-     path('organizations/<int:orga_id>/tourleaders/not-in-organization/',
+     path('organizations/not-in-organization/',
           TourLeaderListNotInOrganization.as_view(), name='tourleader_not_in_organization'),
-     path('organizations/<int:orga_id>/tourleaders/in-organization/',
+     path('organizations/in-organization/',
           TourLeaderListInOrganization.as_view(), name='tourleaders_in_organization'),
 
      path('requests/', RequestCreate.as_view(), name='request_create'),
