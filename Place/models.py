@@ -63,7 +63,7 @@ class Comment(models.Model):
         User, on_delete=models.CASCADE, related_name='comments')
     parent = models.ForeignKey('Comment', on_delete=models.CASCADE, 
                         related_name='replies', null=True, blank=True)
-    created_date = models.DateTimeField(auto_now_add=True)
+    created_date = models.DateField(auto_now_add=True)
     text = models.TextField()
     def __str__(self):
         return f"{self.place.title} {self.user.username}"

@@ -395,6 +395,7 @@ class ShowRequest(APIView):#mrs
             
 from datetime import datetime#mrs
 
+
 class histroy_org2(ListAPIView):#mrs
     permission_classes = [permi.IsOrganization]
     pagination_class = DefaultPagination
@@ -402,7 +403,7 @@ class histroy_org2(ListAPIView):#mrs
     serializer_class =OrgHistoryserializer 
     def get_queryset(self):  
         org = Organization.objects.get(person_id = self.request.user)
-        return  Trip.objects.filter(organization_id = org ).order_by('departure_date').select_related(#this queryset need more optimization
+        return  Trip.objects.filter(organization_id = org , departure_date__lt= datetime.now().date() ).order_by('departure_date').select_related(#this queryset need more optimization
             'origin_city_id','origin_city_id__country_id').prefetch_related(
             'common_people_id', 'destination_city','TourLeader_ids',
             'TourLeader_ids__person_id','TourLeader_ids__person_id__user_id', )#,departure_date__gt = '2000-01-01') #******* it want more optimize for trip_common_people
@@ -464,7 +465,7 @@ class CustomTrip(ListAPIView):
     serializer_class = CustomeTripSerializer
     filterset_class = CustomeTripFilter
     filter_backends=[DjangoFilterBackend]
-    queryset = Trip.objects.select_related('origin_city_id' , 'origin_city_id__country_id').prefetch_related("place_ids", 'destination_city' , 'destination_country' ,'passenger').all()
+    queryset = Trip.objects.select_related('origin_city_id' , 'origin_city_id__country_id' , 'organization_id').prefetch_related("place_ids", 'destination_city' , 'destination_country' ,'passenger').all()
     # def list(self , request):
 
 
@@ -482,11 +483,13 @@ class CountryViewSet(ModelViewSet):#mrs
     queryset = Country.objects.prefetch_related('city_set').all()
 
     serializer_class = CountrySerializer    
+    #region
     # def create(self, request, *args, **kwargs):
     #     serializer = self.get_serializer(data=request.data, many=True)
     #     serializer.is_valid(raise_exception=True)
     #     self.perform_create(serializer)
     #     return Response(serializer.data)
+    #endregion
 class CityViewSet(ModelViewSet):#mrs
     # permission_classes = [permi.CrudAdminReadOther]
     filterset_class = CityFilter#mrs
