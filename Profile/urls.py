@@ -42,46 +42,48 @@ path("RequestToOrg/<int:id>" , RequestToOrg.as_view()),
 
 path("GetRequest/" , ShowRequest.as_view()),
 
-    # (r'^ProfileInfoAPI/$', ListOrgAPIView.as_view(), name='ProfileInfoAPI'),		
+     # (r'^ProfileInfoAPI/$', ListOrgAPIView.as_view(), name='ProfileInfoAPI'),		
 
-    # path("org/",ListOrgAPIView.as_view(),name="Org_list"),		
+     # path("org/",ListOrgAPIView.as_view(),name="Org_list"),		
 
-    # path("createOrg/", CreateOrgAPIView.as_view(),name="create_Org"),		
+     # path("createOrg/", CreateOrgAPIView.as_view(),name="create_Org"),		
 
-    # path("updateOrg/<int:pk>/",UpdateOrgAPIView.as_view(),name="update_Org"),		
+     # path("updateOrg/<int:pk>/",UpdateOrgAPIView.as_view(),name="update_Org"),		
 
-    # path("deleteOrg/<int:pk>/",DeleteOrgAPIView.as_view(),name="delete_Org"),		
+     # path("deleteOrg/<int:pk>/",DeleteOrgAPIView.as_view(),name="delete_Org"),		
 
-    # path("tl/",ListTourLeaderAPIView.as_view(),name="TourLeader_list"),		
+     # path("tl/",ListTourLeaderAPIView.as_view(),name="TourLeader_list"),		
 
-    # path("create/", CreateTourLeaderAPIView.as_view(),name="create_TourLeader"),		
+     # path("create/", CreateTourLeaderAPIView.as_view(),name="create_TourLeader"),		
 
-    # path("update/<int:pk>/",UpdateTourLeaderAPIView.as_view(),name="update_TourLeader"),		
+     # path("update/<int:pk>/",UpdateTourLeaderAPIView.as_view(),name="update_TourLeader"),		
 
-    # path("delete/<int:pk>/",DeleteTourLeaderAPIView.as_view(),name="delete_TourLeader"),		
+     # path("delete/<int:pk>/",DeleteTourLeaderAPIView.as_view(),name="delete_TourLeader"),		
 
-    path("TL_by_org/",get_tourleaders, name = "TL_by_org"),		
+     path("TL_by_org/",get_tourleaders, name = "TL_by_org"),		
 
-    path("trip_by_org", get_toursfromOrg, name = "trip_by_org"),		
+     path("trip_by_org", get_toursfromOrg, name = "trip_by_org"),		
 
-    path("list_orgs", get_orgs, name = "list_orgs"),		
+     path("list_orgs", get_orgs, name = "list_orgs"),		
 
-    path("all_tourL", get_alltourleaders, name = "all_tourL"),		
+     path("all_tourL", get_alltourleaders, name = "all_tourL"),		
 
-    # path("RTL/", rate_TOURL, name = "RTL"),		
+     # path("RTL/", rate_TOURL, name = "RTL"),		
 
-    # path("rate_Orgg/", rate_Orgg, name = "rate_Orgg"),	
-    path('test' , user.as_view()),
-    path('historyorg2' , histroy_org2.as_view()),
-    path('passengers/<int:trip_id>' , passenger_list.as_view()),
-    path('reserve/<int:trip_id>' , reserve.as_view()),
-    # for see the list of tourleaders that are not in a especial org
-    path('organizations/<int:orga_id>/tourleaders/not-in-organization/',
-         TourLeaderListNotInOrganization.as_view(), name='tourleader_not_in_organization'),
+     # path("rate_Orgg/", rate_Orgg, name = "rate_Orgg"),	
+     path('test' , user.as_view()),
+     path('historyorg2' , histroy_org2.as_view()),
+     path('passengers/<int:trip_id>' , passenger_list.as_view()),
+     path('reserve/<int:trip_id>' , reserve.as_view()),
+     # for see the list of tourleaders that are not in a especial org
+     path('organizations/<int:orga_id>/tourleaders/not-in-organization/',
+          TourLeaderListNotInOrganization.as_view(), name='tourleader_not_in_organization'),
+     path('organizations/<int:orga_id>/tourleaders/in-organization/',
+          TourLeaderListInOrganization.as_view(), name='tourleaders_in_organization'),
 
-    path('requests/', RequestCreate.as_view(), name='request_create'),
-    # delete a tourleader..
-    path('organizations/<int:orga_id>/tourleaders/<int:tl_id>/delete/',
+     path('requests/', RequestCreate.as_view(), name='request_create'),
+     # delete a tourleader..
+     path('organizations/<int:orga_id>/tourleaders/<int:tl_id>/delete/',
      TourLeaderDeleteFromOrganization.as_view(), name='tourleader_delete_from_organization'),
      path('inc_money/' , Increase_people_wallet.as_view()),
      path('custome_trip/' , CustomTrip.as_view()),

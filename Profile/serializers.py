@@ -364,17 +364,17 @@ class OrganizationSerializer(serializers.ModelSerializer):
 
         model = Organization	
 
-        # fields = ["person_id",
-        #             "name_org" ,
-        #             "description" ,
-        #             "city_id", 
-        #             "logo", 
-        #             "Address", 
-        #             "Phone", 
-        #             "rates", 
-        #             "wallet",
-        #             "mean_rate"]
-        fields = "__all__"
+        fields = ["person_id",
+                    "name_org" ,
+                    "description" ,
+                    "city_id", 
+                    "logo", 
+                    "Address", 
+                    "Phone", 
+                    "rates", 
+                    "wallet",
+                    "mean_rate"]
+        # fields = "__all__"
         read_only_fields = ["mean_rate", "rates", "wallet", "city_id", "person_id"]
         # read_only_fields = ["user_id"]
     def update(self, instance, validated_data):

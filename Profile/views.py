@@ -32,7 +32,7 @@ from rest_framework.pagination import PageNumberPagination
 from .pagination import DefaultPagination
 from Profile import pagination
 from rest_framework import generics
-
+from account.serializers import UserSerializer
 
 class PersonViewSet(CreateModelMixin , RetrieveModelMixin , UpdateModelMixin , GenericViewSet ,ListModelMixin):
     filterset_class = ProductFilter#mrs
@@ -674,6 +674,20 @@ class TourLeaderListNotInOrganization(generics.ListAPIView):
         queryset = TourLeader.objects.filter(orga_id__isnull=True)
         return queryset 
 
+class TourLeaderListInOrganization(generics.ListAPIView):
+    serializer_class = TourLeaderSerializer
+    def get_queryset(self):
+        orga_id = self.kwargs.get('orga_id')
+        organization = Organization.objects.filter(id=orga_id).first()
+        if organization:
+            # Get all tour leaders that are in the organization
+            queryset = TourLeader.objects.filter(orga_id=organization)
+        else:
+            # Return an empty queryset if the organization does not exist
+            queryset = TourLeader.objects.none()
+
+        # queryset = TourLeader.objects.filter(orga_id__isnull=True)
+        return queryset 
 
 
 
@@ -727,8 +741,8 @@ class OrganizationViewSet(CreateModelMixin , RetrieveModelMixin , UpdateModelMix
 
     @action(detail=False , methods=['GET' , 'PUT'])
     def me(self:Organization, request):
-        (org , created) = Organization.objects.get_or_create(id = request.user.id)
-        
+        print(request.user.id)
+        org  = Organization.objects.filter(person_id = request.user.id).first()
         if request.method == 'GET':
             data = OrganizationSerializer(org)
             return Response(data.data , status = status.HTTP_200_OK)
