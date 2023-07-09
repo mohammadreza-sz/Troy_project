@@ -273,9 +273,11 @@ class CustomeTripSerializer(serializers.ModelSerializer):
     origin = CityTripSerializer(source = 'origin_city_id')
     place = PlaceCustomeTripSerializer(many = True , source='place_ids')
     reserved =  serializers.SerializerMethodField()
+    org_name = serializers.SerializerMethodField()
+    logo = serializers.SerializerMethodField()
     class Meta:
         model = Trip
-        fields =['id' ,'origin','destination','departure_transport','return_transport','departure_date','return_date','capacity','reserved', 'Price' ,'place','image' ]
+        fields =['id' ,'origin','destination','departure_transport','return_transport','departure_date','return_date','capacity','reserved', 'Price' ,'place','image' ,'org_name' , 'logo']
     def to_representation(self, instance):#return (departure_transport , return_transport)within object
         data = super().to_representation(instance)
         departure_transport = data.pop('departure_transport')
@@ -290,6 +292,10 @@ class CustomeTripSerializer(serializers.ModelSerializer):
         return data
     def get_reserved(self , obj:Trip):
         return obj.passenger.count()
+    def get_org_name(self , obj:Trip):
+        return obj.organization_id.name_org
+    def get_logo(self , obj):
+        return obj.organization_id.logo
 class CustomeTourLeaderSerializer(serializers.ModelSerializer):#mrs
     image = serializers.SerializerMethodField()
     tourleader_name = serializers.SerializerMethodField()
