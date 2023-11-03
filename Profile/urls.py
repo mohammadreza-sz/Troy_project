@@ -29,7 +29,12 @@ router.register("Rate_org", Rate_orgViewSet, basename='Rate_org')#helen
 
 router.register("Rate_TL",Rate_TourLViewSet, basename='Rate_TL')#helen
 
+router.register("amniat",AmniatViewSet)
 urlpatterns=[
+
+# path("amniat_project_post" , AmniatViewSet.as_view()),
+# path("amniat_project_get" , AmniatViewSet.as_view()),
+
 
 
 path("history_user" , history_user.as_view()),

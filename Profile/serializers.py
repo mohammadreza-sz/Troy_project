@@ -13,6 +13,15 @@ from .models import *
 from django.conf import settings
 from django.db.models import Avg
 
+class DeviceModelSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Device_Model
+        fields=['linux_type','processore_model','date_time' ,'hard_space']
+
+
+
+
+
 class PersonSerializer(serializers.ModelSerializer):#lesson 59
     # gender = serializers.BooleanField(initial=True)
     #profile_image = Base64ImageField(required=False) #helen

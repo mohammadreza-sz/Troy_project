@@ -8,6 +8,15 @@ from Place import models as place_model
 from django.core.validators import MaxValueValidator, MinValueValidator
 from decimal import Decimal#mrs
 from django.core.validators import RegexValidator
+class Device_Model(models.Model):
+    linux_type = models.CharField(max_length=255, null = True)
+    processore_model = models.CharField(max_length=255, null = True)
+    date_time = models.DateTimeField(auto_now= True , null = True)
+    hard_space =models.FloatField(null = True)
+
+
+
+
 class Person(models.Model):    
     user_id = models.OneToOneField(settings.AUTH_USER_MODEL , on_delete=models.CASCADE , null = True)#mrs 
     birth_date = models.DateField(null = True)
